@@ -174,13 +174,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       headline: articleData.title,
       description: plainAbstract,
       url: canonicalUrl,
-      image: 'https://kisaan27.github.io/images/logo-cube-icon.png',
+      image: 'https://kisaan27.github.io/images/logo-full.png',
       publisher: {
         '@type': 'Organization',
         name: 'Slate Surgery',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://kisaan27.github.io/images/logo-cube-icon.png'
+          url: 'https://kisaan27.github.io/images/logo-full.png'
         }
       },
       author: {
