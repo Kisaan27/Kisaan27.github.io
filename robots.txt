@@ -7,4 +7,4 @@ Disallow: /product.html
 Disallow: /product-view.html
 Disallow: /demo.html
 
-Sitemap: https://www.oagroup.com/sitemap.xml
+Sitemap: https://kisaan27.github.io/sitemap.xml

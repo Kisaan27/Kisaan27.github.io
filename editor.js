@@ -85,25 +85,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     6: { author: 'Aazad Abbas', date: 'Mar 18, 2025 • 1 min read' },
     7: { author: 'Aazad Abbas', date: 'Mar 18, 2025 • 1 min read' },
     8: { author: 'Aazad Abbas', date: 'Mar 18, 2025 • 2 min read' },
-    9: { author: 'OA Group', date: 'Nov 20, 2023 • 2 min read' },
-    10: { author: 'OA Group', date: 'Nov 20, 2023 • 2 min read' },
-    11: { author: 'OA Group', date: 'Jul 20, 2023 • 2 min read' },
-    12: { author: 'OA Group', date: 'Jun 15, 2023 • 2 min read' },
-    13: { author: 'OA Group', date: 'May 15, 2023 • 2 min read' },
-    14: { author: 'OA Group', date: 'Mar 9, 2023 • 2 min read' },
-    15: { author: 'OA Group', date: 'Mar 1, 2023 • 2 min read' },
-    16: { author: 'OA Group', date: 'Feb 25, 2023 • 2 min read' },
-    17: { author: 'OA Group', date: 'Jan 26, 2023 • 2 min read' },
-    18: { author: 'OA Group', date: 'Jul 19, 2022 • 2 min read' },
-    19: { author: 'OA Group', date: 'Jul 15, 2022 • 1 min read' },
-    20: { author: 'OA Group', date: 'Jun 29, 2022 • 2 min read' },
-    21: { author: 'OA Group', date: 'Jun 27, 2022 • 2 min read' },
-    22: { author: 'OA Group', date: 'Apr 12, 2022 • 2 min read' },
-    23: { author: 'OA Group', date: 'Mar 16, 2022 • 2 min read' },
-    24: { author: 'OA Group', date: 'Feb 1, 2022 • 2 min read' },
-    25: { author: 'OA Group', date: 'Dec 5, 2021 • 1 min read' },
-    26: { author: 'OA Group', date: 'Nov 5, 2021 • 1 min read' },
-    27: { author: 'OA Group', date: 'Sep 25, 2021 • 1 min read' },
+    9: { author: 'Slate Surgery', date: 'Nov 20, 2023 • 2 min read' },
+    10: { author: 'Slate Surgery', date: 'Nov 20, 2023 • 2 min read' },
+    11: { author: 'Slate Surgery', date: 'Jul 20, 2023 • 2 min read' },
+    12: { author: 'Slate Surgery', date: 'Jun 15, 2023 • 2 min read' },
+    13: { author: 'Slate Surgery', date: 'May 15, 2023 • 2 min read' },
+    14: { author: 'Slate Surgery', date: 'Mar 9, 2023 • 2 min read' },
+    15: { author: 'Slate Surgery', date: 'Mar 1, 2023 • 2 min read' },
+    16: { author: 'Slate Surgery', date: 'Feb 25, 2023 • 2 min read' },
+    17: { author: 'Slate Surgery', date: 'Jan 26, 2023 • 2 min read' },
+    18: { author: 'Slate Surgery', date: 'Jul 19, 2022 • 2 min read' },
+    19: { author: 'Slate Surgery', date: 'Jul 15, 2022 • 1 min read' },
+    20: { author: 'Slate Surgery', date: 'Jun 29, 2022 • 2 min read' },
+    21: { author: 'Slate Surgery', date: 'Jun 27, 2022 • 2 min read' },
+    22: { author: 'Slate Surgery', date: 'Apr 12, 2022 • 2 min read' },
+    23: { author: 'Slate Surgery', date: 'Mar 16, 2022 • 2 min read' },
+    24: { author: 'Slate Surgery', date: 'Feb 1, 2022 • 2 min read' },
+    25: { author: 'Slate Surgery', date: 'Dec 5, 2021 • 1 min read' },
+    26: { author: 'Slate Surgery', date: 'Nov 5, 2021 • 1 min read' },
+    27: { author: 'Slate Surgery', date: 'Sep 25, 2021 • 1 min read' },
   };
 
   // 1. Load article content for EVERYONE
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Populate per-article SEO metadata (falls back to the static tags in the HTML if fields are missing).
     if (articleData.title) {
-      const pageTitle = `${articleData.title} — OA Group`;
+      const pageTitle = `${articleData.title} — Slate Surgery`;
       document.title = pageTitle;
       const ogTitle = document.querySelector('meta[property="og:title"]');
       if (ogTitle) ogTitle.setAttribute('content', pageTitle);
@@ -174,18 +174,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       headline: articleData.title,
       description: plainAbstract,
       url: canonicalUrl,
-      image: 'https://www.oagroup.com/images/logo.png',
+      image: 'https://kisaan27.github.io/images/logo-cube-icon.png',
       publisher: {
         '@type': 'Organization',
-        name: 'OA Group',
+        name: 'Slate Surgery',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://www.oagroup.com/images/logo.png'
+          url: 'https://kisaan27.github.io/images/logo-cube-icon.png'
         }
       },
       author: {
-        '@type': byline && byline.author !== 'OA Group' ? 'Person' : 'Organization',
-        name: (byline && byline.author) || 'OA Group'
+        '@type': byline && byline.author !== 'Slate Surgery' ? 'Person' : 'Organization',
+        name: (byline && byline.author) || 'Slate Surgery'
       }
     };
     if (parsedDate && !isNaN(parsedDate)) {
