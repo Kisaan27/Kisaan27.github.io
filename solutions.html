@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+  <link rel="icon" type="image/svg+xml" href="images/drawing24.svg">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solutions — Slate Surgery</title>
+  <meta name="description" content="OA Group's applied solutions arm — medical device evaluation, cost utility analysis, and artificial intelligence consulting for health systems and device makers.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.oagroup.com/solutions.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Solutions — OA Group">
+  <meta property="og:description" content="OA Group's applied solutions arm — medical device evaluation, cost utility analysis, and artificial intelligence consulting for health systems and device makers.">
+  <meta property="og:url" content="https://www.oagroup.com/solutions.html">
+  <meta property="og:image" content="https://www.oagroup.com/images/logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Solutions — OA Group">
+  <meta name="twitter:description" content="OA Group's applied solutions arm — medical device evaluation, cost utility analysis, and artificial intelligence consulting for health systems and device makers.">
+  <meta name="twitter:image" content="https://www.oagroup.com/images/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap">
+  <link rel="stylesheet" href="footer.css">
+  <link rel="stylesheet" href="search-dropdown.css">
+  <style>
+    :root {
+      /* ── brand palette, sampled from images/drawing24.svg ── */
+      --color-primary: #1e274b;
+      --color-primary-dark: #10142a;
+      --color-accent: #7aaa66;
+      --color-accent-soft: rgba(122,170,102,0.14);
+      --color-gray: #8a8e97;
+      --color-bg: #f4f6f4;
+      --color-surface: #f7f8f9;
+      --color-text: #10142a;
+      --color-text-muted: #6b7280;
+      --color-border: #e5e7eb;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-soft: 0 8px 30px rgba(16,20,42,0.08);
+
+      /* legacy aliases used by shared nav/footer rules */
+      --bg-light: var(--color-bg);
+      --text-dark: var(--color-text);
+      --brand-green: var(--color-primary);
+      --accent-mint: var(--color-accent);
+      --logo-gray: var(--color-gray);
+      --border-light: rgba(0,0,0,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:
+        radial-gradient(ellipse 1000px 700px at 6% -8%, rgba(30,39,75,0.14), transparent 55%),
+        radial-gradient(ellipse 900px 650px at 100% 105%, rgba(122,170,102,0.12), transparent 55%),
+        linear-gradient(160deg, #e9ebf1 0%, #dfe2ea 50%, #e6eae1 100%);
+      color: var(--color-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAVBAR (matches site-wide light nav) ── */
+    .navbar {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      padding: 1.5rem 4rem;
+      background: rgba(242, 244, 246, 0.77);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      position: relative; z-index: 100;
+    }
+    .logo { font-weight: 700; font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; height: 34px; text-decoration: none; cursor: pointer; justify-self: start; width: fit-content; }
+    .logo-img { height: 90px; width: auto; display: block; }
+    .nav-links {
+      display: flex; gap: 2.2rem; justify-self: center;
+      background: rgba(255,255,255,0.6);
+      padding: 0.5rem 1.5rem; border-radius: 30px;
+      border: 1px solid var(--border-light);
+    }
+    .nav-links a { text-decoration: none; color: #555; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a.active, .nav-links a:hover { color: var(--brand-green); font-weight: 600; }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; justify-self: end; }
+    .search-wrapper { position: relative; display: flex; align-items: center; }
+    .search-wrapper > i { position: absolute; left: 12px; color: rgba(16, 20, 42, 0.45); font-size: 0.9rem; pointer-events: none; }
+    .search-input {
+      background: #ffffff; border: 1px solid rgba(30, 39, 75, 0.18);
+      padding: 0.45rem 1rem 0.45rem 2.1rem; border-radius: 20px;
+      color: #10142a; font-size: 0.9rem; width: 220px; outline: none;
+      box-shadow: 0 2px 8px rgba(16,20,42,0.08); transition: all 0.2s ease;
+    }
+    .search-input::placeholder { color: rgba(16, 20, 42, 0.4); }
+    .search-input:focus { border-color: var(--accent-mint); box-shadow: 0 0 0 3px rgba(122,170,102,0.18); width: 300px; }
+    .nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 4px; width: 22px; height: 22px; background: none; border: none; cursor: pointer; padding: 0; flex-shrink: 0; }
+    .nav-hamburger span { display: block; width: 100%; height: 2px; background: #10142a; border-radius: 2px; transition: transform 0.25s ease, opacity 0.25s ease; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    /* ── SHARED REVEAL-ON-SCROLL MOTION ── */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease-out, transform 0.55s ease-out; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    .solutions-main { max-width: 1200px; margin: 0 auto; padding: 0 4rem 2rem; flex-grow: 1; width: 100%; }
+    .section-eyebrow {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em;
+      color: var(--color-accent); display: block; margin-bottom: 0.9rem;
+    }
+
+    /* ── SECTION 1: GALLERY HERO ── */
+    .gallery-hero { padding-top: 0.5rem; position: relative; }
+    .banner-strip {
+      position: relative; left: 50%; width: 100vw; margin-left: -50vw;
+      height: 56px; margin-top: -0.5rem; margin-bottom: 1.25rem;
+      background:
+        radial-gradient(circle, rgba(122,170,102,0.35) 1.4px, transparent 1.4px) 0 0/18px 18px,
+        linear-gradient(180deg, rgba(122,170,102,0.16) 0%, rgba(122,170,102,0.02) 100%);
+      -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
+              mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
+    }
+    .solutions-title {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: clamp(2.4rem, 4.6vw, 3.6rem); font-weight: 600; letter-spacing: -0.01em;
+      line-height: 1.15; margin-bottom: 1.75rem; max-width: 720px;
+    }
+    .solutions-title span { color: var(--color-accent); }
+
+    .trust-badge {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      background: #ffffff; border-radius: 999px; padding: 0.6rem 1.15rem;
+      font-size: 0.82rem; font-weight: 700; color: var(--color-primary);
+      box-shadow: var(--shadow-soft); margin-bottom: 2rem;
+    }
+    .trust-badge i { color: var(--color-accent); font-size: 0.9rem; }
+
+    .gallery-row { display: grid; grid-template-columns: 0.85fr 1.3fr 0.85fr; gap: 1.5rem; align-items: stretch; }
+    .gallery-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-soft); height: 320px; }
+    .gallery-card--center { height: 380px; align-self: center; }
+    .gallery-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .stat-float {
+      position: absolute; left: 1.25rem; bottom: 1.25rem; right: 1.25rem;
+      background: rgba(255,255,255,0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.5); border-radius: var(--radius-md);
+      padding: 1rem 1.15rem; box-shadow: 0 12px 28px rgba(16,20,42,0.22);
+    }
+    .stat-number { font-size: 2rem; font-weight: 800; color: var(--color-primary); letter-spacing: -0.02em; }
+    .stat-suffix { font-size: 1.3rem; font-weight: 800; color: var(--color-accent); }
+    .stat-caption { font-size: 0.76rem; color: var(--color-text-muted); margin-top: 0.15rem; line-height: 1.4; }
+
+    .solutions-lede {
+      font-size: 1.08rem; line-height: 1.7; color: #4a5265; max-width: 700px;
+      text-align: center; margin: 3rem auto 0;
+    }
+    .solutions-lede strong { color: var(--color-text); }
+
+    /* ── SECTION 2: CAPABILITIES CAROUSEL ── */
+    .capabilities { padding: 5.5rem 0 1rem; text-align: center; }
+    .section-header-center { max-width: 640px; margin: 0 auto 3rem; }
+    .section-h2 { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: clamp(2.1rem, 3.6vw, 2.9rem); font-weight: 600; letter-spacing: -0.01em; margin: 0.4rem 0 0.75rem; }
+    .section-h2 span { color: var(--color-accent); }
+    .section-sub { color: var(--color-text-muted); font-size: 1rem; line-height: 1.6; }
+
+    .cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; text-align: left; }
+    .cap-card {
+      text-align: center;
+      background: var(--color-primary-dark); border: 1px solid var(--color-primary-dark); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 2.25rem 1.75rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .cap-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(16,20,42,0.24); }
+    .cap-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(122,170,102,0.22); color: var(--color-accent); font-size: 1.3rem;
+    }
+    .cap-title { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.005em; line-height: 1.35; color: #ffffff; }
+    .cap-desc { font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.7); margin-top: 0.2rem; }
+
+    /* ── SECTION 3: FEATURE SPLIT ── */
+    .feature-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; padding: 5.5rem 0 4rem; }
+    .feature-media { position: relative; }
+    .feature-img-frame { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-soft); height: 380px;
+      transition: transform 0.6s ease-out, opacity 0.6s ease-out; opacity: 0; transform: scale(0.96); }
+    .feature-split.is-visible .feature-img-frame { opacity: 1; transform: scale(1); }
+    .feature-img-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .feature-copy { padding-top: 2rem; }
+    .feature-heading { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: clamp(2.1rem, 3.4vw, 2.8rem); font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 1rem;
+      opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+    .feature-para { font-size: 1rem; line-height: 1.7; color: var(--color-text-muted); max-width: 480px; margin-bottom: 1.75rem;
+      opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease-out 0.08s, transform 0.5s ease-out 0.08s; }
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+    .feature-list li {
+      display: flex; align-items: center; gap: 0.85rem;
+      background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--radius-md);
+      padding: 0.85rem 1.1rem; font-size: 0.92rem; font-weight: 600; color: var(--color-text);
+      opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .feature-split.is-visible .feature-heading,
+    .feature-split.is-visible .feature-para,
+    .feature-split.is-visible .feature-list li,
+    .feature-split.is-visible .feature-ctas { opacity: 1; transform: translateY(0); }
+    .feature-list li:nth-child(1) { transition-delay: 0.16s; }
+    .feature-list li:nth-child(2) { transition-delay: 0.24s; }
+    .feature-list li:nth-child(3) { transition-delay: 0.32s; }
+    .check-badge {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      background: var(--color-accent-soft); color: var(--color-accent);
+      display: flex; align-items: center; justify-content: center; font-size: 0.68rem;
+    }
+    .feature-ctas { display: flex; gap: 1rem; flex-wrap: wrap;
+      transition: opacity 0.5s ease-out 0.4s, transform 0.5s ease-out 0.4s; }
+    .btn-primary, .btn-ghost {
+      font-size: 0.92rem; font-weight: 600; padding: 0.85rem 1.7rem; border-radius: 999px;
+      text-decoration: none; display: inline-flex; align-items: center; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--color-primary), #2f3c73); color: #fff; box-shadow: 0 8px 24px rgba(30,39,75,0.25); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(30,39,75,0.4); }
+    .btn-ghost { background: transparent; color: var(--color-text); border: 1px solid var(--color-border); }
+    .btn-ghost:hover { transform: translateY(-2px); border-color: var(--color-primary); }
+    @media (prefers-reduced-motion: reduce) {
+      .feature-img-frame, .feature-heading, .feature-para, .feature-list li, .feature-ctas { opacity: 1; transform: none; transition: none; }
+    }
+
+    @media (max-width: 900px) {
+      .navbar { padding: 1.1rem 1.5rem; display: flex; justify-content: space-between; }
+      .logo-img { height: 44px; }
+      .nav-hamburger { display: flex; }
+      .nav-links {
+        position: fixed; inset: 0; width: 100%; height: 100dvh;
+        background: rgba(244, 246, 244, 0.97);
+        backdrop-filter: blur(16px);
+        flex-direction: column; align-items: stretch; justify-content: flex-start;
+        gap: 0; border-radius: 0; border: none; padding: 6.5rem 2rem 2rem;
+        transform: translateY(-100%); opacity: 0; pointer-events: none;
+        transition: transform 0.3s ease, opacity 0.3s ease; z-index: 500; overflow-y: auto;
+      }
+      .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      .nav-links a { color: var(--text-dark); font-size: 1.5rem; font-weight: 600; text-align: left; width: 100%; padding: 0.7rem 0.1rem; }
+      .nav-links a.active, .nav-links a:hover { color: var(--accent-mint); }
+      .solutions-main { padding: 0 1.5rem 1.5rem; }
+      .search-input { width: 150px; }
+
+      .gallery-row { grid-template-columns: 1fr; }
+      .gallery-card, .gallery-card--center { height: 260px; align-self: auto; }
+
+      .cap-grid { grid-template-columns: 1fr; }
+      .feature-split { grid-template-columns: 1fr; gap: 3rem; padding-top: 4rem; }
+      .feature-copy { padding-top: 0; }
+    }
+    @media (max-width: 480px) {
+      .search-input { width: 96px; font-size: 0.78rem; }
+      .search-input:focus { width: 150px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo"><img src="images/drawing22.svg" alt="OA Group" class="logo-img"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="research.html">Research</a>
+      <a href="solutions.html" class="active">Solutions</a>
+      <a href="index.html#about-us">About Us</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <div class="search-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-input" id="siteSearchBar" placeholder="Search articles, papers...." autocomplete="off">
+      </div>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="solutions-main">
+
+    <!-- Gallery hero -->
+    <section class="gallery-hero">
+      <div class="banner-strip" aria-hidden="true"></div>
+
+      <div class="hero-intro reveal">
+        <h1 class="solutions-title">Solutions built on <span>applied research.</span></h1>
+      </div>
+
+      <div class="trust-badge reveal"><i class="fa-solid fa-user-doctor"></i> Led by Surgeon-Scientists &amp; Researchers</div>
+
+      <div class="gallery-row">
+        <figure class="gallery-card gallery-card--side reveal">
+          <img src="images/leftimage1.avif" alt="Medical device evaluation session">
+        </figure>
+        <figure class="gallery-card gallery-card--center reveal">
+          <img src="images/middle1.webp" alt="Laboratory research and analysis">
+          <div class="stat-float">
+            <span class="stat-number" data-target="265">0</span><span class="stat-suffix">+</span>
+            <p class="stat-caption">Peer-reviewed publications backing our approach</p>
+          </div>
+        </figure>
+        <figure class="gallery-card gallery-card--side reveal">
+          <img src="images/rightimage1.jpg" alt="Surgical team in the operating room">
+        </figure>
+      </div>
+
+      <p class="solutions-lede reveal">
+        Our team works directly with hospitals, device makers, and health systems on a handful of recurring
+        engagements below. This list will grow as our <strong>portfolio companies</strong> come online, each bringing a
+        dedicated product and service offering into the fold.
+      </p>
+    </section>
+
+    <!-- Capabilities carousel -->
+    <section class="capabilities reveal">
+      <div class="section-header-center">
+        <h2 class="section-h2">Our <span>Solutions</span></h2>
+      </div>
+
+      <div class="cap-grid">
+        <div class="cap-card">
+          <span class="cap-icon"><i class="fa-solid fa-kit-medical"></i></span>
+          <span class="cap-title">Medical Device Evaluation</span>
+          <span class="cap-desc">Independent, evidence-based review of medical devices and equipment to help institutions and manufacturers understand real-world clinical and operational impact.</span>
+        </div>
+        <div class="cap-card">
+          <span class="cap-icon"><i class="fa-solid fa-chart-line"></i></span>
+          <span class="cap-title">Cost Utility Analysis</span>
+          <span class="cap-desc">Financial and outcomes modeling that translates clinical value into terms procurement and hospital leadership can act on.</span>
+        </div>
+        <div class="cap-card">
+          <span class="cap-icon"><i class="fa-solid fa-brain"></i></span>
+          <span class="cap-title">Artificial Intelligence Consulting</span>
+          <span class="cap-desc">Guidance on applying machine learning and predictive analytics to healthcare operations, from feasibility through implementation.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-column feature -->
+    <section class="feature-split reveal">
+      <div class="feature-media">
+        <div class="feature-img-frame">
+          <img src="images/moreresearch.webp" alt="Ongoing research and development">
+        </div>
+      </div>
+
+      <div class="feature-copy">
+        <h2 class="feature-heading">More solutions are on the way.</h2>
+        <p class="feature-para">As our portfolio companies launch, their dedicated tools and services will be integrated here alongside our direct advisory work.</p>
+
+        <ul class="feature-list">
+          <li><span class="check-badge"><i class="fa-solid fa-check"></i></span> Medical Device Evaluation</li>
+          <li><span class="check-badge"><i class="fa-solid fa-check"></i></span> Cost Utility Analysis</li>
+          <li><span class="check-badge"><i class="fa-solid fa-check"></i></span> Artificial Intelligence Consulting</li>
+        </ul>
+
+        <div class="feature-ctas">
+          <a href="contact.html" class="btn-primary">Discuss an Engagement</a>
+          <a href="index.html#about-us" class="btn-ghost">Meet the Team</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      const navBtn = document.getElementById('navHamburger');
+      const navLinks = document.querySelector('.nav-links');
+      if (!navBtn || !navLinks) return;
+      function closeMenu() {
+        navLinks.classList.remove('open');
+        navBtn.classList.remove('open');
+        navBtn.setAttribute('aria-expanded', 'false');
+      }
+      navBtn.addEventListener('click', () => {
+        const open = !navLinks.classList.contains('open');
+        navLinks.classList.toggle('open', open);
+        navBtn.classList.toggle('open', open);
+        navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    })();
+
+    // ── Scroll-triggered reveal, staggered per section, fires once ──
+    (function () {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const groups = [
+        document.querySelector('.gallery-hero'),
+        document.querySelector('.capabilities'),
+        document.querySelector('.feature-split'),
+      ].filter(Boolean);
+
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        groups.forEach(g => {
+          g.classList.add('is-visible');
+          g.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+        });
+        return;
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const section = entry.target;
+          section.classList.add('is-visible');
+          const items = section.matches('.reveal') ? [section] : Array.from(section.querySelectorAll('.reveal'));
+          items.forEach((el, i) => {
+            setTimeout(() => el.classList.add('is-visible'), i * 120);
+          });
+          io.unobserve(section);
+        });
+      }, { threshold: 0.2 });
+
+      groups.forEach(g => io.observe(g));
+    })();
+
+    // ── Stat counter, counts up once when it scrolls into view ──
+    (function () {
+      const statEl = document.querySelector('.stat-number');
+      if (!statEl) return;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const target = parseInt(statEl.getAttribute('data-target'), 10) || 0;
+
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        statEl.textContent = target;
+        return;
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const duration = 1200;
+          const start = performance.now();
+          function tick(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            statEl.textContent = Math.round(eased * target);
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+          io.unobserve(statEl);
+        });
+      }, { threshold: 0.5 });
+      io.observe(statEl);
+    })();
+  </script>
+  <script src="site-search.js"></script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <a href="index.html" class="footer-logo"><img src="images/logo-cube-icon.png" alt="" class="footer-logo-img">SLATE SURGERY</a>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="solutions.html">Solutions</a></li>
+        <li><a href="index.html#about-us">About Us</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="login.html">Sign In</a></li>
+      </ul>
+      <span class="footer-copy">&copy; 2026 Slate Surgery. All rights reserved.</span>
+    </div>
+  </footer>
+</body>
+</html>

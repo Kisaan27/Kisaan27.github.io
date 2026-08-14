@@ -1,0 +1,81 @@
+/* ── SEARCH SUGGESTION DROPDOWN (shared across all pages) ── */
+.search-wrapper,
+.navbar__search {
+  position: relative;
+}
+
+.search-suggest {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  min-width: 260px;
+  background: #1a1d24;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 0.4rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  z-index: 200;
+}
+
+.search-suggest.open {
+  display: block;
+}
+
+.search-suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  color: rgba(244, 246, 244, 0.75);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.search-suggest-item:hover,
+.search-suggest-item:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  outline: none;
+}
+
+.search-suggest-item i {
+  color: #22c55e;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.search-suggest-item strong {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+/* Light navbar variant (homepage.html) */
+.navbar__search .search-suggest {
+  background: #fff;
+  border-color: #e2e2e6;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.navbar__search .search-suggest-item {
+  color: #555;
+}
+
+.navbar__search .search-suggest-item:hover,
+.navbar__search .search-suggest-item:focus-visible {
+  background: #f4f4f6;
+  color: #131113;
+}
+
+.navbar__search .search-suggest-item i,
+.navbar__search .search-suggest-item strong {
+  color: #4837ff;
+}

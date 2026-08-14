@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin-import.html
+Disallow: /login.html
+Disallow: /dashboard.html
+Disallow: /product.html
+Disallow: /product-view.html
+Disallow: /demo.html
+
+Sitemap: https://www.oagroup.com/sitemap.xml

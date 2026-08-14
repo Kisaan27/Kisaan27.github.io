@@ -1,0 +1,664 @@
+/* --- Fonts & Resets --- */
+@import url('https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kumbh Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:root {
+    --bg: #f4f6f4;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --border-light: rgba(0, 0, 0, 0.06);
+    --text-dark: #0b130e;
+    --text-muted: rgba(11, 19, 14, 0.6);
+    --brand-green: #072a1d;
+    --accent-mint: #22c55e;
+    --accent-glow: rgba(34, 197, 94, 0.08);
+}
+
+body {
+    background:
+        radial-gradient(ellipse 1000px 700px at 6% -8%, rgba(30,39,75,0.18), transparent 55%),
+        radial-gradient(ellipse 900px 650px at 100% 105%, rgba(122,170,102,0.16), transparent 55%),
+        linear-gradient(160deg, #e9ebf1 0%, #dfe2ea 50%, #e6eae1 100%);
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* --- New Matrix Navigation Layout --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem; /* Matches main layout navbar padding */
+    background: rgba(242, 244, 246, 0.77);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-light);
+    position: fixed; /* Fixed position layout matches the active application layer */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+  }
+  
+  .navbar__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  #navbar__logo {
+    font-weight: 700;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #10142a;
+    text-decoration: none;
+    height: 34px;
+    overflow: visible;
+  }
+
+  .navbar__logo-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #10142a;
+  }
+
+  .logo-img {
+    height: 90px;
+    width: auto;
+    display: block;
+  }
+
+  .navbar__menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 0.5rem 1.5rem;
+    border-radius: 30px;
+    border: 1px solid var(--border-light);
+    align-items: center;
+  }
+  
+  .navbar__links {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    display: inline-block;
+    height: auto;
+    padding: 0;
+  }
+  
+  .navbar__links.active, 
+  .navbar__links:hover {
+    color: var(--brand-green) !important;
+    font-weight: 600;
+  }
+  
+  .navbar__btn {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    height: auto;
+  }
+  
+  .button {
+    border: 1px solid var(--brand-green);
+    background: transparent;
+    color: var(--brand-green);
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    transition: all 0.2s;
+  }
+  
+  .button:hover {
+    background: var(--brand-green);
+    color: #fff;
+  }
+
+/* --- Article Loading Overlay --- */
+/* Article content is populated client-side from Supabase (see editor.js), which
+   can leave a blank/placeholder flash on first load. This overlay covers the
+   page until that fetch resolves, then fades out as the content pops in. */
+.article-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 20, 42, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.article-loader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.article-loader-spinner {
+    width: 46px;
+    height: 46px;
+    border: 4px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: article-loader-spin 0.8s linear infinite;
+}
+
+@keyframes article-loader-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Layout Grid For Research Post --- */
+.post-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 70px 4rem 4rem; /* Offset built for the top fixed layout */
+    position: relative;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.post-container.is-ready {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.post-layout-grid {
+    display: grid;
+    grid-template-columns: 2.4fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+    padding-top: 2.5rem;
+}
+
+/* --- Main Article Box View --- */
+.main-content-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-light);
+    border-radius: 18px;
+    padding: 3.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.01);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.main-content-card:hover {
+    background: #ffffff;
+    border-color: rgba(7, 42, 29, 0.15);
+    box-shadow: 0 20px 40px rgba(7, 42, 29, 0.04), 0 0 40px var(--accent-glow);
+}
+
+.research-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(7, 42, 29, 0.04);
+    color: var(--brand-green);
+    margin-bottom: 1.5rem;
+}
+
+/* Article content is overwritten client-side with the database version after
+   load (see editor.js) — that stored HTML can carry inline font-family styles
+   left over from the rich-text editor, which would otherwise beat the site
+   font. Force it back, excluding <i> so Font Awesome icons keep their glyphs. */
+#edit-title,
+#edit-abstract, #edit-abstract *:not(i),
+#edit-body, #edit-body *:not(i) {
+    font-family: 'Kumbh Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.article-main-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--brand-green);
+    margin-bottom: 1.5rem;
+}
+
+.author-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.author-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.pub-details {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--accent-glow);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    font-weight: 600;
+}
+
+.section-divider {
+    border: 0;
+    height: 1px;
+    background: var(--border-light);
+    margin: 2.5rem 0;
+}
+
+/* --- Core Abstract & Academic Formatting --- */
+.article-body-text h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--brand-green);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.article-body-text p {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text-dark);
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.article-body-text blockquote {
+    margin: 1.5rem 0;
+    padding: 0.75rem 1.5rem;
+    border-left: 3px solid var(--brand-green);
+    font-style: italic;
+    color: var(--text-dark);
+    opacity: 0.85;
+}
+
+.abstract-callout {
+    background: rgba(7, 42, 29, 0.04);
+    border-left: 4px solid var(--accent-mint);
+    padding: 2rem;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 2.5rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.01);
+}
+
+.abstract-callout h2 {
+    margin-top: 0;
+    color: var(--brand-green);
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.75rem;
+}
+
+.abstract-callout p {
+    margin-bottom: 0;
+    color: var(--text-dark);
+    font-style: italic;
+}
+
+/* --- Circuit & Metrics Highlight Panels --- */
+.themes-highlight-box {
+    background: rgba(7, 42, 29, 0.02);
+    border-radius: 14px;
+    padding: 2rem;
+    margin: 2.5rem 0;
+    border: 1px solid var(--border-light);
+}
+
+.themes-highlight-box h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--brand-green);
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.themes-highlight-box ul {
+    list-style: none;
+}
+
+.themes-highlight-box li {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.themes-highlight-box li:last-child {
+    margin-bottom: 0;
+}
+
+.theme-icon {
+    color: var(--accent-mint);
+    margin-top: 4px;
+    font-size: 0.8rem;
+}
+
+/* --- Sidebar Panels --- */
+.post-sidebar {
+    position: sticky;
+    top: 110px; /* Clearance safely past the 70px nav block + padding gap */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-newsletter {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-light);
+    border-radius: 24px; 
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(7, 42, 29, 0.02);
+}
+
+.mail-icon-badge {
+    color: var(--accent-mint);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.sidebar-newsletter h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--brand-green);
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-newsletter p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.form-success-state {
+    font-size: 0.8rem;
+    color: var(--accent-mint);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.action-btn-primary {
+    width: 100%;
+    background: var(--brand-green);
+    color: #ffffff;
+    border: none;
+    height: 42px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 21px;
+    cursor: pointer;
+    transition: all 0.22s ease;
+}
+
+.action-btn-primary:hover {
+    background: #0f3f2d;
+    box-shadow: 0 4px 12px rgba(7, 42, 29, 0.15);
+}
+
+.share-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-light);
+    border-radius: 18px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.share-card h4 {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.share-buttons-grid {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.share-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.share-icon-btn:hover {
+    background: var(--brand-green);
+    color: #ffffff;
+    border-color: var(--brand-green);
+    transform: translateY(-2px);
+}
+
+#editor-toolbar button,
+#editor-toolbar select {
+    background: #ffffff;
+    color: var(--text-dark);
+    border: 1px solid var(--border-light);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+#editor-toolbar button:hover {
+    background: var(--brand-green);
+    color: #ffffff;
+    border-color: var(--brand-green);
+}
+
+.toolbar-more-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+.toolbar-more-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    flex-direction: column;
+    gap: 10px;
+    width: 190px;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    text-align: left;
+}
+
+.toolbar-more-panel.open {
+    display: flex;
+}
+
+.toolbar-more-panel label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.toolbar-more-panel select {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.toolbar-more-panel input[type="color"] {
+    width: 100%;
+    height: 32px;
+    padding: 2px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    cursor: pointer;
+    background: #ffffff;
+}
+
+.toolbar-more-panel button {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* --- Media Response Rules --- */
+@media screen and (max-width: 1200px) {
+    .navbar__container { padding: 0 2rem; }
+    .post-container { padding: 70px 2rem 4rem; }
+}
+
+@media screen and (max-width: 960px) {
+    #mobile-menu.active .bar:nth-child(2) { opacity: 0; }
+    #mobile-menu.active .bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    #mobile-menu.active .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .navbar { padding: 1.1rem 1.5rem; }
+    .navbar__container { padding: 0; }
+    .navbar__menu {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 0;
+        width: 100%;
+        height: 100dvh;
+        position: fixed;
+        inset: 0;
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        overflow-y: auto;
+        background: rgba(244, 246, 244, 0.97);
+        backdrop-filter: blur(16px);
+        border-bottom: none;
+        padding: 6.5rem 2rem 2rem;
+        z-index: 500;
+    }
+    .navbar__menu.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    #navbar__logo { padding-left: 0; }
+
+    #mobile-menu {
+        display: block;
+        cursor: pointer;
+        position: relative;
+        z-index: 501;
+    }
+    .navbar__toggle .bar {
+        display: block;
+        width: 22px;
+        height: 2px;
+        margin: 3px auto;
+        background: #10142a;
+        transition: all 0.2s ease;
+    }
+    .navbar__item {
+        width: 100%;
+        height: auto;
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    .navbar__links {
+        color: #10142a;
+        font-size: 1.5rem;
+        font-weight: 600;
+        height: auto;
+        justify-content: flex-start;
+        padding: 0.7rem 0.1rem;
+    }
+    .navbar__links.active,
+    .navbar__links:hover {
+        color: var(--accent-mint) !important;
+    }
+    .navbar__menu.active .navbar__item { animation: navLinkIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .navbar__menu.active .navbar__item:nth-child(1) { animation-delay: 0.08s; }
+    .navbar__menu.active .navbar__item:nth-child(2) { animation-delay: 0.14s; }
+    .navbar__menu.active .navbar__item:nth-child(3) { animation-delay: 0.20s; }
+    .navbar__menu.active .navbar__item:nth-child(4) { animation-delay: 0.26s; }
+    .navbar__menu.active .navbar__item:nth-child(5) { animation-delay: 0.32s; }
+    @keyframes navLinkIn { to { opacity: 1; transform: translateY(0); } }
+    .navbar__btn { width: 100%; padding: 1rem 0 0; justify-content: center; }
+    .button { width: 50%; height: 44px; }
+
+    /* Stack single column layout */
+    .post-layout-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding-top: 1.5rem;
+    }
+    .main-content-card {
+        padding: 2rem 1.5rem;
+    }
+    .post-sidebar {
+        position: static;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .navbar__logo-text { font-size: 1.05rem; }
+    .post-container { padding: 70px 1.25rem 3rem; }
+    .main-content-card { padding: 1.5rem 1.25rem; }
+    .abstract-callout, .themes-highlight-box { padding: 1.25rem; }
+    .article-body-text p { font-size: 1rem; }
+    .sidebar-newsletter, .share-card { padding: 1.5rem; }
+}
+
+@media screen and (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+    .navbar__menu { padding: 4.5rem 2rem 1.5rem; }
+    .navbar__links { font-size: 1.15rem; padding: 0.7rem 0.1rem; }
+    .post-container { padding-top: 60px; }
+}

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+  <link rel="icon" type="image/svg+xml" href="images/drawing24.svg">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article — Slate Surgery</title>
+    <meta name="description" content="Read research articles and clinical insights from OA Group on healthcare delivery, machine learning, and surgical outcomes.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Article — OA Group">
+    <meta property="og:description" content="Read research articles and clinical insights from OA Group on healthcare delivery, machine learning, and surgical outcomes.">
+    <meta property="og:url" content="https://www.oagroup.com/article.html">
+    <meta property="og:image" content="https://www.oagroup.com/images/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Article — OA Group">
+    <meta name="twitter:description" content="Read research articles and clinical insights from OA Group on healthcare delivery, machine learning, and surgical outcomes.">
+    <meta name="twitter:image" content="https://www.oagroup.com/images/logo.png">
+    <link rel="stylesheet" href="article.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="footer.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* ══ INLINE THEME EXTENSIONS FOR STRUCTURAL DYNAMICS ══ */
+        #editor-controls {
+            display: none;
+            padding: 1rem 4rem;
+            background: #100d0d;
+            border-bottom: 1px solid var(--border-light);
+            text-align: right;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            z-index: 998;
+            box-shadow: 0 4px 12px rgba(7, 42, 29, 0.02);
+        }
+
+        .editor-status {
+            color: var(--accent-mint);
+            font-weight: 600;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #save-btn {
+            background: var(--brand-green);
+            color: white;
+            border: none;
+            padding: 0 1.25rem;
+            height: 38px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        #save-btn:hover {
+            background: #0f3f2d;
+            box-shadow: 0 4px 12px rgba(7, 42, 29, 0.15);
+        }
+
+        #signout-btn {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0 1.1rem;
+            height: 38px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        #signout-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        /* Shift content grid down dynamically ONLY when editor ribbon is present */
+        body.editing-active .post-container {
+            padding-top: 130px;
+        }
+
+        @media screen and (max-width: 1200px) {
+            #editor-controls { padding: 1rem 2rem; }
+        }
+        @media screen and (max-width: 960px) {
+            #editor-controls { padding: 1rem 1.5rem; position: static; height: auto; flex-direction: column; align-items: stretch; }
+            body.editing-active .post-container { padding-top: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="article-loader" class="article-loader"><div class="article-loader-spinner"></div></div>
+
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a href="index.html" id="navbar__logo">
+                <img src="images/drawing22.svg" alt="OA Group" class="logo-img">
+            </a>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+                <li class="navbar__item"><a href="index.html" class="navbar__links">Home</a></li>
+                <li class="navbar__item"><a href="research.html" class="navbar__links active">Research</a></li>
+                <li class="navbar__item"><a href="solutions.html" class="navbar__links">Solutions</a></li>
+                <li class="navbar__item"><a href="index.html#about-us" class="navbar__links">About Us</a></li>
+                <li class="navbar__item"><a href="contact.html" class="navbar__links">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ══ REFACTORED EDITOR MATRIX RIBBON ══ -->
+    <div id="editor-controls">
+        <div id="editor-toolbar" style="display:flex; gap: 8px; flex-wrap: wrap; flex: 1;">
+            <button onclick="format('bold')"><b>B</b></button>
+            <button onclick="format('italic')"><i>I</i></button>
+            <button onclick="format('underline')"><u>U</u></button>
+            <button onclick="format('strikeThrough')"><s>S</s></button>
+
+            <select onchange="formatBlock(this.value)">
+                <option value="p">Paragraph</option>
+                <option value="h1">Heading 1</option>
+                <option value="h2">Heading 2</option>
+                <option value="h3">Heading 3</option>
+            </select>
+
+            <select onchange="applyCommand('fontSize', this.value)">
+                <option value="3">Normal</option>
+                <option value="4">Large</option>
+                <option value="5">Larger</option>
+                <option value="6">Huge</option>
+            </select>
+
+            <button onclick="format('insertUnorderedList')"><i class="fa-solid fa-list-ul"></i></button>
+            <button onclick="format('insertOrderedList')"><i class="fa-solid fa-list-ol"></i></button>
+            <button onclick="format('justifyLeft')"><i class="fa-solid fa-align-left"></i></button>
+            <button onclick="format('justifyCenter')"><i class="fa-solid fa-align-center"></i></button>
+            <button onclick="format('justifyRight')"><i class="fa-solid fa-align-right"></i></button>
+            <button onclick="insertLink()"><i class="fa-solid fa-link"></i></button>
+
+            <div class="toolbar-more-wrap">
+                <button id="toolbar-more-toggle" onclick="toggleMoreMenu(event)" title="More formatting"><i class="fa-solid fa-ellipsis"></i></button>
+                <div id="toolbar-more-panel" class="toolbar-more-panel">
+                    <label>Font
+                        <select onchange="applyCommand('fontName', this.value)">
+                            <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Default</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                        </select>
+                    </label>
+                    <label>Text color
+                        <input type="color" onchange="applyCommand('foreColor', this.value)" value="#0b130e">
+                    </label>
+                    <label>Highlight
+                        <input type="color" onchange="applyCommand('hiliteColor', this.value)" value="#ffff00">
+                    </label>
+                    <button onclick="formatBlock('blockquote')"><i class="fa-solid fa-quote-right"></i> Quote</button>
+                    <button onclick="format('removeFormat')"><i class="fa-solid fa-eraser"></i> Clear formatting</button>
+                </div>
+            </div>
+        </div>
+        <span class="editor-status" id="toggle-edit-mode">
+            <i class="fa-solid fa-toggle-on"></i> <span id="status-text">Editing Mode Active</span>
+        </span>        <button id="save-btn">
+            <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        </button>
+        <button id="signout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+    </div>
+
+    <main class="post-container">
+        <div class="post-layout-grid">
+
+            <article class="main-content-card">
+                <header class="article-header">
+                    <span id="edit-tag" class="research-tag">
+                        <span class="rtag-dot" style="width:5px; height:5px; border-radius:50%; background:var(--accent-mint); display:inline-block; margin-right:5px;"></span>
+                        Untagged
+                    </span>
+                    <h1 id="edit-title" class="article-main-title">Untitled Article</h1>
+
+                    <div class="author-meta">
+                        <div class="author-info">
+                            <span class="author-name" id="edit-author">Slate Surgery Research Team</span>
+                            <span class="pub-details" id="edit-date">Draft • Not yet published</span>
+                        </div>
+                    </div>
+                </header>
+
+                <hr class="section-divider">
+
+                <section class="article-body-text">
+                    <div class="abstract-callout">
+                        <h2>Abstract</h2>
+                        <div id="edit-abstract">
+                            <p>Sign in and click here to add the abstract for this article.</p>
+                        </div>
+                    </div>
+
+                    <div id="edit-body">
+                        <p>Sign in and click here to add the full article body.</p>
+                    </div>
+                </section>
+            </article>
+
+            <aside class="post-sidebar">
+                <div class="sidebar-newsletter">
+                    <div class="mail-icon-badge">
+                        <i class="fa-regular fa-envelope"></i>
+                    </div>
+                    <h3>Subscribe to Research</h3>
+                    <p>Stay up to date with the latest innovations, medical breakthroughs, and academic insights from our team.</p>
+                    <button class="action-btn-primary">Subscribe</button>
+                </div>
+
+                <div class="share-card">
+                    <h4>Share Article</h4>
+                    <div class="share-buttons-grid">
+                        <a href="#" class="share-icon-btn"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="share-icon-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#" class="share-icon-btn"><i class="fa-regular fa-copy"></i></a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <a href="index.html" class="footer-logo"><img src="images/logo-cube-icon.png" alt="" class="footer-logo-img">SLATE SURGERY</a>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
+                <li><a href="index.html#about-us">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="login.html">Sign In</a></li>
+            </ul>
+            <span class="footer-copy">&copy; 2026 Slate Surgery. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="editor.js"></script>
+    <script>
+        // Script patch to handle page wrap offsets cleanly when editing becomes live
+        const observer = new MutationObserver(() => {
+            const controls = document.getElementById('editor-controls');
+            if(controls && controls.style.display !== 'none') {
+                document.body.classList.add('editing-active');
+            } else {
+                document.body.classList.remove('editing-active');
+            }
+        });
+        const target = document.getElementById('editor-controls');
+        if(target) observer.observe(target, { attributes: true, attributeFilter: ['style'] });
+    </script>
+    <script>
+        (function () {
+            const menuBtn = document.getElementById('mobile-menu');
+            const menu = document.querySelector('.navbar__menu');
+            if (!menuBtn || !menu) return;
+            function closeMenu() {
+                menuBtn.classList.remove('active');
+                menu.classList.remove('active');
+            }
+            menuBtn.addEventListener('click', () => {
+                const willOpen = !menu.classList.contains('active');
+                menuBtn.classList.toggle('active', willOpen);
+                menu.classList.toggle('active', willOpen);
+            });
+            menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+            menu.addEventListener('click', (e) => {
+                if (e.target === menu) closeMenu();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+  <link rel="icon" type="image/svg+xml" href="images/drawing24.svg">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Import — Slate Surgery Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #0b130e; color: #f4f6f4; min-height: 100vh; padding: 3rem 2rem; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .sub { color: rgba(244,246,244,0.6); font-size: 0.9rem; margin-bottom: 2rem; }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .locked { text-align: center; }
+    .locked a { color: #22c55e; font-weight: 600; }
+    #import-btn {
+      background: #22c55e; color: #05170d; border: none; padding: 0.9rem 1.6rem;
+      border-radius: 20px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    }
+    #import-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #log { margin-top: 1.5rem; font-size: 0.85rem; line-height: 1.7; }
+    .row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; border-bottom: 1px dashed rgba(255,255,255,0.08); }
+    .ok { color: #22c55e; }
+    .fail { color: #f13737; }
+    a.back { color: rgba(244,246,244,0.5); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="research.html">&larr; Back to Articles</a>
+    <h1 style="margin-top:1rem;">Bulk Import: Research Articles (Part 1)</h1>
+    <p class="sub">Sign in first, then click Import to upsert all 12 articles into Supabase (ids 2&ndash;13).</p>
+
+    <div id="locked-card" class="card locked" style="display:none;">
+      <p>You need to be signed in to run the import.</p>
+      <p style="margin-top:0.75rem;"><a href="login.html">Go to Sign In &rarr;</a></p>
+    </div>
+
+    <div id="unlocked-card" class="card" style="display:none;">
+      <button id="import-btn"><i class="fa-solid fa-cloud-arrow-up"></i> Import 12 Articles</button>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <script>
+    const _supabase = supabase.createClient(
+      'https://brreqfxtesvavfdaidwi.supabase.co',
+      'sb_publishable_3x4bvAl-vr2bBgNZkzh04w_suiCtcf5'
+    );
+
+    const articles = [
+      {
+        id: 2, tag: "Artificial Intelligence",
+        title: "Development of a Surgical Difficulty Score for Open Reduction Internal Fixation of Pilon Fractures",
+        abstract: "<p><strong>Objectives:</strong> To identify characteristics that contribute to surgical complexity in pilon fractures and to develop a machine learning (ML) Pilon Surgical Difficulty Score (PSDS) based on these factors.</p>",
+        body: `<h2>Design</h2><p>Retrospective cohort study.</p>
+<h2>Setting</h2><p>Academic Level I trauma center.</p>
+<h2>Patient Selection Criteria</h2><p>Pilon fractures (OTA/AO Type 43) in adult patients treated with open reduction internal fixation.</p>
+<h2>Outcomes Measures and Comparisons</h2><p>Various patient, injury, and radiological characteristics were assessed. Surgical difficulty was measured using 2 outcomes: (1) operative time and (2) perceived difficulty. Perceived difficulty was determined using the opinion of 16 fellowship-trained orthopaedic traumatologists on a 10-point scale. Significant predictors of difficulty were determined using univariate analyses. ML models were used to develop a PSDS for both operative time and surgical difficulty.</p>
+<h2>Results</h2><p>One hundred operatively fixed pilon fractures were included. Predictors of operative time were age, OTA/AO classification, articular comminution, articular impaction, bone loss, delay to surgery, poor quality reduction, number of approaches, and number of articular fragments. Predictors of perceived difficulty included OTA/AO classification and delay to surgery. Operative time PSDS had a mean absolute error of 64 minutes and a 60-minute buffer accuracy of 59%. Perceived difficulty PSDS had a mean absolute error of 1.7 points and a 2-point buffer accuracy of 63%.</p>
+<h2>Conclusion</h2><p>ML was used to generate accurate PSDSs for operative time and difficulty for pilon fractures. Future work should aim to clinically validate these PSDSs, so they may improve patient outcomes.</p>
+<p><strong>Level of evidence:</strong> Level III Diagnostic.</p>`
+      },
+      {
+        id: 3, tag: "Clinical Research",
+        title: "Predicting 30-Day Venous Thromboembolism Following Total Joint Arthroplasty: Adjusting for Trends in Annual Length of Stay",
+        abstract: "<p><strong>Background:</strong> Venous thromboembolism (VTE) following total hip arthroplasty and total knee arthroplasty (TKA) is linked to immobility, and preoperative prediction remains difficult. We aimed to evaluate whether annual mean length of stay (LOS) is associated with the incidence of VTE and develop a generalizable machine learning model to preoperatively predict the incidence of symptomatic VTE following total hip and TKA using National Surgical Quality Improvement Program data.</p>",
+        body: `<h2>Methods</h2><p>Annual incidence of 30-day postoperative VTE, deep vein thrombosis, and pulmonary embolism was calculated over 6 years and tested for trend. Correlation between annual VTE rates and mean LOS was calculated. Predictive models (logistic regression, random forest, and XGBoost) were trained and tested based on year of surgery with different oversampling algorithms used to address data imbalance.</p>
+<h2>Results</h2><p>A total of 498,314 patients were included, with 0.88% developing a VTE within 30 days. VTE rates decreased from 1.11% in 2014 to 0.76% in 2019 (P &lt; .001). There was a strong correlation between the yearly incidence of VTE, pulmonary embolism, and deep vein thrombosis and mean LOS (r = 0.96, 0.87, and 0.98, respectively). Univariate analysis demonstrated that TKA, inpatient setting, American Society of Anesthesiologists classification, and various patient comorbidities were significantly associated with VTE. The logistic regression model trained on all data with a balanced loss scoring function performed the best (area under the curve = 0.600).</p>
+<h2>Conclusions</h2><p>This study revealed declining VTE rates strongly correlated to decreasing postoperative LOS and identified patient and surgery-specific factors associated with VTE risk. Development of more accurate machine learning models for VTE prediction may improve risk stratification, prevention, and monitoring for arthroplasty patients.</p>
+<p><strong>Keywords:</strong> Machine learning; Outcome prediction; Total hip arthroplasty; Total knee arthroplasty; Venous thromboembolism.</p>`
+      },
+      {
+        id: 4, tag: "Efficiency",
+        title: "Development of a Mobile Application to Increase Motivation, Engagement &amp; Recognition of Clinical Teaching Faculty",
+        abstract: "<p>Clinician teachers (CT) have historically felt undervalued and underappreciated. One technology used to increase motivation is gamification: the process of inserting elements of game-playing into activities that are not usually associated with games. We developed a mobile application that rewards CTs using in-app gamification techniques to increase CT motivation. This program was implemented specifically in a regional campus setting, Mississauga, Ontario.</p>",
+        body: `<h2>Methods</h2><p>A cross-platform application that rewards physicians for their clinical teaching hours was created. This consisted of a star grading criteria where each physician was awarded depending on the number of hours completed. End-user perceptions of the application were evaluated using a survey with a Likert scale and open-ended questions. Survey results were collated with descriptive statistics and thematic analysis.</p>
+<h2>Results</h2><p>The TutorTracker application was developed implementing a live gamification algorithm. It allows physicians to view their hours completed, rewards obtained, and add additional hours. The majority of CTs agreed or strongly agreed that the application was user-friendly, easy to navigate and enjoyed the rewards provided. Major themes that emerged were regarding additional features and full integration of such an application for rewarding teaching efforts.</p>
+<h2>Conclusions</h2><p>Gamification principles have been implemented in a cross-platform application allowing CTs to be rewarded for their teaching. The next steps would be to formally quantify the effects and advantages of using the application to increase the motivation of tutors.</p>`
+      },
+      {
+        id: 5, tag: "Efficiency",
+        title: "Machine Learning to Predict-Then-Optimize Elective Orthopaedic Surgery Scheduling",
+        abstract: "<p><strong>Objective:</strong> To determine the potential for improving elective surgery scheduling for total knee and hip arthroplasty (TKA and THA, respectively) by utilizing a two-stage approach that incorporates machine learning (ML) prediction of the duration of surgery (DOS) with scheduling optimization.</p>",
+        body: `<h2>Materials and Methods</h2><p>Two ML models (for TKA and THA) were trained to predict DOS using patient factors based on 302,490 and 196,942 examples, respectively, from a large international database. Three optimization formulations based on varying surgeon flexibility were compared: Any (surgeons could operate in any operating room at any time), Split (limitation of two surgeons per operating room per day), and MSSP (limit of one surgeon per operating room per day). Two years of daily scheduling simulations were performed for each optimization problem using ML-prediction or mean DOS over a range of schedule parameters.</p>
+<h2>Results</h2><p>The Any scheduling formulation performed significantly worse than the Split and MSSP formulations with respect to overtime and underutilization (p&lt;0.001). The latter two problems performed similarly (p&gt;0.05) over most schedule parameters. The ML-prediction schedules outperformed those generated using a mean DOS over all schedule parameters, with overtime reduced on average by 300 to 500 minutes per week. Using a 15-minute schedule granularity with a wait list pool of minimum 1 month generated the best schedules.</p>
+<h2>Conclusion</h2><p>Assuming a full waiting list, optimizing an individual surgeon's elective operating room time using an ML-assisted predict-then-optimize scheduling system improves overall operating room efficiency, significantly decreasing overtime.</p>`
+      },
+      {
+        id: 6, tag: "Efficiency",
+        title: "Simulation Optimization of Operating Room Schedules for Elective Orthopaedic Surgery",
+        abstract: "<p>Our specific problem is to create daily schedules of elective surgeries in a multiple operating room setting with the goals of minimizing the amount of overtime incurred and maintaining patient volumes.</p>",
+        body: `<p>While surgical durations cannot always be perfectly estimated and vary by procedure and surgeon, our approach relies on leveraging the stochastic nature of surgical durations to simulate each operating day and understand the probability of incurring overtime under a certain schedule of surgeries. The heuristic optimization component of our approach investigates the probabilistic evaluation and strategically re-schedules surgeries.</p>
+<h2>Results</h2><p>Through experimentation with three optimization techniques, two showed promising results, being able to reduce the total number of overtime surgeries by 12&ndash;15%, equivalent to approximately 1h of total monthly overtime. Compared to the literature, this approach serves solely as a tool for improving schedules and can be used for supporting decision making at the hospital.</p>
+<h2>Conclusion</h2><p>Our contribution involves introducing the simulation optimization model and describing the data-driven approach to analyzing the scheduling problem.</p>`
+      },
+      {
+        id: 7, tag: "Efficiency",
+        title: "Intraoperative Scrub Nurse Turnover in Orthopaedic Surgery",
+        abstract: "<p><strong>Background:</strong> Scrub nurses play a crucial role in facilitating orthopaedic surgeries, and thus intraoperative scrub nurse turnover may disrupt the workflow of the surgical team and prolong duration of surgery (DOS). The purpose of this study was to quantify the impact of intraoperative scrub nurse turnover on operative time of orthopaedic surgeries lasting less than 3h in duration.</p>",
+        body: `<h2>Methods</h2><p>Prospectively collected databases from two institutions were retrospectively queried to identify all orthopaedic procedures of maximum mean duration of 180min from March 4th, 2018 to August 31st, 2022. Cases were divided into two groups, those with scrub nurse turnover and those without. Propensity score matching was conducted to match groups by surgeon, hospital, patient age, gender, and ASA classification. Average treatment effect on treated (ATET) with 95% confidence intervals (CIs) were calculated.</p>
+<h2>Results</h2><p>Scrub nurse turnover significantly prolonged DOS across multiple procedures, including bone forearm fracture ORIF (ATET=21.08, p=0.001), ankle ORIF (ATET=21.26, p&lt;0.001), clavicle ORIF (ATET=16.16, p=0.028), femur intramedullary nail (ATET=11.52, p=0.003), rotator cuff repair (ATET=16.88, p&lt;0.001), partial discectomy (ATET=10.52, p=0.001), total knee arthroplasty (ATET=5.69, p&lt;0.001), anterior total hip arthroplasty (ATET=8.80, p&lt;0.001), lateral THA (ATET=7.02, p&lt;0.001), and uncemented hip hemiarthroplasty (ATET=16.79, p=0.049).</p>
+<h2>Conclusion</h2><p>Intraoperative scrub nurse turnover significantly prolongs surgical times in orthopaedic surgeries lasting up to 3h in duration, highlighting the importance of developing strategies to prevent turnover to improve OR efficiency and decrease healthcare costs.</p>
+<p><strong>Keywords:</strong> Efficiency; Operating room; Orthopaedic surgery; Scrub nurse; Surgical waitlists.</p>`
+      },
+      {
+        id: 8, tag: "Clinical Research",
+        title: "Current State of Systematic Reviews for Platelet-Rich Plasma Use in Knee Osteoarthritis",
+        abstract: "<p><strong>Background:</strong> Knee osteoarthritis (KOA) is a highly prevalent musculoskeletal disorder affecting millions of people. To date, there is no curative treatment for KOA other than joint arthroplasty. Platelet-rich plasma (PRP) has been proposed as a possible therapy, but there are no evidence-based guidelines for its use. This study evaluates the methodological quality of systematic reviews (SRs) on PRP therapy for KOA using AMSTAR 2, a validated assessment tool.</p>",
+        body: `<h2>Patients and Methods</h2><p>The MEDLINE, EMBASE, PubMed and Cochrane databases were searched from inception to May 2023. Two independent reviewers selected SRs that investigated the use of injection therapies for KOA. AMSTAR 2 assessment was completed independently by the same reviewers, and Cohen's kappa was calculated to measure interrater reliability. Quality was rated as "high", "moderate", "low", or "critically low".</p>
+<h2>Results</h2><p>Forty-one SRs were included in the analysis. The Cohen kappa was 0.88, indicating high interrater reliability. There were no "high" quality SRs identified. Seven SRs (17%) were of "low" quality, while the remainder (34 SRs, 83%) were rated as "critically low".</p>
+<h2>Conclusion</h2><p>The methodological quality of the selected SRs was suboptimal. Clinicians should critically appraise the SRs and interpret their conclusions with caution before making clinical decisions.</p>
+<p><strong>Level of evidence:</strong> II. <strong>Keywords:</strong> AMSTAR; Knee; Osteoarthritis; Platelet-rich plasma.</p>`
+      },
+      {
+        id: 9, tag: "Medical Device Evaluation",
+        title: "A Comparison of Financial and Operational Efficiency Between Smart and Traditional Insufflation for Laparoscopic Surgery: A Granular Analysis",
+        abstract: "<p><strong>Objective:</strong> Smart insufflation (SI) techniques relying on valve and membrane-free insufflation are increasing in usage. Although considerable literature exists demonstrating the benefits of SI on procedural ease and patient outcomes, there remains a paucity describing the financial impact of these devices. This study determines the financial and efficiency impact of these devices on the operating room and inpatient wards of a hospital.</p>",
+        body: `<h2>Methods</h2><p>A discrete event simulation model representing a typical mid-sized North American hospital comparing SI to traditional insufflation (TI) was generated, using National Surgical Quality Improvement data from 2015 to 2019. Outcomes included length of stay (LOS), duration of surgery (DOS), annual procedure volume, profit, return on investment (ROI), and gross profit margin (GPM).</p>
+<h2>Results</h2><p>Implementation of an SI led to an increase in annual throughput of 42&ndash;346 (4.4%&ndash;36.6%) cases for all procedures. LOS was decreased by 175&ndash;614 days across procedures with the implementation of an SI, resulting in an increase in net profit of $104,685 per annum. The ROI of SI over the TI device was &gt;1000%, and the GPM for the TI was 90.0% versus 71.7% for the SI.</p>
+<h2>Conclusion</h2><p>Despite the initial financial investment being greater, the implementation of SI offsets these expenses and yields significant financial benefits, illustrating how granular operational and financial analyses of technologies are essential to sound healthcare procurement decision making.</p>
+<p><strong>Keywords:</strong> Insufflation, Airseal, Surgical efficiency, Financial impact</p>
+<p><a href="https://www.sciencedirect.com/science/article/pii/S2468900923000439" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 10, tag: "Artificial Intelligence",
+        title: "Machine Learning Models Can Predict Subsequent Publication of NASS Annual General Meeting Abstracts",
+        abstract: "<p><strong>Background:</strong> Academic meetings serve as an opportunity to present and discuss novel ideas. Previous studies have identified factors predictive of publication without generating predictive models. This study used machine learning (ML) models to predict subsequent publication of abstracts presented at a major surgical conference.</p>",
+        body: `<h2>Methods</h2><p>All abstracts from the North American Spine Society (NASS) annual general meetings from 2013&ndash;2015 were reviewed, extracting number of authors, institution, location, conference category, subject category, study type, data collection methodology, human subject research, and FDA approval. Abstracts were searched on PubMed, Google Scholar, and Scopus for publication, and ML models were trained to predict publication.</p>
+<h2>Results</h2><p>A total of 1119 abstracts were presented, with 553 (49%) published. During training, the partial least squares model performed best (AUC of 0.77&plusmn;0.05). During testing, the random forest model performed best (AUC of 0.69, accuracy of 67%). Top features included number of authors, year, conference category, subject category, human subjects research, continent, and data collection methodology.</p>
+<h2>Conclusions</h2><p>This was the first study attempting to use ML to predict publication of complete articles after abstract presentation at a major academic conference. Future studies should incorporate deep learning frameworks and apply this methodology to larger conferences.</p>
+<p><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0289931" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 11, tag: "Clinical Research",
+        title: "Comparison of Major Spine Navigation Platforms Based on Key Performance Metrics: A Meta-Analysis of 16,040 Screws",
+        abstract: "<p><strong>Purpose:</strong> This meta-analysis compares available computer-assisted navigation platforms by key performance metrics including pedicle screw placement accuracy, operative time, neurological complications, and blood loss.</p>",
+        body: `<h2>Methods</h2><p>A systematic review was conducted using major databases for articles comparing pedicle screw accuracy of computer-assisted navigation to conventional (freehand or fluoroscopy) controls via post-operative computed tomography. Outcome data were extracted and pooled by random-effects model for analysis.</p>
+<h2>Results</h2><p>All navigation platforms demonstrated significant reduction in risk of breach, with Stryker demonstrating the highest accuracy compared to controls (OR 0.16, P &lt; 0.00001) followed by Medtronic. BrainLab demonstrated significantly faster operative time compared to Medtronic by 30 min (P = 0.03). Together, there was significantly lower risk of major breach in the navigation group compared to controls (OR 0.42, P &lt; 0.0001).</p>
+<h2>Conclusions</h2><p>Stryker demonstrated the highest accuracy, and Brainlab the shortest operative time, both followed by Medtronic. No significant difference was found between platforms regarding neurologic complications or blood loss. This study is the first to directly compare available navigation platforms, offering insight for institutional procurement of platforms.</p>
+<p><strong>Keywords:</strong> Computer-assisted navigation; Pedicle screw accuracy; Spine surgery technology.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/37474627/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 12, tag: "Medical Device Evaluation",
+        title: "In-Office Needle Arthroscopy Is a Cost-Effective Alternative for Operating Room Diversion in Medial Meniscectomy: A Financial Analysis",
+        abstract: "<p><strong>Background:</strong> In-office needle arthroscopy (IONA) has been described as a diagnostic alternative to MRI for intra-articular pathology, but few studies have analyzed its impact on cost and wait times as a therapeutic intervention. This study investigates the impact on cost and wait times of offering IONA for partial medial meniscectomy as an alternative to traditional operating room (OR) arthroscopy.</p>",
+        body: `<h2>Methods</h2><p>Two models were created comparing the existing care pathway to a proposed future state utilizing IONA, using accounting data from an academically affiliated hospital in Canada. A Monte Carlo simulation combined with DuPont analysis running 10,000 simulations calculated revenue, expenses, profits, and effect on surgical waitlists between the states.</p>
+<h2>Results</h2><p>An average of 198 (SD 31) patients underwent arthroscopic meniscectomy or repair each year from 2016 to 2020. The IONA revision rate was 20.3%. Annual expenses in the IONA pathway were significantly reduced ($266,912.68 versus $281,415.23, p &lt; .0001), while improving throughput by 21.2%.</p>
+<h2>Conclusions</h2><p>IONA is a cost-effective alternative to traditional OR arthroscopy in patients undergoing partial medial meniscectomy. Next steps are to assess patient perceptions of IONA and carry out clinical trials to determine efficacy and outcomes.</p>
+<p><strong>Keywords:</strong> Arthroscopy; Cost-effectiveness; Efficiency; In-office; Needle; Wait times.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/37322494/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 13, tag: "Medical Device Evaluation",
+        title: "Immersive Virtual Reality and Cadaveric Bone Are Equally Effective in Skeletal Anatomy Education: A Randomized Crossover Noninferiority Trial",
+        abstract: "<p><strong>Objective:</strong> Immersive virtual reality (IVR) technology is transforming medical education. This study compares the effectiveness of IVR with cadaveric bone models in teaching skeletal anatomy.</p>",
+        body: `<h2>Design</h2><p>A randomized crossover noninferiority trial was conducted in the anatomy laboratory of a large medical school.</p>
+<h2>Participants</h2><p>Incoming first-year medical students were randomized to IVR or cadaveric groups studying upper limb skeletal anatomy, then crossed over to the opposite tool to study lower limb skeletal anatomy, completing pre- and postintervention knowledge tests.</p>
+<h2>Results</h2><p>Fifty first-year medical students were randomized. Score increase between tests was 15.0% in the upper limb IVR group versus 16.7% for cadaveric bones (p = 0.286). For the lower limb, score increase was 22.6% in the IVR group versus 22.5% in the cadaveric bone group (p = 0.936). 79% of participants found IVR most valuable for teaching 3-dimensional orientation and anatomical relationships.</p>
+<h2>Conclusions</h2><p>There was no significant difference in knowledge gained after using IVR or cadaveric bones for skeletal anatomy education, with implications for medical schools facing challenges in acquiring cadaveric specimens.</p>
+<p><strong>Keywords:</strong> medical education; orthopaedic surgery; skeletal anatomy; surgical education; virtual reality.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/37150701/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 14, tag: "Efficiency",
+        title: "Improving Resource Utilization for Arthroplasty Care by Leveraging Machine Learning and Optimization: A Systematic Review",
+        abstract: "<p><strong>Background:</strong> There is a growing demand for total joint arthroplasty (TJA) surgery. The applications of machine learning (ML), mathematical optimization, and computer simulation have the potential to improve efficiency of TJA care delivery through outcome prediction and surgical scheduling optimization, easing the burden on health-care systems. This study evaluates strategies using advances in analytics and computational modeling that may improve planning and the overall efficiency of TJA care.</p>",
+        body: `<h2>Methods</h2><p>A systematic review including MEDLINE, Embase, and IEEE Xplore databases was completed from inception to October 3, 2022, for identification of studies generating ML models for TJA length of stay, duration of surgery, and hospital readmission prediction. A scoping review of optimization strategies in elective surgical scheduling was also conducted.</p>
+<h2>Results</h2><p>Twenty studies were included for evaluating ML predictions and 17 in the scoping review of scheduling optimization. Among studies generating linear or logistic control models alongside ML models, only 1 found a control model to outperform its ML counterpart. Neural networks performed superior to or at the same level as conventional ML models in all but 1 study. Implementation of mathematical and simulation strategies improved optimization efficiency when compared to traditional scheduling methods at the operational level.</p>
+<h2>Conclusions</h2><p>High-performing predictive ML-based models have been developed for TJA, as have mathematical strategies for elective surgical scheduling optimization. Leveraging artificial intelligence for outcome prediction and surgical optimization offers greater opportunities for improved resource utilization and cost-savings than traditional modeling and scheduling methods.</p>
+<p><strong>Keywords:</strong> Artificial intelligence; Optimization; Predictive modeling; Surgical scheduling; Total hip arthroplasty; Total knee arthroplasty.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/36938350/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 15, tag: "Artificial Intelligence",
+        title: "Artificial Intelligence for Hip Fracture Detection and Outcome Prediction: A Systematic Review",
+        abstract: "<p><strong>Importance:</strong> Artificial intelligence (AI) enables powerful models for establishment of clinical diagnostic and prognostic tools for hip fractures; however the performance and potential impact of these newly developed algorithms are currently unknown. <strong>Objective:</strong> To evaluate the performance of AI algorithms designed to diagnose hip fractures on radiographs and predict postoperative clinical outcomes following hip fracture surgery relative to current practices.</p>",
+        body: `<h2>Data Sources</h2><p>A systematic review of the literature was performed using the MEDLINE, Embase, and Cochrane Library databases for all articles published from database inception to January 23, 2023, with a manual reference search of included articles.</p>
+<h2>Methods</h2><p>Studies developing machine learning (ML) models for the diagnosis of hip fractures from hip or pelvic radiographs, or to predict any postoperative patient outcome following hip fracture surgery, were included. This study followed PRISMA guidelines and was registered with PROSPERO. Diagnostic accuracy of AI models was compared with expert clinicians using odds ratios, and areas under the curve for postoperative outcome prediction were compared between traditional statistical models and ML models.</p>
+<h2>Results</h2><p>Of 39 studies included, 18 (46.2%) used AI models to diagnose hip fractures on plain radiographs and 21 (53.8%) used AI models to predict patient outcomes. A total of 39,598 plain radiographs and 714,939 hip fractures were used for training, validating, and testing the models. Mortality and length of hospital stay were the most predicted outcomes. Compared with clinicians, the OR for diagnostic error of ML models was 0.79 (95% CI, 0.48-1.31; P = .36). The mean sensitivity was 89.3%, specificity was 87.5%, and F1 score was 0.90. The mean area under the curve for mortality prediction was 0.84 with ML models compared with 0.79 for alternative controls (P = .09).</p>
+<h2>Conclusions and Relevance</h2><p>The performance of AI in diagnosing hip fractures was comparable with that of expert radiologists and surgeons. However, current implementations of AI for outcome prediction do not seem to provide substantial benefit over traditional multivariable predictive statistics.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/36930153/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 16, tag: "Efficiency",
+        title: "Optimizing Spine Surgery Instrument Trays to Immediately Increase Efficiency and Reduce Costs in the Operating Room",
+        abstract: "<p><strong>Background:</strong> Over-crowded surgical trays result in perioperative inefficiency and unnecessary costs. This study compared three tray-reduction methods: clinician review (CR), mathematical programming (MP), and a novel hybrid model (HM) based on surveys and cost analysis, hypothesizing the easy-to-implement HM would achieve reductions comparable to CR and MP.</p>",
+        body: `<h2>Methods</h2><p>Three approaches were tested: CR, MP, and HM. Five neurosurgeons and three orthopedic surgeons who performed a total of 5,437 spine cases over a 4-year period (2017-2021) were interviewed. In CR, surgeons suggested which instruments should be removed. MP was performed via mathematical analysis of 25 observations of tray use. The HM was performed via a structured survey of surgeons' estimated instrument usage, followed by a cost-based inflection point analysis.</p>
+<h2>Results</h2><p>The CR, MP, and HM approaches resulted in total instrument reductions of 41%, 35%, and 38%, respectively, corresponding to annual cost savings of $50,211.20, $46,348.80, and $44,417.60.</p>
+<h2>Conclusions</h2><p>Despite MP being the most accurate methodology, savings were similar across all three methods. CR and HM are significantly less laborious and are practical alternatives for hospitals scrutinizing surgical inventory.</p>
+<p><strong>Keywords:</strong> Clinician review; Cost savings; Mathematical model; Newsvendor model; Optimization; Spine surgery; Standardization; Surgical instruments; Surgical trays.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/37124067/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 17, tag: "Efficiency",
+        title: "An Automated, Web-Based Triage Tool May Optimise Referral Pathways in Elective Orthopaedic Surgery: A Proof-of-Concept Study",
+        abstract: "<p>This proof-of-concept study explores whether an automated, web-based triage tool can help streamline how patients are routed into elective orthopaedic surgery referral pathways, aiming to cut unnecessary wait times and administrative bottlenecks along the way.</p>",
+        body: `<p>Read the full study, including methodology and results, at the source link below.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/36762026/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 18, tag: "Medical Device Evaluation",
+        title: "Clinical Applications of Augmented Reality in Orthopaedic Surgery: A Comprehensive Narrative Review",
+        abstract: "<p><strong>Purpose:</strong> Augmented reality (AR) technology allows orthopaedic surgeons to incorporate and visualize surgical data, superimposing peri-operative imaging, anatomical landmarks, and navigation guidance onto the surgical field without the need for conjugate gaze between multiple screens. This review introduces the fundamental requirements for an AR system and assesses current applications, outcomes, and limitations.</p>",
+        body: `<h2>Methods</h2><p>A literature search was performed using MEDLINE and Embase databases by two independent reviewers, who synthesized the results into a narrative review focused on the applications of augmented reality across major orthopaedic sub-specialties.</p>
+<h2>Results</h2><p>Current technology requires pre-operative patient data acquisition and AR-compatible model construction. Intra-operatively, four major components are required: a camera, computer image processing technology, tracking tools, and an output screen, with a heads-up display enabling the user to view both their natural field and computer-generated images. High-quality evidence for clinical implementation is currently lacking; however, growing in vitro literature highlights potential applications including increased operative accuracy, improved biomechanical alignment parameters, and potentially reduced operative time.</p>
+<h2>Conclusion</h2><p>While AR systems in surgery are currently in their infancy, rapid and widespread implementation is anticipated across various orthopaedic sub-specialties.</p>
+<p><strong>Keywords:</strong> Arthroplasty; Augmented reality; Computer vision; Efficiency; Navigation; Technology.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/35852653/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 19, tag: "Efficiency",
+        title: "A Dedicated Orthopedic Trauma Room Improves Efficiency While Remaining Financially Net Positive",
+        abstract: "<p><strong>Objectives:</strong> To determine the impact of dedicated orthopaedic trauma room (DOTR) implementation on operating room efficiency and finances.</p>",
+        body: `<h2>Design</h2><p>Retrospective cost-analysis at a single midsized academic-affiliated community hospital in Toronto, Canada.</p>
+<h2>Participants and Methods</h2><p>All patients undergoing the most frequently performed orthopedic trauma procedures (hip hemiarthroplasty, and open reduction internal fixation of the ankle, femur, elbow, and distal radius) over a four-year period (2016-2019) were included. Patient data for two years prior to DOTR implementation was compared to two years after, adjusting for case volume. The primary outcome was surgical duration; the secondary outcome was financial impact.</p>
+<h2>Results</h2><p>1,960 orthopaedic cases were examined pre- and post-DOTR. All procedures had reduced total operative time post-DOTR (mean improvement of 33.4%). Daytime operating hours increased 21%, while after-hours decreased by 37.8%. Overtime staffing costs were reduced by $24,976 alongside an increase in opportunity costs of $22,500, resulting in a net profit of $2,476.</p>
+<h2>Conclusions</h2><p>DOTRs improve operating room efficiency and can be cost efficient, addressing hesitation regarding potential loss of profit from displaced elective surgeries. Widespread implementation can improve patient care while remaining financially favourable.</p>
+<p><strong>Level of evidence:</strong> Economic Level III.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/35839453/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 20, tag: "Clinical Research",
+        title: "The Efficacy of Primary Sacroiliac Joint Fusion for Low Back Pain Caused by Sacroiliac Joint Pathology: A Systematic Review and Meta-analysis",
+        abstract: "<p><strong>Purpose:</strong> This systematic review quantifies the effect of primary sacroiliac joint fusion (SIJF) for the treatment of sacroiliac (SI) joint pathology on patient-reported outcomes.</p>",
+        body: `<h2>Methods</h2><p>Medline, Embase, Cochrane, PubMed, and Scopus databases were searched prior to August 18, 2020, for all English-language studies involving treatment of SIJ pathology through SIJF and/or conservative management (CM). Study quality was assessed using GRADE. The primary outcome measure was the Visual Analogue Scale (VAS) for low back pain, with the Oswestry Disability Index (ODI) and adverse reaction incidence as secondary measures.</p>
+<h2>Results</h2><p>A total of 564 patients across six studies were included; overall evidence quality was low, and five of six studies were industry funded. The VAS standardized mean difference between SIJF and CM at three and six months follow-up was -1.4 and -1.5, respectively. The ODI standardized mean difference was -0.9 and -1.1 at the same intervals. The odds ratio of adverse reactions due to SIJF compared to CM was 1.9.</p>
+<h2>Conclusion</h2><p>Based on a limited number of independent trials with long-term follow-up, SIJF shows potential as a surgical treatment option for SIJ pathology.</p>
+<p><strong>Keywords:</strong> Fusion; Low back; Pain; Sacroiliac; Spine.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/35768617/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 21, tag: "Medical Device Evaluation",
+        title: "Distal Femoral Replacement or Internal Fixation for Management of Periprosthetic Distal Femur Fractures: A Systematic Review",
+        abstract: "<p><strong>Background:</strong> The number of periprosthetic fractures above a total knee arthroplasty continues to increase, carrying a high risk of morbidity and mortality. This review compares mortality and reoperation rates between open reduction internal fixation (ORIF) and revision arthroplasty via distal femoral replacement (DFR) for treating periprosthetic distal femur fractures.</p>",
+        body: `<h2>Methods</h2><p>A systematic review including MEDLINE, Embase, and Cochrane Library databases was completed from inception to April 10, 2021. Studies including a comparator cohort were meta-analyzed.</p>
+<h2>Results</h2><p>Fourteen studies were identified, five with sufficient homogeneity for meta-analysis. 30-day and 2-year mortality was 4.1% and 14.6% in the DFR group, with no statistically significant difference between ORIF and DFR. The reoperation rate in the DFR group was 9.3% versus 14.8% for ORIF, with no significant difference between groups, and no difference in rates of deep infection.</p>
+<h2>Conclusion</h2><p>DFR is equivalent to ORIF with respect to mortality and reoperation rate for periprosthetic distal femur fractures, and may be more reliable in complex fracture patterns where adequate fixation is difficult to obtain.</p>
+<p><strong>Keywords:</strong> Distal femur replacement; Fracture; Internal fixation; Periprosthetic; Total knee arthroplasty; Trauma.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/35772245/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 22, tag: "Efficiency",
+        title: "Optimizing the Surgical Instrument Tray to Immediately Increase Efficiency and Lower Costs in the Operating Room",
+        abstract: "<p><strong>Background:</strong> Surgical trays are often poorly configured and can be ongoing sources of frustration and excess costs. This observational study determined whether a customized mathematical inventory optimization model would result in a greater reduction in the number of instruments on a surgical tray than clinician review alone.</p>",
+        body: `<h2>Methods</h2><p>Utilization of instruments on the major orthopedic tray at a large academic hospital was documented over 80 procedures. Processes in the medical device reprocessing department and operating room were observed to quantify associated costs, which were applied to a customized mathematical model to determine the ideal tray configuration, compared against a separate clinician review.</p>
+<h2>Results</h2><p>The mathematical model alone produced an ideal tray size of 47 instruments, a 47% reduction from the original 88, representing $34,440 in annual savings. Clinician review alone suggested a 23% reduction ($17,640 in savings). When clinicians were given the model's findings, they reduced the tray to 51 instruments (42% reduction, $31,870 in savings) &mdash; the mathematical model alone still yielded an additional 22% reduction and $14,230 in savings over clinician review alone.</p>
+<h2>Conclusion</h2><p>This mathematical model is generalizable across specialties and hospitals; applied to all surgical trays at the study institution, it would produce an estimated $205,000 in annual savings.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/35414528/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 23, tag: "Clinical Research",
+        title: "The Effect of Leukocyte Concentration on Platelet-Rich Plasma Injections for Knee Osteoarthritis: A Network Meta-Analysis",
+        abstract: "<p><strong>Background:</strong> It is hypothesized that leukocyte-poor (LP) platelet-rich plasma (PRP) is preferred over leukocyte-rich (LR) PRP for the treatment of knee osteoarthritis (OA). This network meta-analysis compares LP-PRP and LR-PRP against each other and relevant controls.</p>",
+        body: `<h2>Methods</h2><p>MEDLINE, Embase, and Cochrane databases were reviewed for English-language studies comparing LP-PRP or LR-PRP, following patients at 6 and 12 months. The primary outcome was change in WOMAC score; secondary outcomes included the WOMAC pain subscale, VAS pain score, IKDC subjective score, and adverse reaction incidence, ranked using SUCRA probabilities.</p>
+<h2>Results</h2><p>This network meta-analysis included 23 studies (20 RCTs, 3 prospective comparative studies) totaling 2,260 patients over a mean follow-up of 9.9 months. No significant difference was found in outcome measures or adverse reactions between LP-PRP and LR-PRP, though SUCRA rankings favored LP-PRP across follow-up periods for all outcome measures.</p>
+<h2>Conclusions</h2><p>Leukocyte concentration of PRP does not play a significant role in patient-reported outcomes for knee OA. LP-PRP is statistically preferred per SUCRA rankings, but this preference may not be clinically important.</p>
+<p><strong>Level of evidence:</strong> Therapeutic Level II.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/34826301/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 24, tag: "Artificial Intelligence",
+        title: "Machine Learning Using Preoperative Patient Factors Can Predict Duration of Surgery and Length of Stay for Total Knee Arthroplasty",
+        abstract: "<p><strong>Background:</strong> Total knee arthroplasty (TKA) is one of the most resource-intensive, high-volume surgical procedures. This study aimed to predict duration of surgery (DOS) and postoperative length of stay (LOS) for elective unilateral TKAs using machine learning models based on preoperative factors.</p>",
+        body: `<h2>Methods</h2><p>The ACS NSQIP database was queried for unilateral TKAs from 2014 to 2019, split into training, validation, and testing sets by year. Linear, tree-based, and multilayer perceptron (MLP) models were fitted in scikit-learn and PyTorch, tuned on the validation set, and trained to minimize mean squared error (MSE).</p>
+<h2>Results</h2><p>A total of 302,300 patients were included. During testing, PyTorch MLPs performed best based on MSE for both DOS (0.896) and LOS (0.690). The scikit-learn MLP yielded the best 30-minute buffer accuracy for DOS (78.8%), while the PyTorch MLP provided the best 1-day buffer accuracy for LOS (75.2%). Nearly all ML models outperformed mean regressors for both outcomes.</p>
+<h2>Conclusion</h2><p>Conventional and deep learning models outperformed mean regressors for predicting DOS and LOS of unilateral elective TKA patients using preoperative factors alone; future work should incorporate operational factors to further improve predictions.</p>
+<p><strong>Keywords:</strong> Arthroplasty; Duration of surgery; Knee; Length of stay; Machine learning; NSQIP.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/34971918/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 25, tag: "Clinical Research",
+        title: "Megaprosthesis Anti-Bacterial Coatings: A Comprehensive Translational Review",
+        abstract: "<p>Periprosthetic joint infections (PJI) are catastrophic complications for patients with implanted megaprostheses and pose significant challenges in orthopaedic oncology care. This translational review discusses the mechanisms of bacterial colonization and biofilm formation on implants, alongside the major anti-bacterial coating strategies currently in use and development.</p>",
+        body: `<p>The review covers current in vitro outcomes, clinical significance, economic importance, evolutionary perspectives, and future directions of anti-bacterial coatings for megaprosthetic implants, with the goal of reducing infection rates following implantation and positively impacting sarcoma and major trauma reconstruction care.</p>
+<p><strong>Keywords:</strong> Bacterial biofilm; Implant coating; Joint replacement; Orthopaedic oncology; Orthopaedic surgery; Periprosthetic joint infection; Prevention.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/34879295/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 26, tag: "Medical Device Evaluation",
+        title: "Value-Based Procurement Using Total Cost of Ownership: A Step-by-Step Financial Assessment of Orthopaedic-Powered Instrument Procurement",
+        abstract: "<p>This piece walks through a value-based procurement framework for orthopaedic-powered surgical instruments, using a total cost of ownership (TCO) approach that looks beyond sticker price to weigh maintenance, reprocessing, and lifecycle costs when making purchasing decisions.</p>",
+        body: `<p>Read the full step-by-step financial assessment at the source link below.</p>
+<p><a href="https://hmpi.org/2021/12/02/value-based-procurement-using-total-cost-of-ownership-a-step-by-step-financial-assessment-of-orthopaedic-powered-instrument-procurement/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      },
+      {
+        id: 27, tag: "Efficiency",
+        title: "Inventory Optimization in the Perioperative Care Department Using Kotter's Change Model",
+        abstract: "<p><strong>Background:</strong> Perioperative services have been scrutinized in the context of cost containment in health care, particularly around procurement and reprocessing of surgical instruments. This project describes the implementation of an inventory optimization (IO) initiative using Kotter's Change Model (KCM).</p>",
+        body: `<h2>Methods</h2><p>This study was conducted at a tertiary academic hospital across its four highest-volume surgical services. The IO was implemented using KCM's eight steps: create coalition, create vision for change, establish urgency, communicate the vision, empower broad-based action, generate short-term wins, consolidate gains, and anchor change. The process was evaluated using inventory metrics, operational efficiency metrics, and clinician satisfaction.</p>
+<h2>Results</h2><p>Total inventory was reduced by 37.7%, with an average tray size reduction of 18.0%. This led to reprocessing time savings of 1,333 hours per annum and labor cost savings of $39,995 per annum, alongside $64,320 in annual depreciation cost savings. Case cancellation rate due to instrument-related errors decreased from 3.9% to 0.2%, and staff satisfaction with inventory rose from 1.7% pre-IO to 80.0% post-IO.</p>
+<h2>Conclusion</h2><p>This is the first study to describe successful implementation of KCM to facilitate change in the perioperative setting, contributing to the growing body of literature supporting KCM as a valuable change management tool in health care.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/34758922/" target="_blank" rel="noopener noreferrer">View source publication</a></p>`
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await _supabase.auth.getSession();
+      const lockedCard = document.getElementById('locked-card');
+      const unlockedCard = document.getElementById('unlocked-card');
+
+      if (!session) {
+        lockedCard.style.display = 'block';
+        return;
+      }
+
+      unlockedCard.style.display = 'block';
+      const importBtn = document.getElementById('import-btn');
+      const log = document.getElementById('log');
+
+      importBtn.addEventListener('click', async () => {
+        importBtn.disabled = true;
+        importBtn.innerHTML = 'Importing...';
+        log.innerHTML = '';
+
+        for (const article of articles) {
+          const { error } = await _supabase.from('articles').upsert({
+            id: article.id,
+            tag: article.tag,
+            title: article.title,
+            abstract: article.abstract,
+            body: article.body,
+            updated_at: new Date().toISOString(),
+          });
+
+          const row = document.createElement('div');
+          row.className = 'row';
+          row.innerHTML = error
+            ? `<span>#${article.id} ${article.title}</span><span class="fail">${error.message}</span>`
+            : `<span>#${article.id} ${article.title}</span><span class="ok">Saved</span>`;
+          log.appendChild(row);
+        }
+
+        importBtn.innerHTML = '<i class="fa-solid fa-check"></i> Import Complete';
+      });
+    });
+  </script>
+</body>
+</html>

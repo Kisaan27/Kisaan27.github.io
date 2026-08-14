@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    /* Soft navy/sage gradient matching the brand */
+    background:
+        radial-gradient(ellipse 1000px 700px at 6% -8%, rgba(30,39,75,0.14), transparent 55%),
+        radial-gradient(ellipse 900px 650px at 100% 105%, rgba(122,170,102,0.12), transparent 55%),
+        linear-gradient(160deg, #e9ebf1 0%, #dfe2ea 50%, #e6eae1 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1.25rem;
+}
+
+.auth-card {
+    background: #ffffff;
+    width: 90%;
+    max-width: 1000px;
+    min-height: 600px;
+    border-radius: 40px; /* Extra rounded corners */
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(30,39,75,0.08);
+    box-shadow: 0 25px 50px -12px rgba(16,20,42,0.18);
+}
+
+/* --- LEFT SIDE --- */
+.auth-form-section {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    margin-bottom: 24px;
+}
+
+.brand img {
+    height: 70px;
+    width: auto;
+    display: block;
+}
+
+.form-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    color: #10142a;
+}
+
+.form-header p {
+    color: #5b6578;
+    margin-bottom: 40px;
+}
+
+.input-field {
+    margin-bottom: 20px;
+}
+
+.input-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #10142a;
+}
+
+.input-field input {
+    width: 100%;
+    padding: 16px 20px;
+    background: #f7f8fb;
+    border: 1px solid rgba(30,39,75,0.12);
+    border-radius: 20px; /* Pill shape */
+    font-size: 15px;
+    color: #10142a;
+    outline: none;
+    transition: 0.2s;
+}
+
+.input-field input:focus {
+    border-color: #7aaa66;
+    background: #fff;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(90deg, #1e274b, #2f3c73);
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(30,39,75,0.3);
+}
+
+.form-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-footer a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e274b;
+}
+
+/* --- RIGHT SIDE --- */
+.auth-image-section {
+    flex: 1.2;
+    padding: 20px;
+}
+
+.image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 850px) {
+    .auth-image-section { display: none; }
+    .auth-card { max-width: 450px; min-height: auto; }
+    .auth-form-section { padding: 44px 32px; }
+}
+
+@media screen and (max-width: 480px) {
+    body { padding: 1.25rem 1rem; }
+    .auth-card { border-radius: 28px; }
+    .auth-form-section { padding: 36px 24px; }
+    .brand { margin-bottom: 40px; font-size: 20px; }
+    .form-header h1 { font-size: 26px; }
+    .form-footer { flex-direction: column; gap: 0.75rem; align-items: flex-start; margin-top: 24px; }
+}
+
+/* Landscape phones: short viewport height means the image column and generous
+   vertical padding no longer fit without forcing the page to scroll awkwardly. */
+@media screen and (max-height: 480px) and (orientation: landscape) {
+    body { align-items: flex-start; padding: 1.25rem; }
+    .auth-image-section { display: none; }
+    .auth-card { max-width: 480px; min-height: auto; }
+    .auth-form-section { padding: 28px 32px; }
+    .brand { margin-bottom: 20px; }
+    .form-header p { margin-bottom: 20px; }
+    .input-field { margin-bottom: 14px; }
+}

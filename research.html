@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+  <link rel="icon" type="image/svg+xml" href="images/drawing24.svg">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Articles — Slate Surgery</title>
+  <meta name="description" content="Browse research articles and clinical insights from OA Group covering machine learning, healthcare delivery, and surgical outcomes.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.oagroup.com/research.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Research Articles — OA Group">
+  <meta property="og:description" content="Browse research articles and clinical insights from OA Group covering machine learning, healthcare delivery, and surgical outcomes.">
+  <meta property="og:url" content="https://www.oagroup.com/research.html">
+  <meta property="og:image" content="https://www.oagroup.com/images/logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Research Articles — OA Group">
+  <meta name="twitter:description" content="Browse research articles and clinical insights from OA Group covering machine learning, healthcare delivery, and surgical outcomes.">
+  <meta name="twitter:image" content="https://www.oagroup.com/images/logo.png">
+  <link rel="stylesheet" href="forarticle.css">
+  <link rel="stylesheet" href="research.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="footer.css">
+  <link rel="stylesheet" href="search-dropdown.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <canvas id="neural-bg"></canvas>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <img src="images/drawing22.svg" alt="OA Group" class="logo-img">
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="research.html" class="active">Research</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="index.html#about-us">About Us</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+
+      <div class="search-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-input" id="siteSearchBar" placeholder="Search articles, papers...." autocomplete="off">
+      </div>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="research-wrapper">
+    
+    <section class="research-hero">
+      <div class="hero-card-layout">
+        <div class="hero-image-pane">
+          <img src="images/collab.png" alt="Clinical Collaboration" class="hero-pane-img">
+        </div>
+        <div class="hero-text-pane">
+          <span class="badge blue">Latest Post</span>
+          <h1 class="featured-title">
+            Entrepreneurship in Healthcare Seminar Series (EHSS): Re-engineering Modern Medical Curriculums.
+          </h1>
+          <p class="featured-meta">March 18, 2026 — <span class="meta-tag">Efficiency</span></p>
+          <a href="ehss.html" class="inline-cta-btn">
+            Read Article <i class="fa-solid fa-arrow-right-long"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="filter-ribbon">
+      <div class="categories-cluster">
+        <div class="filter-links">
+          <a href="#" class="cat-link active" data-filter="all">All Channels</a>
+          <a href="#" class="cat-link" data-filter="efficiency">Efficiency</a>
+          <a href="#" class="cat-link" data-filter="clinical-research">Clinical Research</a>
+          <a href="#" class="cat-link" data-filter="ai">Artificial Intelligence</a>
+          <a href="#" class="cat-link" data-filter="device-evaluation">Device Evaluation</a>
+        </div>
+        <select class="cat-select" id="categorySelect" aria-label="Filter articles by category">
+          <option value="all">All Channels</option>
+          <option value="efficiency">Efficiency</option>
+          <option value="clinical-research">Clinical Research</option>
+          <option value="ai">Artificial Intelligence</option>
+          <option value="device-evaluation">Device Evaluation</option>
+        </select>
+      </div>
+      <div class="search-wrapper-input">
+        <i class="fa-solid fa-magnifying-glass search-inner-icon"></i>
+        <input type="text" id="search-input" placeholder="Query keywords, targets...">
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section class="content-layout">
+      <div class="articles-grid" id="articles-container">
+
+        <a href="ehss.html" class="article-card-link mobile-only-card" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="images/collab.png" alt="Clinical Collaboration" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">Entrepreneurship in Healthcare Seminar Series (EHSS): Re-engineering Modern Medical Curriculums.</h3>
+              <p class="card-excerpt">A novel initiative teaching medical students to develop healthcare innovations and launch entrepreneurial ventures, evaluated through student feedback by OA Group.</p>
+              <span class="card-date">March 18, 2026</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=2" class="article-card-link" data-category="ai clinical-research">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&q=80&w=500" alt="Surgical planning" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">AI & Clinical Research</span>
+              <h3 class="card-title">Development of a Surgical Difficulty Score for Open Reduction Internal Fixation of Pilon Fractures</h3>
+              <p class="card-excerpt">Identifying the clinical and radiological factors that drive surgical complexity in pilon fractures, and using them to train a machine-learning difficulty score for operative time and perceived difficulty.</p>
+              <span class="card-date">March 18, 2025</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=3" class="article-card-link" data-category="clinical-research ai">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=500" alt="Clinical analysis" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Clinical Research & AI</span>
+              <h3 class="card-title">Predicting 30-Day Venous Thromboembolism Following Total Joint Arthroplasty: Adjusting for Trends in Annual Length of Stay</h3>
+              <p class="card-excerpt">A machine-learning model for predicting 30-day blood clot risk after hip and knee replacement, showing thromboembolism rates have fallen in step with shorter post-operative hospital stays.</p>
+              <span class="card-date">March 18, 2025</span>
+            </div>
+          </article>
+        </a>
+
+        <div class="newsletter-card" data-category="persistent">
+          <div class="newsletter-top">
+            <div class="envelope-icon">
+              <i class="fa-regular fa-envelope-open"></i>
+            </div>
+            <h3>Get the latest insights from the Slate Surgery team delivered straight to your inbox</h3>
+          </div>
+          <div class="newsletter-bottom">
+            <button class="cta-filled wide-btn">Subscribe To Network</button>
+            <div class="sidebar-footer">
+              <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="article.html?id=4" class="article-card-link" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=500" alt="Gamification app interface" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">Development of a Mobile Application to Increase Motivation, Engagement &amp; Recognition of Clinical Teaching Faculty</h3>
+              <p class="card-excerpt">A cross-platform app that gamifies clinical teaching hours for physician educators, rewarding recognition and engagement through a star-based rating system.</p>
+              <span class="card-date">March 18, 2025</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=5" class="article-card-link" data-category="ai efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=500" alt="Data dashboard metrics" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">AI & Efficiency</span>
+              <h3 class="card-title">Machine Learning to Predict-Then-Optimize Elective Orthopaedic Surgery Scheduling</h3>
+              <p class="card-excerpt">Pairing machine-learning duration predictions with scheduling optimization to cut overtime and improve utilization across elective hip and knee replacement operating rooms.</p>
+              <span class="card-date">March 18, 2025</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=6" class="article-card-link" data-category="efficiency ai">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=500" alt="Analytics data graphics" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency & AI</span>
+              <h3 class="card-title">Simulation Optimization of Operating Room Schedules for Elective Orthopaedic Surgery</h3>
+              <p class="card-excerpt">A simulation-based scheduling model that uses the probabilistic nature of surgical durations to re-sequence elective cases and meaningfully reduce operating room overtime.</p>
+              <span class="card-date">March 18, 2025</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=7" class="article-card-link" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="images/Operating-Room-Terminal-Cleaning.jpg" alt="Operating unit sterilization" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">Intraoperative Scrub Nurse Turnover in Orthopaedic Surgery</h3>
+              <p class="card-excerpt">Quantifying how mid-case scrub nurse turnover extends operative time across common orthopaedic procedures, and why minimizing handoffs matters for OR efficiency.</p>
+              <span class="card-date">March 18, 2025</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=8" class="article-card-link" data-category="clinical-research">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="images/Onsite-Laboratory-Investigations-and-Screening-Services.jpg" alt="Lab environment tracking" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Clinical Research</span>
+              <h3 class="card-title">Current State of Systematic Reviews for Platelet-Rich Plasma Use in Knee Osteoarthritis</h3>
+              <p class="card-excerpt">An AMSTAR 2 quality appraisal of systematic reviews on platelet-rich plasma therapy for knee osteoarthritis, finding most reviews fall short of rigorous methodological standards.</p>
+              <span class="card-date">March 18, 2025</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=9" class="article-card-link" data-category="efficiency device-evaluation">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=500" alt="Surgical tech infrastructure" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Device Evaluation & Efficiency</span>
+              <h3 class="card-title">A Comparison of Financial and Operational Efficiency Between Smart and Traditional Insufflation for Laparoscopic Surgery: A Granular Analysis</h3>
+              <p class="card-excerpt">A financial simulation comparing smart and traditional insufflation systems in laparoscopic surgery, modeling their impact on case throughput, length of stay, and hospital profitability.</p>
+              <span class="card-date">November 20, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=10" class="article-card-link" data-category="ai">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&q=80&w=500" alt="Medical conference session" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Artificial Intelligence</span>
+              <h3 class="card-title">Machine Learning Models Can Predict Subsequent Publication of NASS Annual General Meeting Abstracts</h3>
+              <p class="card-excerpt">Training machine-learning classifiers on North American Spine Society meeting abstracts to predict which presentations go on to full publication, and what factors matter most.</p>
+              <span class="card-date">November 20, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=11" class="article-card-link" data-category="clinical-research">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1603398938378-e54eab446dde?auto=format&fit=crop&q=80&w=500" alt="Hardware instrumentation array" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Clinical Research</span>
+              <h3 class="card-title">Comparison of Major Spine Navigation Platforms Based on Key Performance Metrics: A Meta-Analysis of 16,040 Screws</h3>
+              <p class="card-excerpt">A meta-analysis of over 16,000 pedicle screws comparing accuracy, operative time, and complication rates across the major computer-assisted spine navigation platforms.</p>
+              <span class="card-date">July 20, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=12" class="article-card-link" data-category="device-evaluation efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=500" alt="Diagnostic tools array" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Medical Device Evaluation & Efficiency</span>
+              <h3 class="card-title">In-Office Needle Arthroscopy Is a Cost-Effective Alternative for Operating Room Diversion in Medial Meniscectomy: A Financial Analysis</h3>
+              <p class="card-excerpt">A financial model showing in-office needle arthroscopy can divert meniscectomy cases from the operating room, cutting costs while improving surgical throughput.</p>
+              <span class="card-date">June 15, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=13" class="article-card-link" data-category="device-evaluation">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1585842378054-ee2e52f94ba2?auto=format&fit=crop&q=80&w=500" alt="Virtual reality headset for medical education" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Medical Device Evaluation</span>
+              <h3 class="card-title">Immersive Virtual Reality and Cadaveric Bone Are Equally Effective in Skeletal Anatomy Education: A Randomized Crossover Noninferiority Trial</h3>
+              <p class="card-excerpt">A randomized crossover trial finding immersive VR headsets teach skeletal anatomy just as effectively as cadaveric bone models, with strong student preference for blended use.</p>
+              <span class="card-date">May 15, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=14" class="article-card-link" data-category="efficiency ai">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&q=80&w=500" alt="Knee arthroplasty planning" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency &amp; AI</span>
+              <h3 class="card-title">Improving Resource Utilization for Arthroplasty Care by Leveraging Machine Learning and Optimization: A Systematic Review</h3>
+              <p class="card-excerpt">A systematic review of machine-learning and optimization techniques for improving resource utilization and scheduling efficiency across total joint arthroplasty care.</p>
+              <span class="card-date">March 9, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=15" class="article-card-link" data-category="clinical-research ai">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=500" alt="Hip radiograph review" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Clinical Research &amp; AI</span>
+              <h3 class="card-title">Artificial Intelligence for Hip Fracture Detection and Outcome Prediction: A Systematic Review</h3>
+              <p class="card-excerpt">A meta-analysis of AI diagnostic tools for hip fractures, finding performance on par with expert radiologists, though outcome-prediction models show only modest gains over traditional statistics.</p>
+              <span class="card-date">March 1, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=16" class="article-card-link" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&q=80&w=500" alt="Spine surgery instrument tray" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">Optimizing Spine Surgery Instrument Trays to Immediately Increase Efficiency and Reduce Costs in the Operating Room</h3>
+              <p class="card-excerpt">Comparing clinician review, mathematical programming, and a novel hybrid model for trimming bloated spine surgery instrument trays without sacrificing meaningful cost savings.</p>
+              <span class="card-date">February 25, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=17" class="article-card-link" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1512678080530-7760d81faba6?auto=format&fit=crop&q=80&w=500" alt="Digital referral triage interface" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">An Automated, Web-Based Triage Tool May Optimise Referral Pathways in Elective Orthopaedic Surgery: A Proof-of-Concept Study</h3>
+              <p class="card-excerpt">A proof-of-concept web-based triage tool designed to streamline referral pathways and reduce administrative delays in elective orthopaedic surgery.</p>
+              <span class="card-date">January 26, 2023</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=18" class="article-card-link" data-category="device-evaluation clinical-research">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&q=80&w=500" alt="Augmented reality surgical headset" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Medical Device Evaluation &amp; Clinical Research</span>
+              <h3 class="card-title">Clinical Applications of Augmented Reality in Orthopaedic Surgery: A Comprehensive Narrative Review</h3>
+              <p class="card-excerpt">A narrative review of augmented reality's emerging role in orthopaedic surgery, from heads-up navigation displays to early evidence on accuracy and operative time.</p>
+              <span class="card-date">July 19, 2022</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=19" class="article-card-link" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&q=80&w=500" alt="Orthopaedic trauma operating room" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">A Dedicated Orthopedic Trauma Room Improves Efficiency While Remaining Financially Net Positive</h3>
+              <p class="card-excerpt">A retrospective cost analysis showing a dedicated orthopaedic trauma room cuts operative time and after-hours costs while staying financially net positive.</p>
+              <span class="card-date">July 15, 2022</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=20" class="article-card-link" data-category="clinical-research">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&q=80&w=500" alt="Spine imaging for low back pain" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Clinical Research</span>
+              <h3 class="card-title">The Efficacy of Primary Sacroiliac Joint Fusion for Low Back Pain Caused by Sacroiliac Joint Pathology: A Systematic Review and Meta-analysis</h3>
+              <p class="card-excerpt">A meta-analysis of sacroiliac joint fusion for low back pain, finding modest evidence of benefit over conservative management despite low overall study quality.</p>
+              <span class="card-date">June 29, 2022</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=21" class="article-card-link" data-category="device-evaluation">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&q=80&w=500" alt="Femur fracture fixation hardware" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Medical Device Evaluation</span>
+              <h3 class="card-title">Distal Femoral Replacement or Internal Fixation for Management of Periprosthetic Distal Femur Fractures: A Systematic Review</h3>
+              <p class="card-excerpt">A systematic review comparing distal femoral replacement to internal fixation for periprosthetic distal femur fractures, finding comparable mortality and reoperation outcomes.</p>
+              <span class="card-date">June 27, 2022</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=22" class="article-card-link" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?auto=format&fit=crop&q=80&w=500" alt="Surgical instrument tray layout" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">Optimizing the Surgical Instrument Tray to Immediately Increase Efficiency and Lower Costs in the Operating Room</h3>
+              <p class="card-excerpt">An observational study showing a customized mathematical optimization model trims far more excess instruments from surgical trays than clinician review alone.</p>
+              <span class="card-date">April 12, 2022</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=23" class="article-card-link" data-category="clinical-research">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1580281657702-257584239a55?auto=format&fit=crop&q=80&w=500" alt="Platelet-rich plasma vial" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Clinical Research</span>
+              <h3 class="card-title">The Effect of Leukocyte Concentration on Platelet-Rich Plasma Injections for Knee Osteoarthritis: A Network Meta-Analysis</h3>
+              <p class="card-excerpt">A network meta-analysis testing whether leukocyte concentration in platelet-rich plasma injections meaningfully affects outcomes for knee osteoarthritis patients.</p>
+              <span class="card-date">March 16, 2022</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=24" class="article-card-link" data-category="ai">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&q=80&w=500" alt="Predictive analytics dashboard" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Artificial Intelligence</span>
+              <h3 class="card-title">Machine Learning Using Preoperative Patient Factors Can Predict Duration of Surgery and Length of Stay for Total Knee Arthroplasty</h3>
+              <p class="card-excerpt">Machine learning models trained on national surgical data to predict operative duration and hospital length of stay for total knee arthroplasty from preoperative factors alone.</p>
+              <span class="card-date">February 1, 2022</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=25" class="article-card-link" data-category="clinical-research">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=500" alt="Orthopaedic implant hardware" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Clinical Research</span>
+              <h3 class="card-title">Megaprosthesis Anti-Bacterial Coatings: A Comprehensive Translational Review</h3>
+              <p class="card-excerpt">A translational review of anti-bacterial coating strategies aimed at reducing periprosthetic joint infections in megaprosthesis implants for orthopaedic oncology patients.</p>
+              <span class="card-date">December 5, 2021</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=26" class="article-card-link" data-category="device-evaluation">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=500" alt="Hospital procurement financial planning" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Medical Device Evaluation</span>
+              <h3 class="card-title">Value-Based Procurement Using Total Cost of Ownership: A Step-by-Step Financial Assessment of Orthopaedic-Powered Instrument Procurement</h3>
+              <p class="card-excerpt">A step-by-step total cost of ownership framework for evaluating orthopaedic-powered instrument purchases beyond sticker price.</p>
+              <span class="card-date">November 5, 2021</span>
+            </div>
+          </article>
+        </a>
+
+        <a href="article.html?id=27" class="article-card-link" data-category="efficiency">
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?auto=format&fit=crop&q=80&w=500" alt="Operating room inventory management" class="card-img">
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">Efficiency</span>
+              <h3 class="card-title">Inventory Optimization in the Perioperative Care Department Using Kotter's Change Model</h3>
+              <p class="card-excerpt">A case study applying Kotter's eight-step change model to drive a successful surgical inventory optimization initiative across a hospital's busiest surgical services.</p>
+              <span class="card-date">September 25, 2021</span>
+            </div>
+          </article>
+        </a>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const menuBtn = document.querySelector('.profile-btn');
+    const searchInput = document.querySelector('#search-input');
+    const categoryLinks = document.querySelectorAll('.cat-link');
+    const categorySelect = document.querySelector('#categorySelect');
+    const newsletterCard = document.querySelector('.newsletter-card');
+    const gridContainer = document.querySelector('#articles-container');
+
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    function filterArticles() {
+      let visibleCount = 0;
+      const articles = document.querySelectorAll('.article-card-link');
+
+      articles.forEach(article => {
+        const title = article.querySelector('.card-title').textContent.toLowerCase();
+        const excerpt = article.querySelector('.card-excerpt').textContent.toLowerCase();
+        const categories = article.getAttribute('data-category') || '';
+        
+        const matchesCategory = (activeCategory === 'all' || categories.includes(activeCategory));
+        const matchesSearch = (title.includes(searchQuery) || excerpt.includes(searchQuery));
+
+        if (matchesCategory && matchesSearch) {
+          article.style.display = 'flex';
+          visibleCount++;
+        } else {
+          article.style.display = 'none';
+        }
+      });
+
+      if (activeCategory !== 'all' || searchQuery !== '') {
+        newsletterCard.style.display = 'none';
+      } else {
+        newsletterCard.style.display = 'flex';
+      }
+
+      const existingEmptyState = document.querySelector('.empty-state-card');
+      if (existingEmptyState) {
+        existingEmptyState.remove();
+      }
+
+      if (visibleCount === 0) {
+        const emptyStateHTML = `
+          <div class="empty-state-card">
+            <div class="empty-icon">(°.°)</div>
+            <h3>No matching evaluations located</h3>
+            <p>Modify key terms or reset filters to observe available documentation arrays.</p>
+          </div>
+        `;
+        gridContainer.insertAdjacentHTML('beforeend', emptyStateHTML);
+      }
+    }
+
+    categoryLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        categoryLinks.forEach(item => item.classList.remove('active'));
+        this.classList.add('active');
+        activeCategory = this.getAttribute('data-filter');
+        if (categorySelect) categorySelect.value = activeCategory;
+        filterArticles();
+      });
+    });
+
+    if (categorySelect) {
+      categorySelect.addEventListener('change', function () {
+        activeCategory = this.value;
+        categoryLinks.forEach(item => item.classList.toggle('active', item.getAttribute('data-filter') === activeCategory));
+        filterArticles();
+      });
+    }
+
+    searchInput.addEventListener('input', function(e) {
+      searchQuery = e.target.value.toLowerCase();
+      filterArticles();
+    });
+
+    // ── Published papers, pulled live from Supabase and merged into the grid ──
+    (function () {
+      const PUB_SUPABASE_URL = 'https://brreqfxtesvavfdaidwi.supabase.co';
+      const PUB_SUPABASE_KEY = 'sb_publishable_3x4bvAl-vr2bBgNZkzh04w_suiCtcf5';
+      // Only papers tied to the actual OA Group team make it onto the site —
+      // co-authored papers from Dr. Lex's scrape are included since they're
+      // shared work, but his solo/unrelated publications are left out.
+      const TEAM_RESEARCHERS = ['Azad Abbas', 'Jay Toor'];
+
+      function escapeHtml(str) {
+        return (str || '').replace(/[&<>"']/g, (ch) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+        }[ch]));
+      }
+
+      function categorizePaper(title) {
+        const t = (title || '').toLowerCase();
+        const cats = new Set();
+        if (/machine learning|artificial intelligence|\bai\b|deep learning|neural network|predictive model|algorithm/.test(t)) cats.add('ai');
+        if (/\bdevice\b|implant|prosthe|recall|hardware|fixation/.test(t)) cats.add('device-evaluation');
+        if (/efficiency|scheduling|\bcost\b|utilization|resource|length of stay|discharge|workflow|optimi/.test(t)) cats.add('efficiency');
+        if (cats.size === 0) cats.add('clinical-research');
+        return [...cats].join(' ');
+      }
+
+      function buildPaperCard(p) {
+        const a = document.createElement('a');
+        a.href = p.scholar_url || '#';
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'article-card-link';
+        a.setAttribute('data-category', categorizePaper(p.title));
+        const citeLabel = p.citations ? `${p.citations} citation${p.citations === 1 ? '' : 's'}` : 'Published';
+        a.innerHTML = `
+          <article class="article-card paper-card">
+            <div class="paper-card-head">
+              <i class="fa-solid fa-file-lines paper-card-icon"></i>
+              <span class="paper-cite-badge">${escapeHtml(citeLabel)}</span>
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">${escapeHtml(p.venue || 'Peer-Reviewed Publication')}</span>
+              <h3 class="card-title">${escapeHtml(p.title || 'Untitled')}</h3>
+              <p class="card-excerpt">${escapeHtml(p.authors || '')}</p>
+              <div class="card-date-row">
+                <span class="card-date">${escapeHtml(p.year ? String(p.year) : '')}</span>
+                <span class="card-scholar-link">View on Scholar <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7em;"></i></span>
+              </div>
+            </div>
+          </article>
+        `;
+        return a;
+      }
+
+      async function loadPublishedPapers() {
+        try {
+          const sb = supabase.createClient(PUB_SUPABASE_URL, PUB_SUPABASE_KEY);
+          const { data, error } = await sb
+            .from('publications')
+            .select('title, authors, venue, year, citations, scholar_url, researcher')
+            .order('year', { ascending: false });
+          if (error || !data) return;
+
+          const filtered = data.filter(p => {
+            if (TEAM_RESEARCHERS.includes(p.researcher)) return true;
+            const authors = (p.authors || '').toLowerCase();
+            return authors.includes('abbas') || authors.includes('toor');
+          });
+
+          const seen = new Set();
+          filtered.forEach(p => {
+            const key = (p.title || '').toLowerCase().trim();
+            if (!key || seen.has(key)) return;
+            seen.add(key);
+            gridContainer.appendChild(buildPaperCard(p));
+          });
+
+          filterArticles();
+        } catch (err) {
+          console.error('Could not load published papers', err);
+        }
+      }
+
+      loadPublishedPapers();
+    })();
+
+    (function () {
+      const navBtn = document.getElementById('navHamburger');
+      const navLinks = document.querySelector('.nav-links');
+      if (!navBtn || !navLinks) return;
+      function closeMenu() {
+        navLinks.classList.remove('open');
+        navBtn.classList.remove('open');
+        navBtn.setAttribute('aria-expanded', 'false');
+      }
+      navBtn.addEventListener('click', () => {
+        const open = !navLinks.classList.contains('open');
+        navLinks.classList.toggle('open', open);
+        navBtn.classList.toggle('open', open);
+        navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      navLinks.addEventListener('click', (e) => { if (e.target === navLinks) closeMenu(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    })();
+  </script>
+  <script src="site-search.js"></script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <a href="index.html" class="footer-logo"><img src="images/logo-cube-icon.png" alt="" class="footer-logo-img">SLATE SURGERY</a>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="solutions.html">Solutions</a></li>
+        <li><a href="index.html#about-us">About Us</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="login.html">Sign In</a></li>
+      </ul>
+      <span class="footer-copy">&copy; 2026 Slate Surgery. All rights reserved.</span>
+    </div>
+  </footer>
+</body>
+</html>
