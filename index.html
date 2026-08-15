@@ -631,8 +631,10 @@
     }
     @media (max-width: 820px) {
       .navbar { padding: 1.1rem 1.5rem; display: flex; justify-content: space-between; }
-      .logo-img { height: 44px; }
+      .logo-img { height: 52px; }
       .nav-hamburger { display: flex; }
+      .search-wrapper { display: none; }
+      .nav-actions .mobile-search-toggle { display: flex; }
       .nav-links {
         position: fixed;
         inset: 0;
@@ -747,6 +749,9 @@
         <i class="fas fa-search"></i>
         <input type="text" class="search-input" id="siteSearchBar" placeholder="Search articles, papers...." autocomplete="off">
       </div>
+      <button class="mobile-search-toggle" id="mobileSearchToggle" aria-label="Search" aria-expanded="false">
+        <i class="fas fa-search"></i>
+      </button>
       <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>

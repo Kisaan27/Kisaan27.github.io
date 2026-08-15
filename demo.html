@@ -145,8 +145,10 @@
 
     @media (max-width: 820px) {
       .navbar { padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; }
-      .logo-img { height: 44px; }
+      .logo-img { height: 52px; }
       .nav-links { display: none; }
+      .search-wrapper { display: none; }
+      .nav-actions .mobile-search-toggle { display: flex; }
       .demo-container { grid-template-columns: 1fr; margin: 2rem auto; }
     }
 
@@ -356,6 +358,9 @@
         <i class="fas fa-search"></i>
         <input type="text" class="search-input" id="siteSearchBar" placeholder="Search..." autocomplete="off">
       </div>
+      <button class="mobile-search-toggle" id="mobileSearchToggle" aria-label="Search" aria-expanded="false">
+        <i class="fas fa-search"></i>
+      </button>
 
     </div>
   </nav>

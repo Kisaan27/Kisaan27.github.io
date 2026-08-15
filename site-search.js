@@ -90,4 +90,71 @@ document.addEventListener('DOMContentLoaded', () => {
       localInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
+
+  // ── Mobile search: icon-only trigger that opens a full-screen overlay
+  // with the search bar and a "Quick Links" list built from the page's own nav links.
+  const mobileToggle = document.getElementById('mobileSearchToggle');
+  if (mobileToggle) {
+    const toggleIcon = mobileToggle.querySelector('i');
+    const navLinks = Array.from(document.querySelectorAll('.nav-links a'));
+
+    if (navLinks.length) {
+      const quickLinks = document.createElement('div');
+      quickLinks.className = 'mobile-search-quicklinks';
+      const label = document.createElement('div');
+      label.className = 'mobile-search-quicklinks-label';
+      label.textContent = 'Quick Links';
+      quickLinks.appendChild(label);
+      navLinks.forEach((a) => {
+        const link = document.createElement('a');
+        link.href = a.getAttribute('href');
+        link.className = 'mobile-search-quicklink';
+        link.innerHTML = `<i class="fas fa-arrow-right"></i><span>${escapeHtml(a.textContent.trim())}</span>`;
+        quickLinks.appendChild(link);
+      });
+      wrapper.appendChild(quickLinks);
+    }
+
+    function closeHamburgerMenu() {
+      const navLinksEl = document.querySelector('.nav-links');
+      const hamburgerBtn = document.getElementById('navHamburger');
+      if (navLinksEl) navLinksEl.classList.remove('open');
+      if (hamburgerBtn) {
+        hamburgerBtn.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    function openMobileSearch() {
+      closeHamburgerMenu();
+      document.body.classList.add('mobile-search-open');
+      mobileToggle.setAttribute('aria-expanded', 'true');
+      if (toggleIcon) toggleIcon.classList.replace('fa-search', 'fa-times');
+      setTimeout(() => siteSearchBar.focus(), 200);
+    }
+
+    function closeMobileSearch() {
+      document.body.classList.remove('mobile-search-open');
+      mobileToggle.setAttribute('aria-expanded', 'false');
+      if (toggleIcon) toggleIcon.classList.replace('fa-times', 'fa-search');
+      dropdown.classList.remove('open');
+    }
+
+    mobileToggle.addEventListener('click', () => {
+      if (document.body.classList.contains('mobile-search-open')) closeMobileSearch();
+      else openMobileSearch();
+    });
+
+    // Tapping the empty overlay background (not the input, suggestions, or
+    // quick links themselves) dismisses it, same as tapping the toggle again.
+    wrapper.addEventListener('click', (event) => {
+      if (event.target === wrapper && document.body.classList.contains('mobile-search-open')) {
+        closeMobileSearch();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeMobileSearch();
+    });
+  }
 });
