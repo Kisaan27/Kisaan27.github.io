@@ -74,6 +74,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Every article page shares this template; ?id= picks which row to load/save.
   const articleId = Number(new URLSearchParams(window.location.search).get('id')) || 1;
 
+  // Mobile-only hero banner image. There's no image column on the articles
+  // table (see the save payload below), so this mirrors the thumbnails already
+  // used for each article's card on research.html rather than touching Supabase.
+  const ARTICLE_IMAGES = {
+    2: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&q=80&w=1400',
+    3: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1400',
+    4: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=1400',
+    5: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1400',
+    6: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1400',
+    7: 'images/Operating-Room-Terminal-Cleaning.jpg',
+    8: 'images/Onsite-Laboratory-Investigations-and-Screening-Services.jpg',
+    9: 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=1400',
+    10: 'https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&q=80&w=1400',
+    11: 'https://images.unsplash.com/photo-1603398938378-e54eab446dde?auto=format&fit=crop&q=80&w=1400',
+    12: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1400',
+    13: 'https://images.unsplash.com/photo-1585842378054-ee2e52f94ba2?auto=format&fit=crop&q=80&w=1400',
+    14: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&q=80&w=1400',
+    15: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1400',
+    16: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&q=80&w=1400',
+    17: 'https://images.unsplash.com/photo-1512678080530-7760d81faba6?auto=format&fit=crop&q=80&w=1400',
+    18: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&q=80&w=1400',
+    19: 'https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&q=80&w=1400',
+    20: 'https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&q=80&w=1400',
+    21: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&q=80&w=1400',
+    22: 'https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?auto=format&fit=crop&q=80&w=1400',
+    23: 'https://images.unsplash.com/photo-1580281657702-257584239a55?auto=format&fit=crop&q=80&w=1400',
+    24: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&q=80&w=1400',
+    25: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=1400',
+    26: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=1400',
+    27: 'https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?auto=format&fit=crop&q=80&w=1400',
+  };
+  const heroImg = document.getElementById('edit-hero-image');
+  if (heroImg) heroImg.src = ARTICLE_IMAGES[articleId] || 'images/logo-full.png';
+
   // Byline info isn't in the articles table (no author/date columns), so it's
   // kept here until the schema grows one. Missing an entry just keeps the
   // "Draft • Not yet published" placeholder, which is correct for new drafts.
