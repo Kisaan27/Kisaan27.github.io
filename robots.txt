@@ -7,4 +7,4 @@ Disallow: /product.html
 Disallow: /product-view.html
 Disallow: /demo.html
 
-Sitemap: https://kisaan27.github.io/sitemap.xml
+Sitemap: https://slatesurgery.com/sitemap.xml
