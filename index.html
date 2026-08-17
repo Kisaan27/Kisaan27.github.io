@@ -215,26 +215,66 @@
     .hero-linechart { width: 100%; height: 68px; }
     .hero-linechart .chart-grid { stroke: rgba(255,255,255,0.1); stroke-width: 0.5; }
     .hero-linechart .chart-axis-label { font-size: 5px; fill: rgba(255,255,255,0.45); font-family: -apple-system, sans-serif; }
-    .hero-linechart .chart-line-a { fill: none; stroke: #8fa0dd; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1.5px 1.5px rgba(0,0,0,0.35)); }
-    .hero-linechart .chart-line-b { fill: none; stroke: var(--accent-mint); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1.5px 2px rgba(0,0,0,0.35)) drop-shadow(0 0 3px rgba(122,170,102,0.7)); }
-    .hero-linechart .chart-dot { fill: var(--accent-mint); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)) drop-shadow(0 0 4px rgba(122,170,102,0.9)); }
+    .hero-linechart .chart-line-a {
+      fill: none; stroke: #8fa0dd; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+      filter: drop-shadow(0 1.5px 1.5px rgba(0,0,0,0.35));
+      stroke-dasharray: 140; stroke-dashoffset: 140;
+      animation: heroLineDraw 1.6s ease-out 0.3s forwards;
+    }
+    .hero-linechart .chart-line-b {
+      fill: none; stroke: var(--accent-mint); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+      filter: drop-shadow(0 1.5px 2px rgba(0,0,0,0.35)) drop-shadow(0 0 3px rgba(122,170,102,0.7));
+      stroke-dasharray: 140; stroke-dashoffset: 140;
+      animation: heroLineDraw 1.6s ease-out 0.6s forwards;
+    }
+    .hero-linechart .chart-area-a, .hero-linechart .chart-area-b { opacity: 0; animation: heroAreaFade 1s ease-out forwards; }
+    .hero-linechart .chart-area-a { animation-delay: 1.3s; }
+    .hero-linechart .chart-area-b { animation-delay: 1.6s; }
+    .hero-linechart .chart-dot {
+      fill: var(--accent-mint); transform-origin: 88px 18px; opacity: 0; transform: scale(0);
+      animation: heroDotPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.9s forwards, heroDotPulse 2.2s ease-in-out 2.4s infinite;
+    }
     .hero-axis-caption { font-size: 0.52rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: -0.3rem; }
+    @keyframes heroLineDraw { to { stroke-dashoffset: 0; } }
+    @keyframes heroAreaFade { to { opacity: 1; } }
+    @keyframes heroDotPop { to { opacity: 1; transform: scale(1); } }
+    @keyframes heroDotPulse {
+      0%, 100% { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)) drop-shadow(0 0 4px rgba(122,170,102,0.9)); }
+      50% { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)) drop-shadow(0 0 8px rgba(122,170,102,1)); }
+    }
 
     /* KPI ring card */
     .hero-kpi-body { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; padding: 0.15rem 0 0.05rem; }
     .hero-ring-big { width: 66px; height: 66px; }
     .hero-ring-big .ring-shadow { fill: none; stroke: rgba(0,0,0,0.4); stroke-width: 7; filter: blur(1.5px); }
     .hero-ring-big .ring-track { fill: none; stroke: rgba(255,255,255,0.12); stroke-width: 7; }
-    .hero-ring-big .ring-fill { fill: none; stroke: url(#heroRingGrad); stroke-width: 7; stroke-linecap: round; transform: rotate(-90deg); transform-origin: center; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4)); }
-    .hero-ring-value { font-size: 0.92rem; font-weight: 800; fill: #ffffff; font-family: -apple-system, sans-serif; }
+    .hero-ring-big .ring-fill {
+      fill: none; stroke: url(#heroRingGrad); stroke-width: 7; stroke-linecap: round;
+      transform: rotate(-90deg); transform-origin: center;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4));
+      stroke-dashoffset: 314.159;
+      animation: heroRingFill 1.7s cubic-bezier(0.4,0,0.2,1) 0.4s forwards;
+    }
+    .hero-ring-value { font-size: 0.92rem; font-weight: 800; fill: #ffffff; font-family: -apple-system, sans-serif; opacity: 0; animation: heroFadeIn 0.6s ease-out 1.8s forwards; }
     .hero-kpi-caption { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.04em; color: rgba(255,255,255,0.75); text-transform: uppercase; }
+    @keyframes heroRingFill { to { stroke-dashoffset: 25.16; } }
+    @keyframes heroFadeIn { to { opacity: 1; } }
 
     /* radar card */
     .hero-radar2 { width: 100%; height: 96px; }
     .hero-radar2 .radar-grid { fill: none; stroke: rgba(255,255,255,0.14); stroke-width: 0.6; }
     .hero-radar2 .radar-axis-label { font-size: 5.6px; fill: rgba(255,255,255,0.55); font-family: -apple-system, sans-serif; }
-    .hero-radar2 .radar-shape-pre { stroke: #8fa0dd; stroke-width: 1.3; stroke-linejoin: round; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
-    .hero-radar2 .radar-shape-post { stroke: var(--accent-mint); stroke-width: 1.3; stroke-linejoin: round; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.35)); }
+    .hero-radar2 .radar-shape-pre {
+      stroke: #8fa0dd; stroke-width: 1.3; stroke-linejoin: round; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+      transform-origin: 70px 55px; transform: scale(0); opacity: 0;
+      animation: heroRadarBloom 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.4s forwards;
+    }
+    .hero-radar2 .radar-shape-post {
+      stroke: var(--accent-mint); stroke-width: 1.3; stroke-linejoin: round; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.35));
+      transform-origin: 70px 55px; transform: scale(0); opacity: 0;
+      animation: heroRadarBloom 0.9s cubic-bezier(0.34,1.56,0.64,1) 0.7s forwards;
+    }
+    @keyframes heroRadarBloom { to { transform: scale(1); opacity: 1; } }
     .hero-radar-legend { display: flex; gap: 0.9rem; justify-content: center; font-size: 0.55rem; color: rgba(255,255,255,0.65); }
     .hero-radar-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
     .hero-radar-legend i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
@@ -886,7 +926,7 @@
             <circle class="ring-glow" cx="60" cy="60" r="58" fill="url(#heroRingGlow)" />
             <circle class="ring-shadow" cx="60" cy="63" r="50" />
             <circle class="ring-track" cx="60" cy="60" r="50" />
-            <circle class="ring-fill" cx="60" cy="60" r="50" stroke-dasharray="289 314.16" />
+            <circle class="ring-fill" cx="60" cy="60" r="50" stroke-dasharray="314.159" />
             <text class="hero-ring-value" x="60" y="68" text-anchor="middle">92%</text>
           </svg>
           <span class="hero-kpi-caption">Decision Accuracy</span>
