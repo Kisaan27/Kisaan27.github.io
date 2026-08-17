@@ -273,6 +273,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // "Copy link" share button, shared by article.html and ehss.html.
+  const copyLinkBtn = document.getElementById('copy-link-btn');
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const icon = copyLinkBtn.querySelector('i');
+      const originalIconClass = icon.className;
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        icon.className = 'fa-solid fa-check';
+      } catch (err) {
+        console.error('Copy link failed', err);
+        icon.className = 'fa-solid fa-xmark';
+      }
+      setTimeout(() => { icon.className = originalIconClass; }, 2000);
+    });
+  }
+
   // 2. Check if an admin session exists
   const { data: { session } } = await _supabase.auth.getSession();
   if (!session) return;
