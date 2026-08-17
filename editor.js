@@ -235,6 +235,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     jsonLdScript.textContent = JSON.stringify(jsonLd);
   }
 
+  // Sidebar "Subscribe to Research" form, shared by article.html and ehss.html.
+  // Must run for every visitor, so this sits before the admin-session check below.
+  const newsletterForm = document.getElementById('newsletter-form');
+  if (newsletterForm) {
+    const newsletterEmail = document.getElementById('newsletter-email');
+    const newsletterSubmitBtn = document.getElementById('newsletter-submit-btn');
+    const newsletterSuccess = document.getElementById('newsletter-success');
+    const newsletterError = document.getElementById('newsletter-error');
+
+    newsletterForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      newsletterSuccess.classList.remove('visible');
+      newsletterError.classList.remove('visible');
+
+      const email = newsletterEmail.value.trim();
+      const originalText = newsletterSubmitBtn.innerText;
+      newsletterSubmitBtn.disabled = true;
+      newsletterSubmitBtn.innerText = 'Subscribing...';
+
+      const { error: subscribeError } = await _supabase
+        .from('subscribers')
+        .insert({ email });
+
+      newsletterSubmitBtn.disabled = false;
+      newsletterSubmitBtn.innerText = originalText;
+
+      if (subscribeError) {
+        newsletterError.textContent = 'Something went wrong: ' + subscribeError.message;
+        newsletterError.classList.add('visible');
+        return;
+      }
+
+      newsletterSuccess.classList.add('visible');
+      newsletterForm.reset();
+    });
+  }
+
   // 2. Check if an admin session exists
   const { data: { session } } = await _supabase.auth.getSession();
   if (!session) return;

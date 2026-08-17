@@ -414,11 +414,49 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.form-success-state {
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.newsletter-input {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(7, 42, 29, 0.15);
+    border-radius: 21px;
+    padding: 0.7rem 1.1rem;
+    color: var(--text-dark);
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.newsletter-input::placeholder {
+    color: var(--text-muted);
+}
+
+.newsletter-input:focus {
+    border-color: var(--accent-mint);
+}
+
+.form-success-state,
+.form-error-state {
+    display: none;
     font-size: 0.8rem;
-    color: var(--accent-mint);
     margin-bottom: 0.5rem;
     font-weight: 600;
+}
+
+.form-success-state.visible {
+    display: block;
+    color: var(--accent-mint);
+}
+
+.form-error-state.visible {
+    display: block;
+    color: #dc2626;
 }
 
 .action-btn-primary {
@@ -437,6 +475,11 @@ body {
 .action-btn-primary:hover {
     background: #0f3f2d;
     box-shadow: 0 4px 12px rgba(7, 42, 29, 0.15);
+}
+
+.action-btn-primary:disabled {
+    opacity: 0.7;
+    cursor: default;
 }
 
 .share-card {
