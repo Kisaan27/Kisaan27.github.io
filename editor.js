@@ -74,6 +74,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Every article page shares this template; ?id= picks which row to load/save.
   const articleId = Number(new URLSearchParams(window.location.search).get('id')) || 1;
 
+  // Set canonical/og:url synchronously, before the Supabase fetch below.
+  // These only need the URL (already known), not the fetched article data, and
+  // Google's crawler may snapshot the page before an async fetch resolves —
+  // if it does, every article would otherwise share the same canonical-less
+  // markup and get flagged as duplicate content with no clear canonical.
+  const canonicalUrl = `${window.location.origin}${window.location.pathname}?id=${articleId}`;
+  let canonicalLink = document.querySelector('link[rel="canonical"]');
+  if (!canonicalLink) {
+    canonicalLink = document.createElement('link');
+    canonicalLink.setAttribute('rel', 'canonical');
+    document.head.appendChild(canonicalLink);
+  }
+  canonicalLink.setAttribute('href', canonicalUrl);
+  const ogUrlEarly = document.querySelector('meta[property="og:url"]');
+  if (ogUrlEarly) ogUrlEarly.setAttribute('content', canonicalUrl);
+
   // Mobile-only hero banner image. There's no image column on the articles
   // table (see the save payload below), so this mirrors the thumbnails already
   // used for each article's card on research.html rather than touching Supabase.
@@ -189,17 +205,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const twitterDesc = document.querySelector('meta[name="twitter:description"]');
       if (twitterDesc) twitterDesc.setAttribute('content', plainAbstract);
     }
-    const canonicalUrl = `${window.location.origin}${window.location.pathname}?id=${articleId}`;
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.setAttribute('href', canonicalUrl);
-    const ogUrl = document.querySelector('meta[property="og:url"]');
-    if (ogUrl) ogUrl.setAttribute('content', canonicalUrl);
-
     // Article structured data (JSON-LD) so Google can show rich results/bylines.
     const parsedDate = byline ? new Date(byline.date.split('•')[0].trim()) : null;
     const jsonLd = {
