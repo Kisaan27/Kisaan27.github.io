@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "kisaan27-github-io.vercel.app"
+        }
+      ],
+      "destination": "https://slatesurgery.com/:path*",
+      "permanent": true
+    }
+  ]
+}
