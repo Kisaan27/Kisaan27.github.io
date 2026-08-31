@@ -21,7 +21,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    overflow-x: hidden;
   }
   
   #neural-bg {
@@ -50,7 +49,11 @@
     --accent-mint: #7aaa66;
     --text-dark: #10142a;
   }
-  
+
+  @media (min-width: 821px) {
+    .navbar { position: sticky; top: 0; }
+  }
+
   .logo {
     font-weight: 700;
     font-size: 1.3rem;
@@ -512,6 +515,7 @@
   /* ══ INTERACTIVE DOCUMENT OVERRIDES ══ */
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
     overflow-y: auto; /* Forces natural scroll space lifecycle over layout modules */
     scrollbar-gutter: stable;
   }

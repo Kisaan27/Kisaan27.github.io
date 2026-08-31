@@ -65,13 +65,12 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    html { scroll-behavior: smooth; overflow-y: auto; scrollbar-gutter: stable; background-color: var(--bg-light); }
+    html { scroll-behavior: smooth; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; background-color: var(--bg-light); }
 
     body {
       background-color: var(--bg-light);
       color: var(--text-dark);
       min-height: 100vh;
-      overflow-x: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -688,6 +687,10 @@
     @media (min-width: 901px) and (max-width: 1500px) {
       .carousel-img-ai { object-position: 20% center; }
     }
+    /* Desktop only: keep the navbar pinned to the top while scrolling. */
+    @media (min-width: 821px) {
+      .navbar { position: sticky; top: 0; }
+    }
     /* Mid-width tablet/laptop screens: the full-size logo, nav pill, and search
        bar don't all fit on one line before the mobile breakpoint kicks in, so
        compact them proportionally to avoid the links wrapping. */
@@ -1172,14 +1175,7 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <a href="index.html" class="footer-logo"><img src="images/logo-cube-icon.png" alt="Slate Surgery logo" class="footer-logo-img">SLATE SURGERY</a>
-      <ul class="footer-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="solutions.html">Solutions</a></li>
-        <li><a href="index.html#about-us">About Us</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-        <li><a href="login.html">Sign In</a></li>
-      </ul>
+ 
       <span class="footer-copy">&copy; 2026 Slate Surgery. All rights reserved.</span>
     </div>
   </footer>

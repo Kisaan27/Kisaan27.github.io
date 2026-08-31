@@ -78,6 +78,9 @@
       border-bottom: 1px solid var(--border-light);
       position: relative; z-index: 100;
     }
+    @media (min-width: 901px) {
+      .navbar { position: sticky; top: 0; }
+    }
     .logo { font-weight: 700; font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; height: 34px; text-decoration: none; cursor: pointer; justify-self: start; width: fit-content; }
     .logo-img { height: 90px; width: auto; display: block; }
     .nav-links {
