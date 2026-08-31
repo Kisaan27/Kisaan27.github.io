@@ -525,19 +525,43 @@
     const categorySelect = document.querySelector('#categorySelect');
     const newsletterCard = document.querySelector('.newsletter-card');
     const gridContainer = document.querySelector('#articles-container');
+    const researchHero = document.querySelector('.research-hero');
 
     let activeCategory = 'all';
     let searchQuery = '';
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+      }[ch]));
+    }
+
+    // Re-renders an element from its own plain-text content, wrapping any
+    // match of `query` in <mark>. textContent stays accurate as the source
+    // of truth even after a previous highlight pass, since <mark> tags add
+    // no extra characters.
+    function highlightMatches(el, query) {
+      const text = el.textContent;
+      if (!query) {
+        el.textContent = text;
+        return;
+      }
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedQuery})`, 'gi');
+      el.innerHTML = escapeHtml(text).replace(regex, '<mark class="search-highlight">$1</mark>');
+    }
 
     function filterArticles() {
       let visibleCount = 0;
       const articles = document.querySelectorAll('.article-card-link');
 
       articles.forEach(article => {
-        const title = article.querySelector('.card-title').textContent.toLowerCase();
-        const excerpt = article.querySelector('.card-excerpt').textContent.toLowerCase();
+        const titleEl = article.querySelector('.card-title');
+        const excerptEl = article.querySelector('.card-excerpt');
+        const title = titleEl.textContent.toLowerCase();
+        const excerpt = excerptEl.textContent.toLowerCase();
         const categories = article.getAttribute('data-category') || '';
-        
+
         const matchesCategory = (activeCategory === 'all' || categories.includes(activeCategory));
         const matchesSearch = (title.includes(searchQuery) || excerpt.includes(searchQuery));
 
@@ -547,7 +571,14 @@
         } else {
           article.style.display = 'none';
         }
+
+        highlightMatches(titleEl, searchQuery);
+        highlightMatches(excerptEl, searchQuery);
       });
+
+      if (researchHero) {
+        researchHero.style.display = searchQuery !== '' ? 'none' : '';
+      }
 
       if (activeCategory !== 'all' || searchQuery !== '') {
         newsletterCard.style.display = 'none';

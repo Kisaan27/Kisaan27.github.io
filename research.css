@@ -332,6 +332,13 @@ body {
     font-weight: 600;
 }
 
+.search-highlight {
+    background: rgba(34, 197, 94, 0.28);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 2px;
+}
+
 /* ==========================================================================
    PUBLISHED-PAPER CARDS (embedded from Google Scholar records)
    ========================================================================== */
