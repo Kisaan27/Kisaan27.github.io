@@ -22,6 +22,12 @@
   gap: 1rem 1.75rem;
 }
 
+.site-footer .footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
 .site-footer .footer-logo {
   display: flex;
   align-items: center;
@@ -72,7 +78,34 @@
 .site-footer .footer-copy {
   font-size: 0.8rem;
   color: rgba(244, 246, 244, 0.35);
-  white-space: nowrap;
+}
+
+.site-footer .footer-bubbles {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-footer .footer-bubble {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(244, 246, 244, 0.06);
+  border: 1px solid rgba(244, 246, 244, 0.15);
+  color: rgba(244, 246, 244, 0.7);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.site-footer .footer-bubble:hover {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #141414;
+  transform: translateY(-2px);
 }
 
 @media (max-width: 640px) {
