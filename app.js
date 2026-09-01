@@ -51,8 +51,7 @@ menu.classList.toggle('active');
           if (submitBtn) submitBtn.innerText = originalText;
         } else {
           console.log("Success! Session token locked down.", data);
-          // Changed redirect target path to go straight to your live editable article page!
-          window.location.href = 'ehss.html'; 
+          window.location.href = 'research.html';
         }
       }
     });

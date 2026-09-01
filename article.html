@@ -30,44 +30,83 @@
         /* ══ INLINE THEME EXTENSIONS FOR STRUCTURAL DYNAMICS ══ */
         #editor-controls {
             display: none;
-            padding: 1rem 4rem;
-            background: #100d0d;
-            border-bottom: 1px solid var(--border-light);
-            text-align: right;
-            justify-content: flex-end;
             align-items: center;
-            gap: 20px;
+            gap: 4px;
+            padding: 0 4rem;
+            height: 52px;
+            background: #17181b;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             position: fixed;
-            top: 70px;
+            top: var(--editor-bar-top, 70px);
             left: 0;
             width: 100%;
             z-index: 998;
-            box-shadow: 0 4px 12px rgba(7, 42, 29, 0.02);
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+        #editor-controls::-webkit-scrollbar { display: none; }
+
+        #editor-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .editor-controls-divider {
+            width: 1px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.14);
+            flex-shrink: 0;
+            margin: 0 8px;
+        }
+
+        .editor-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            margin-left: auto;
+            padding-left: 12px;
+        }
+
+        .editor-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .editor-status {
             color: var(--accent-mint);
+            background: rgba(34, 197, 94, 0.12);
             font-weight: 600;
-            font-size: 0.88rem;
+            font-size: 0.8rem;
+            height: 32px;
+            padding: 0 10px;
+            border-radius: 6px;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            white-space: nowrap;
         }
 
         #save-btn {
             background: var(--brand-green);
             color: white;
             border: none;
-            padding: 0 1.25rem;
-            height: 38px;
-            border-radius: 20px;
+            padding: 0 1rem;
+            height: 32px;
+            border-radius: 16px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         #save-btn:hover {
@@ -78,17 +117,18 @@
         #signout-btn {
             background: transparent;
             color: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0 1.1rem;
-            height: 38px;
-            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            padding: 0 0.9rem;
+            height: 32px;
+            border-radius: 16px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         #signout-btn:hover {
@@ -98,15 +138,14 @@
 
         /* Shift content grid down dynamically ONLY when editor ribbon is present */
         body.editing-active .post-container {
-            padding-top: 130px;
+            padding-top: var(--editor-bar-offset, 122px);
         }
 
         @media screen and (max-width: 1200px) {
-            #editor-controls { padding: 1rem 2rem; }
+            #editor-controls { padding: 0 2rem; }
         }
         @media screen and (max-width: 960px) {
-            #editor-controls { padding: 1rem 1.5rem; position: static; height: auto; flex-direction: column; align-items: stretch; }
-            body.editing-active .post-container { padding-top: 70px; }
+            #editor-controls { padding: 0 1.5rem; }
         }
     </style>
     <script>
@@ -145,65 +184,76 @@
 
     <!-- ══ REFACTORED EDITOR MATRIX RIBBON ══ -->
     <div id="editor-controls">
-        <div id="editor-toolbar" style="display:flex; gap: 8px; flex-wrap: wrap; flex: 1;">
-            <button onclick="format('bold')"><b>B</b></button>
-            <button onclick="format('italic')"><i>I</i></button>
-            <button onclick="format('underline')"><u>U</u></button>
-            <button onclick="format('strikeThrough')"><s>S</s></button>
+            <div id="editor-toolbar">
+                <button onclick="format('bold')"><b>B</b></button>
+                <button onclick="format('italic')"><i>I</i></button>
+                <button onclick="format('underline')"><u>U</u></button>
+                <button onclick="format('strikeThrough')"><s>S</s></button>
 
-            <select onchange="formatBlock(this.value)">
-                <option value="p">Paragraph</option>
-                <option value="h1">Heading 1</option>
-                <option value="h2">Heading 2</option>
-                <option value="h3">Heading 3</option>
-            </select>
+                <select onchange="formatBlock(this.value)">
+                    <option value="p">Paragraph</option>
+                    <option value="h1">Heading 1</option>
+                    <option value="h2">Heading 2</option>
+                    <option value="h3">Heading 3</option>
+                </select>
 
-            <select onchange="applyCommand('fontSize', this.value)">
-                <option value="3">Normal</option>
-                <option value="4">Large</option>
-                <option value="5">Larger</option>
-                <option value="6">Huge</option>
-            </select>
+                <select onchange="applyCommand('fontSize', this.value)">
+                    <option value="3">Normal</option>
+                    <option value="4">Large</option>
+                    <option value="5">Larger</option>
+                    <option value="6">Huge</option>
+                </select>
 
-            <button onclick="format('insertUnorderedList')"><i class="fa-solid fa-list-ul"></i></button>
-            <button onclick="format('insertOrderedList')"><i class="fa-solid fa-list-ol"></i></button>
-            <button onclick="format('justifyLeft')"><i class="fa-solid fa-align-left"></i></button>
-            <button onclick="format('justifyCenter')"><i class="fa-solid fa-align-center"></i></button>
-            <button onclick="format('justifyRight')"><i class="fa-solid fa-align-right"></i></button>
-            <button onclick="insertLink()"><i class="fa-solid fa-link"></i></button>
+                <button onclick="format('insertUnorderedList')"><i class="fa-solid fa-list-ul"></i></button>
+                <button onclick="format('insertOrderedList')"><i class="fa-solid fa-list-ol"></i></button>
+                <button onclick="format('justifyLeft')"><i class="fa-solid fa-align-left"></i></button>
+                <button onclick="format('justifyCenter')"><i class="fa-solid fa-align-center"></i></button>
+                <button onclick="format('justifyRight')"><i class="fa-solid fa-align-right"></i></button>
+                <button onclick="insertLink()"><i class="fa-solid fa-link"></i></button>
 
-            <div class="toolbar-more-wrap">
-                <button id="toolbar-more-toggle" onclick="toggleMoreMenu(event)" title="More formatting"><i class="fa-solid fa-ellipsis"></i></button>
-                <div id="toolbar-more-panel" class="toolbar-more-panel">
-                    <label>Font
-                        <select onchange="applyCommand('fontName', this.value)">
-                            <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Default</option>
-                            <option value="Georgia, serif">Georgia</option>
-                            <option value="'Times New Roman', serif">Times New Roman</option>
-                            <option value="Arial, sans-serif">Arial</option>
-                            <option value="'Courier New', monospace">Courier New</option>
-                            <option value="Verdana, sans-serif">Verdana</option>
-                        </select>
-                    </label>
-                    <label>Text color
-                        <input type="color" onchange="applyCommand('foreColor', this.value)" value="#0b130e">
-                    </label>
-                    <label>Highlight
-                        <input type="color" onchange="applyCommand('hiliteColor', this.value)" value="#ffff00">
-                    </label>
-                    <button onclick="formatBlock('blockquote')"><i class="fa-solid fa-quote-right"></i> Quote</button>
-                    <button onclick="format('removeFormat')"><i class="fa-solid fa-eraser"></i> Clear formatting</button>
+                <div class="toolbar-more-wrap">
+                    <button id="toolbar-more-toggle" onclick="toggleMoreMenu(event)" title="More formatting"><i class="fa-solid fa-ellipsis"></i></button>
+                    <div id="toolbar-more-panel" class="toolbar-more-panel">
+                        <label>Font
+                            <select onchange="applyCommand('fontName', this.value)">
+                                <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Default</option>
+                                <option value="Georgia, serif">Georgia</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                                <option value="Arial, sans-serif">Arial</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="Verdana, sans-serif">Verdana</option>
+                            </select>
+                        </label>
+                        <label>Text color
+                            <input type="color" onchange="applyCommand('foreColor', this.value)" value="#0b130e">
+                        </label>
+                        <label>Highlight
+                            <input type="color" onchange="applyCommand('hiliteColor', this.value)" value="#ffff00">
+                        </label>
+                        <button onclick="formatBlock('blockquote')"><i class="fa-solid fa-quote-right"></i> Quote</button>
+                        <button onclick="format('removeFormat')"><i class="fa-solid fa-eraser"></i> Clear formatting</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <span class="editor-status" id="toggle-edit-mode">
-            <i class="fa-solid fa-toggle-on"></i> <span id="status-text">Editing Mode Active</span>
-        </span>        <button id="save-btn">
-            <i class="fa-solid fa-floppy-disk"></i> Save Changes
-        </button>
-        <button id="signout-btn">
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-        </button>
+
+            <div class="editor-actions">
+                <div class="editor-controls-divider"></div>
+
+                <div class="editor-controls-group">
+                    <span class="editor-status" id="toggle-edit-mode">
+                        <i class="fa-solid fa-toggle-on"></i> <span id="status-text">Editing Mode Active</span>
+                    </span>
+                    <button id="save-btn">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Save Changes
+                    </button>
+                </div>
+
+                <div class="editor-controls-divider"></div>
+
+                <button id="signout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                </button>
+            </div>
     </div>
 
     <main class="post-container">

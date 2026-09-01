@@ -305,6 +305,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (editorControls) {
       editorControls.style.display = 'flex';
       document.body.classList.add('editing-active');
+
+      // The navbar's logo overflows its own box, so its rendered height isn't
+      // a fixed constant (and differs again at the mobile padding breakpoint).
+      // Measure it directly instead of hardcoding a top offset that drifts
+      // out of sync and lets the navbar overlap this bar.
+      const navbar = document.querySelector('.navbar');
+      const syncEditorBarOffset = () => {
+          if (!navbar) return;
+          const navH = navbar.getBoundingClientRect().height;
+          const barH = editorControls.getBoundingClientRect().height;
+          document.documentElement.style.setProperty('--editor-bar-top', navH + 'px');
+          document.documentElement.style.setProperty('--editor-bar-offset', (navH + barH) + 'px');
+      };
+      syncEditorBarOffset();
+      window.addEventListener('resize', syncEditorBarOffset);
   }
 
   // 4. Setup Elements & Toggle Functionality
@@ -403,7 +418,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert('Save failed: ' + error.message);
       } else {
         saveBtn.innerHTML = '✓ Saved!';
-        setTimeout(() => saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes', 2000);
+        setTimeout(() => saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Save Changes', 2000);
       }
     });
   }

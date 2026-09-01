@@ -28,6 +28,77 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="footer.css">
   <link rel="stylesheet" href="search-dropdown.css">
+  <style>
+    /* ══ FLOATING ADMIN BAR (sign in only, research page only) ══ */
+    #admin-float-bar {
+      display: none;
+      position: fixed;
+      top: 100px;
+      right: 40px;
+      z-index: 1200;
+      align-items: center;
+      gap: 6px;
+      padding: 7px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(32,36,44,0.88), rgba(8,10,14,0.8));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.16);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      cursor: grab;
+      user-select: none;
+    }
+    #admin-float-bar.dragging { cursor: grabbing; }
+    #admin-float-bar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0) 50%);
+      pointer-events: none;
+    }
+    #admin-float-bar button {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.07);
+      color: rgba(244,246,244,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    #admin-float-bar button:hover {
+      background: #22c55e;
+      border-color: #22c55e;
+      color: #0b130e;
+      transform: translateY(-2px);
+    }
+    #admin-float-bar .admin-bar-tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(10,12,16,0.94);
+      color: #f4f6f4;
+      padding: 6px 11px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    #admin-float-bar .admin-bar-tooltip.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -35,6 +106,12 @@
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+
+  <div id="admin-float-bar" aria-label="Admin controls">
+    <div class="admin-bar-tooltip" id="admin-bar-tooltip">Feature pending</div>
+    <button type="button" id="admin-expand-btn" title="Adjust layout" aria-label="Adjust layout"><i class="fa-solid fa-expand"></i></button>
+    <button type="button" id="admin-signout-btn" title="Sign out" aria-label="Sign out"><i class="fa-solid fa-right-from-bracket"></i></button>
+  </div>
 
   <canvas id="neural-bg"></canvas>
 
@@ -775,6 +852,86 @@
     })();
   </script>
   <script src="site-search.js"></script>
+  <script>
+    // ── Floating admin bar: sign out + "adjust layout" (pending), draggable, admin-only ──
+    (function () {
+      const bar = document.getElementById('admin-float-bar');
+      if (!bar) return;
+
+      const sbAdmin = supabase.createClient(
+        'https://brreqfxtesvavfdaidwi.supabase.co',
+        'sb_publishable_3x4bvAl-vr2bBgNZkzh04w_suiCtcf5'
+      );
+
+      const expandBtn = document.getElementById('admin-expand-btn');
+      const signOutBtn = document.getElementById('admin-signout-btn');
+      const tooltip = document.getElementById('admin-bar-tooltip');
+
+      function showTooltip(text) {
+        tooltip.textContent = text;
+        tooltip.classList.add('visible');
+        clearTimeout(showTooltip._t);
+        showTooltip._t = setTimeout(() => tooltip.classList.remove('visible'), 1800);
+      }
+
+      if (expandBtn) {
+        expandBtn.addEventListener('click', () => showTooltip('Feature pending'));
+      }
+
+      if (signOutBtn) {
+        signOutBtn.addEventListener('click', async () => {
+          await sbAdmin.auth.signOut();
+          window.location.href = 'login.html';
+        });
+      }
+
+      // Remember where the admin dragged the bar to, per browser.
+      const POS_KEY = 'adminFloatBarPos';
+      function applyPosition(pos) {
+        bar.style.right = 'auto';
+        bar.style.left = pos.x + 'px';
+        bar.style.top = pos.y + 'px';
+      }
+      try {
+        const saved = JSON.parse(localStorage.getItem(POS_KEY));
+        if (saved && typeof saved.x === 'number' && typeof saved.y === 'number') applyPosition(saved);
+      } catch (err) {}
+
+      // Drag from the bar's own background (not the icon buttons) to move it anywhere on screen.
+      let dragging = false, offsetX = 0, offsetY = 0;
+      bar.addEventListener('pointerdown', (e) => {
+        if (e.target !== bar) return;
+        dragging = true;
+        bar.classList.add('dragging');
+        const rect = bar.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        bar.setPointerCapture(e.pointerId);
+      });
+      bar.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const maxX = window.innerWidth - bar.offsetWidth;
+        const maxY = window.innerHeight - bar.offsetHeight;
+        const x = Math.min(Math.max(0, e.clientX - offsetX), maxX);
+        const y = Math.min(Math.max(0, e.clientY - offsetY), maxY);
+        applyPosition({ x, y });
+      });
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        bar.classList.remove('dragging');
+        const rect = bar.getBoundingClientRect();
+        localStorage.setItem(POS_KEY, JSON.stringify({ x: rect.left, y: rect.top }));
+      }
+      bar.addEventListener('pointerup', endDrag);
+      bar.addEventListener('pointercancel', endDrag);
+
+      // Only ever show this for a signed-in admin.
+      sbAdmin.auth.getSession().then(({ data: { session } }) => {
+        if (session) bar.style.display = 'flex';
+      });
+    })();
+  </script>
 
   <footer class="site-footer">
     <div class="footer-inner">
