@@ -73,7 +73,12 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      /* overflow-x here (even just this axis) turns body into its own scroll
+         container, which breaks position:sticky on the navbar — sticky starts
+         resolving against body's box instead of the actual page viewport, and
+         body itself never independently scrolls, so the navbar just scrolls
+         away. html's overflow-x:hidden above already clips the horizontal
+         overflow at the viewport level, so body doesn't need its own copy. */
       overscroll-behavior-x: none;
       max-width: 100vw;
     }
