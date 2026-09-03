@@ -78,25 +78,222 @@
       color: #0b130e;
       transform: translateY(-2px);
     }
-    #admin-float-bar .admin-bar-tooltip {
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%) translateY(4px);
-      background: rgba(10,12,16,0.94);
-      color: #f4f6f4;
-      padding: 6px 11px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      border: 1px solid rgba(255,255,255,0.12);
+    /* ══ ADMIN MODALS (Add Article, Delete Confirm) ══ */
+    .admin-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 9, 11, 0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 1300;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
-    #admin-float-bar .admin-bar-tooltip.visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    .admin-modal-overlay.open { display: flex; }
+
+    .admin-modal {
+      width: 100%;
+      max-width: 420px;
+      background: #17181b;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      color: #f4f6f4;
+    }
+    .admin-modal h3 {
+      margin: 0 0 18px;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .admin-modal-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: rgba(244,246,244,0.65);
+      margin-bottom: 6px;
+    }
+    .admin-modal-warning {
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: rgba(244,246,244,0.65);
+      margin: 0 0 18px;
+    }
+    .admin-modal-warning strong {
+      color: #f4f6f4;
+    }
+
+    .admin-modal-input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #f4f6f4;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+      font-family: inherit;
+    }
+    .admin-modal-input:focus {
+      outline: none;
+      border-color: #22c55e;
+    }
+    .admin-modal-input.danger:focus {
+      border-color: #ef4444;
+    }
+
+    .admin-dropzone {
+      position: relative;
+      height: 150px;
+      border: 1.5px dashed rgba(255,255,255,0.22);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+      transition: border-color 0.15s ease, background 0.15s ease;
+      background: rgba(255,255,255,0.03);
+    }
+    .admin-dropzone:hover,
+    .admin-dropzone.drag-over {
+      border-color: #22c55e;
+      background: rgba(34,197,94,0.06);
+    }
+    .admin-dropzone-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(244,246,244,0.55);
+      font-size: 0.78rem;
+      text-align: center;
+      padding: 0 16px;
+    }
+    .admin-dropzone-empty i {
+      font-size: 1.3rem;
+      color: rgba(244,246,244,0.35);
+    }
+    .admin-dropzone-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .admin-dropzone-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(8,9,11,0.75);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+
+    .admin-modal-error {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      color: #ef4444;
+      min-height: 1em;
+    }
+
+    .admin-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .admin-modal-btn-ghost,
+    .admin-modal-btn-primary {
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 18px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .admin-modal-btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(244,246,244,0.75);
+    }
+    .admin-modal-btn-ghost:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .admin-modal-btn-primary {
+      background: #22c55e;
+      border: none;
+      color: #0b130e;
+    }
+    .admin-modal-btn-primary:hover {
+      background: #29d968;
+    }
+    .admin-modal-btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .admin-modal-btn-danger {
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 18px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      background: #ef4444;
+      border: none;
+      color: #fff;
+    }
+    .admin-modal-btn-danger:hover {
+      background: #dc2626;
+    }
+    .admin-modal-btn-danger:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Delete overlay on admin-authored cards (article grid, admin-only) */
+    .card-delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(8,9,11,0.7);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      z-index: 2;
+      transition: background 0.15s ease;
+    }
+    .card-delete-btn:hover {
+      background: #ef4444;
+    }
+    .card-delete-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -108,9 +305,52 @@
 <body>
 
   <div id="admin-float-bar" aria-label="Admin controls">
-    <div class="admin-bar-tooltip" id="admin-bar-tooltip">Feature pending</div>
-    <button type="button" id="admin-expand-btn" title="Adjust layout" aria-label="Adjust layout"><i class="fa-solid fa-expand"></i></button>
+    <button type="button" id="admin-add-article-btn" title="Add article" aria-label="Add new article"><i class="fa-solid fa-plus"></i></button>
     <button type="button" id="admin-signout-btn" title="Sign out" aria-label="Sign out"><i class="fa-solid fa-right-from-bracket"></i></button>
+  </div>
+
+  <div id="add-article-overlay" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <h3>New Article</h3>
+
+      <label class="admin-modal-label" for="new-article-title">Title</label>
+      <input type="text" id="new-article-title" class="admin-modal-input" placeholder="Article title" autocomplete="off">
+
+      <label class="admin-modal-label">Cover image (optional)</label>
+      <div id="new-article-dropzone" class="admin-dropzone">
+        <img id="new-article-preview" class="admin-dropzone-preview" alt="" hidden>
+        <button type="button" id="new-article-remove-img" class="admin-dropzone-remove" title="Remove image" hidden><i class="fa-solid fa-xmark"></i></button>
+        <div id="new-article-dropzone-empty" class="admin-dropzone-empty">
+          <i class="fa-solid fa-image"></i>
+          <span>Drag &amp; drop an image, or click to browse</span>
+        </div>
+      </div>
+      <input type="file" id="new-article-file" accept="image/*" hidden>
+
+      <div class="admin-modal-error" id="new-article-error"></div>
+
+      <div class="admin-modal-actions">
+        <button type="button" id="new-article-cancel" class="admin-modal-btn-ghost">Cancel</button>
+        <button type="button" id="new-article-submit" class="admin-modal-btn-primary"><i class="fa-solid fa-plus"></i> Create Article</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="delete-confirm-overlay" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <h3>Delete Article</h3>
+      <p class="admin-modal-warning">This permanently deletes <strong id="delete-confirm-target-title">this article</strong> from the database. This can't be undone.</p>
+
+      <label class="admin-modal-label" for="delete-confirm-input">Type <strong>DELETE</strong> to confirm</label>
+      <input type="text" id="delete-confirm-input" class="admin-modal-input danger" placeholder="DELETE" autocomplete="off">
+
+      <div class="admin-modal-error" id="delete-confirm-error"></div>
+
+      <div class="admin-modal-actions">
+        <button type="button" id="delete-confirm-cancel" class="admin-modal-btn-ghost">Cancel</button>
+        <button type="button" id="delete-confirm-submit" class="admin-modal-btn-danger" disabled><i class="fa-solid fa-trash"></i> Delete Article</button>
+      </div>
+    </div>
   </div>
 
   <canvas id="neural-bg"></canvas>
@@ -789,6 +1029,177 @@
       loadPublishedPapers();
     })();
 
+    // ── Admin-authored articles created via the floating "Add article" button,
+    //    pulled live from Supabase and merged into the grid. The 27 cards above
+    //    are hand-written HTML, so anything past that static id range is ours. ──
+    (function () {
+      const HIGHEST_STATIC_ARTICLE_ID = 27;
+      const CATEGORY_LABELS = {
+        'ai': 'AI & Machine Learning',
+        'device-evaluation': 'Device Evaluation',
+        'efficiency': 'Efficiency & Workflow',
+        'clinical-research': 'Clinical Research',
+      };
+
+      // ── Shared "type DELETE to confirm" modal, reused by every card's delete button ──
+      const deleteOverlay = document.getElementById('delete-confirm-overlay');
+      const deleteTargetTitle = document.getElementById('delete-confirm-target-title');
+      const deleteInput = document.getElementById('delete-confirm-input');
+      const deleteError = document.getElementById('delete-confirm-error');
+      const deleteCancelBtn = document.getElementById('delete-confirm-cancel');
+      const deleteSubmitBtn = document.getElementById('delete-confirm-submit');
+      let pendingDelete = null;
+
+      function closeDeleteConfirm() {
+        deleteOverlay.classList.remove('open');
+        pendingDelete = null;
+      }
+
+      function openDeleteConfirm(title, onConfirm) {
+        pendingDelete = onConfirm;
+        if (deleteTargetTitle) deleteTargetTitle.textContent = title || 'this article';
+        deleteInput.value = '';
+        deleteError.textContent = '';
+        deleteSubmitBtn.disabled = true;
+        deleteSubmitBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete Article';
+        deleteOverlay.classList.add('open');
+        setTimeout(() => deleteInput.focus(), 0);
+      }
+
+      if (deleteInput) {
+        deleteInput.addEventListener('input', () => {
+          deleteSubmitBtn.disabled = deleteInput.value !== 'DELETE';
+        });
+      }
+      if (deleteCancelBtn) deleteCancelBtn.addEventListener('click', closeDeleteConfirm);
+      if (deleteOverlay) {
+        deleteOverlay.addEventListener('click', (e) => {
+          if (e.target === deleteOverlay) closeDeleteConfirm();
+        });
+      }
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteOverlay && deleteOverlay.classList.contains('open')) closeDeleteConfirm();
+      });
+      if (deleteSubmitBtn) {
+        deleteSubmitBtn.addEventListener('click', async () => {
+          if (!pendingDelete || deleteInput.value !== 'DELETE') return;
+          deleteSubmitBtn.disabled = true;
+          deleteSubmitBtn.textContent = 'Deleting…';
+          try {
+            await pendingDelete();
+            closeDeleteConfirm();
+          } catch (err) {
+            deleteError.textContent = err.message || 'Delete failed.';
+            deleteSubmitBtn.disabled = false;
+            deleteSubmitBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete Article';
+          }
+        });
+      }
+
+      function stripHtml(html) {
+        return (html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+
+      function categorizeArticle(title) {
+        const t = (title || '').toLowerCase();
+        const cats = new Set();
+        if (/machine learning|artificial intelligence|\bai\b|deep learning|neural network|predictive model|algorithm/.test(t)) cats.add('ai');
+        if (/\bdevice\b|implant|prosthe|recall|hardware|fixation/.test(t)) cats.add('device-evaluation');
+        if (/efficiency|scheduling|\bcost\b|utilization|resource|length of stay|discharge|workflow|optimi/.test(t)) cats.add('efficiency');
+        if (cats.size === 0) cats.add('clinical-research');
+        return [...cats];
+      }
+
+      function firstImageSrc(html) {
+        const match = /<img[^>]+src=["']([^"']+)["']/i.exec(html || '');
+        return match ? match[1] : 'images/logo-full.png';
+      }
+
+      async function deleteArticleRow(sb, id) {
+        // .select() forces Supabase to return what it actually deleted — if a
+        // table has no DELETE policy, Row Level Security silently matches zero
+        // rows instead of erroring, so `error` alone can't tell success from a
+        // silently-blocked delete.
+        const { data, error } = await sb.from('articles').delete().eq('id', id).select();
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          throw new Error('Blocked by Supabase Row Level Security — add a DELETE policy on the "articles" table for authenticated users (Table Editor > articles > RLS in your Supabase dashboard).');
+        }
+      }
+
+      function buildArticleCard(row, sb, isAdmin) {
+        const cats = categorizeArticle(row.title);
+        const excerpt = stripHtml(row.abstract).slice(0, 160) || 'Click to read the full article.';
+        const tagLabel = CATEGORY_LABELS[cats[0]] || 'Research';
+        const dateLabel = row.updated_at
+          ? new Date(row.updated_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+          : '';
+
+        const a = document.createElement('a');
+        a.href = `article.html?id=${row.id}`;
+        a.className = 'article-card-link';
+        a.setAttribute('data-category', cats.join(' '));
+        a.innerHTML = `
+          <article class="article-card">
+            <div class="card-img-frame">
+              <img src="${escapeHtml(firstImageSrc(row.body))}" alt="" class="card-img">
+              ${isAdmin ? '<button type="button" class="card-delete-btn" title="Delete article" aria-label="Delete article"><i class="fa-solid fa-trash"></i></button>' : ''}
+            </div>
+            <div class="card-body">
+              <span class="card-inline-tag">${escapeHtml(tagLabel)}</span>
+              <h3 class="card-title">${escapeHtml(row.title || 'Untitled Article')}</h3>
+              <p class="card-excerpt">${escapeHtml(excerpt)}</p>
+              <span class="card-date">${escapeHtml(dateLabel)}</span>
+            </div>
+          </article>
+        `;
+
+        if (isAdmin) {
+          const deleteBtn = a.querySelector('.card-delete-btn');
+          deleteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openDeleteConfirm(row.title, async () => {
+              await deleteArticleRow(sb, row.id);
+              a.remove();
+              filterArticles();
+            });
+          });
+        }
+
+        return a;
+      }
+
+      async function loadAdminArticles() {
+        try {
+          const sb = supabase.createClient(
+            'https://brreqfxtesvavfdaidwi.supabase.co',
+            'sb_publishable_3x4bvAl-vr2bBgNZkzh04w_suiCtcf5'
+          );
+          const [{ data, error }, { data: { session } }] = await Promise.all([
+            sb
+              .from('articles')
+              .select('id, title, abstract, body, updated_at')
+              .gt('id', HIGHEST_STATIC_ARTICLE_ID)
+              .order('id', { ascending: false }),
+            sb.auth.getSession(),
+          ]);
+          if (error || !data) return;
+
+          const isAdmin = !!session;
+          data.filter(row => row.title).forEach(row => {
+            gridContainer.insertAdjacentElement('afterbegin', buildArticleCard(row, sb, isAdmin));
+          });
+
+          filterArticles();
+        } catch (err) {
+          console.error('Could not load admin-authored articles', err);
+        }
+      }
+
+      loadAdminArticles();
+    })();
+
     (function () {
       const navBtn = document.getElementById('navHamburger');
       const navLinks = document.querySelector('.nav-links');
@@ -853,7 +1264,7 @@
   </script>
   <script src="site-search.js"></script>
   <script>
-    // ── Floating admin bar: sign out + "adjust layout" (pending), draggable, admin-only ──
+    // ── Floating admin bar: sign out + add article, draggable, admin-only ──
     (function () {
       const bar = document.getElementById('admin-float-bar');
       if (!bar) return;
@@ -863,19 +1274,167 @@
         'sb_publishable_3x4bvAl-vr2bBgNZkzh04w_suiCtcf5'
       );
 
-      const expandBtn = document.getElementById('admin-expand-btn');
+      const addArticleBtn = document.getElementById('admin-add-article-btn');
       const signOutBtn = document.getElementById('admin-signout-btn');
-      const tooltip = document.getElementById('admin-bar-tooltip');
 
-      function showTooltip(text) {
-        tooltip.textContent = text;
-        tooltip.classList.add('visible');
-        clearTimeout(showTooltip._t);
-        showTooltip._t = setTimeout(() => tooltip.classList.remove('visible'), 1800);
+      // Static cards below go up to id 27 — new articles always get an id past
+      // that, whether or not every static id has actually been saved to the
+      // articles table yet, so a new draft can never collide with one of them.
+      const HIGHEST_STATIC_ARTICLE_ID = 27;
+
+      // ── "Add article" modal: title + optional drag-and-drop cover image ──
+      const overlay = document.getElementById('add-article-overlay');
+      const titleInput = document.getElementById('new-article-title');
+      const dropzone = document.getElementById('new-article-dropzone');
+      const fileInput = document.getElementById('new-article-file');
+      const preview = document.getElementById('new-article-preview');
+      const dropzoneEmpty = document.getElementById('new-article-dropzone-empty');
+      const removeImgBtn = document.getElementById('new-article-remove-img');
+      const submitBtn = document.getElementById('new-article-submit');
+      const cancelBtn = document.getElementById('new-article-cancel');
+      const errorEl = document.getElementById('new-article-error');
+
+      let selectedFile = null;
+
+      function clearImage() {
+        selectedFile = null;
+        fileInput.value = '';
+        preview.hidden = true;
+        preview.src = '';
+        dropzoneEmpty.hidden = false;
+        removeImgBtn.hidden = true;
       }
 
-      if (expandBtn) {
-        expandBtn.addEventListener('click', () => showTooltip('Feature pending'));
+      function setImage(file) {
+        if (!file.type.startsWith('image/')) {
+          errorEl.textContent = 'Please choose an image file.';
+          return;
+        }
+        if (file.size > 8 * 1024 * 1024) {
+          errorEl.textContent = 'Image is too large (max 8MB).';
+          return;
+        }
+        errorEl.textContent = '';
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = () => {
+          preview.src = reader.result;
+          preview.hidden = false;
+          dropzoneEmpty.hidden = true;
+          removeImgBtn.hidden = false;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function openModal() {
+        titleInput.value = '';
+        clearImage();
+        errorEl.textContent = '';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Create Article';
+        overlay.classList.add('open');
+        setTimeout(() => titleInput.focus(), 0);
+      }
+      function closeModal() {
+        overlay.classList.remove('open');
+      }
+
+      if (addArticleBtn) addArticleBtn.addEventListener('click', openModal);
+      if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+      if (overlay) {
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+      }
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) closeModal();
+      });
+
+      if (dropzone) {
+        dropzone.addEventListener('click', (e) => {
+          if (removeImgBtn.contains(e.target)) return;
+          fileInput.click();
+        });
+        dropzone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dropzone.classList.add('drag-over');
+        });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+        dropzone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropzone.classList.remove('drag-over');
+          const file = e.dataTransfer.files && e.dataTransfer.files[0];
+          if (file) setImage(file);
+        });
+      }
+      if (fileInput) {
+        fileInput.addEventListener('change', () => {
+          const file = fileInput.files && fileInput.files[0];
+          if (file) setImage(file);
+        });
+      }
+      if (removeImgBtn) {
+        removeImgBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          clearImage();
+        });
+      }
+
+      if (submitBtn) {
+        submitBtn.addEventListener('click', async () => {
+          const title = titleInput.value.trim();
+          if (!title) {
+            errorEl.textContent = 'Give the article a title.';
+            titleInput.focus();
+            return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Creating…';
+          errorEl.textContent = '';
+
+          try {
+            let bodyHtml = '';
+            if (selectedFile) {
+              const safeName = selectedFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+              const path = `covers/${Date.now()}-${safeName}`;
+              const { error: uploadError } = await sbAdmin.storage
+                .from('article-images')
+                .upload(path, selectedFile, { cacheControl: '3600', upsert: false });
+              if (uploadError) throw uploadError;
+
+              const { data: urlData } = sbAdmin.storage.from('article-images').getPublicUrl(path);
+              bodyHtml = `<img src="${urlData.publicUrl}" alt="">`;
+            }
+
+            const { data: existing, error: idError } = await sbAdmin
+              .from('articles')
+              .select('id')
+              .order('id', { ascending: false })
+              .limit(1);
+            if (idError) throw idError;
+
+            const maxKnownId = existing && existing.length ? existing[0].id : 0;
+            const newId = Math.max(maxKnownId, HIGHEST_STATIC_ARTICLE_ID) + 1;
+
+            const { error: insertError } = await sbAdmin
+              .from('articles')
+              .insert({
+                id: newId,
+                tag: '<span class="rtag-dot" style="width:5px; height:5px; border-radius:50%; background:#22c55e; display:inline-block; margin-right:5px;"></span>Draft',
+                title,
+                abstract: '',
+                body: bodyHtml,
+                updated_at: new Date().toISOString(),
+              });
+            if (insertError) throw insertError;
+
+            window.location.href = `article.html?id=${newId}`;
+          } catch (err) {
+            console.error('Could not create article', err);
+            errorEl.textContent = 'Could not create article: ' + (err.message || 'unknown error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Create Article';
+          }
+        });
       }
 
       if (signOutBtn) {

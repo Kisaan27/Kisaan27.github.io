@@ -115,6 +115,29 @@
             box-shadow: 0 4px 12px rgba(7, 42, 29, 0.15);
         }
 
+        #delete-btn {
+            display: none;
+            background: transparent;
+            color: rgba(239, 68, 68, 0.85);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            padding: 0 0.9rem;
+            height: 32px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.78rem;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        #delete-btn:hover {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.6);
+            color: #ef4444;
+        }
+
         #signout-btn {
             background: transparent;
             color: rgba(255, 255, 255, 0.6);
@@ -157,6 +180,23 @@
 <body>
 
     <div id="article-loader" class="article-loader"><div class="article-loader-spinner"></div></div>
+
+    <div id="delete-confirm-overlay" class="admin-modal-overlay">
+      <div class="admin-modal">
+        <h3>Delete Article</h3>
+        <p class="admin-modal-warning">This permanently deletes this article from the database. This can't be undone.</p>
+
+        <label class="admin-modal-label" for="delete-confirm-input">Type <strong>DELETE</strong> to confirm</label>
+        <input type="text" id="delete-confirm-input" class="admin-modal-input danger" placeholder="DELETE" autocomplete="off">
+
+        <div class="admin-modal-error" id="delete-confirm-error"></div>
+
+        <div class="admin-modal-actions">
+          <button type="button" id="delete-confirm-cancel" class="admin-modal-btn-ghost">Cancel</button>
+          <button type="button" id="delete-confirm-submit" class="admin-modal-btn-danger" disabled><i class="fa-solid fa-trash"></i> Delete Article</button>
+        </div>
+      </div>
+    </div>
 
     <div class="mobile-hero" id="mobile-hero">
         <a href="research.html" class="mobile-back-btn" aria-label="Back to Research"><i class="fa-solid fa-arrow-left"></i></a>
@@ -211,6 +251,7 @@
                 <button onclick="format('justifyCenter')"><i class="fa-solid fa-align-center"></i></button>
                 <button onclick="format('justifyRight')"><i class="fa-solid fa-align-right"></i></button>
                 <button onclick="insertLink()"><i class="fa-solid fa-link"></i></button>
+                <button onclick="insertImage()" title="Insert image"><i class="fa-solid fa-image"></i></button>
 
                 <div class="toolbar-more-wrap">
                     <button id="toolbar-more-toggle" onclick="toggleMoreMenu(event)" title="More formatting"><i class="fa-solid fa-ellipsis"></i></button>
@@ -246,6 +287,9 @@
                     </span>
                     <button id="save-btn">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Save Changes
+                    </button>
+                    <button id="delete-btn" title="Delete this article">
+                        <i class="fa-solid fa-trash"></i> Delete
                     </button>
                 </div>
 

@@ -50,6 +50,15 @@ function insertLink() {
   }
 }
 
+function insertImage() {
+  const url = prompt('Enter image URL:');
+  if (url) {
+    restoreSelection();
+    document.execCommand('insertImage', false, url);
+    saveSelection();
+  }
+}
+
 function toggleMoreMenu(event) {
   event.stopPropagation();
   const panel = document.getElementById('toolbar-more-panel');
@@ -335,6 +344,81 @@ document.addEventListener("DOMContentLoaded", async () => {
       await _supabase.auth.signOut();
       window.location.reload();
     });
+  }
+
+  // Delete only makes sense for articles created through the admin "Add
+  // article" flow (id > 27) — the 27 hand-written ones have their card baked
+  // directly into research.html's HTML, so removing their Supabase row
+  // wouldn't remove the card, just leave it pointing at nothing.
+  const HIGHEST_STATIC_ARTICLE_ID = 27;
+  const deleteBtn = document.getElementById('delete-btn');
+  const deleteOverlay = document.getElementById('delete-confirm-overlay');
+  const deleteInput = document.getElementById('delete-confirm-input');
+  const deleteError = document.getElementById('delete-confirm-error');
+  const deleteCancelBtn = document.getElementById('delete-confirm-cancel');
+  const deleteSubmitBtn = document.getElementById('delete-confirm-submit');
+
+  function closeDeleteConfirm() {
+    if (deleteOverlay) deleteOverlay.classList.remove('open');
+  }
+
+  if (deleteBtn && articleId > HIGHEST_STATIC_ARTICLE_ID) {
+    deleteBtn.style.display = 'inline-flex';
+    deleteBtn.addEventListener('click', () => {
+      if (!deleteOverlay) return;
+      deleteInput.value = '';
+      deleteError.textContent = '';
+      deleteSubmitBtn.disabled = true;
+      deleteSubmitBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete Article';
+      deleteOverlay.classList.add('open');
+      setTimeout(() => deleteInput.focus(), 0);
+    });
+
+    if (deleteInput) {
+      deleteInput.addEventListener('input', () => {
+        deleteSubmitBtn.disabled = deleteInput.value !== 'DELETE';
+      });
+    }
+    if (deleteCancelBtn) deleteCancelBtn.addEventListener('click', closeDeleteConfirm);
+    if (deleteOverlay) {
+      deleteOverlay.addEventListener('click', (e) => {
+        if (e.target === deleteOverlay) closeDeleteConfirm();
+      });
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && deleteOverlay.classList.contains('open')) closeDeleteConfirm();
+    });
+
+    if (deleteSubmitBtn) {
+      deleteSubmitBtn.addEventListener('click', async () => {
+        if (deleteInput.value !== 'DELETE') return;
+
+        deleteSubmitBtn.disabled = true;
+        deleteSubmitBtn.textContent = 'Deleting…';
+
+        // .select() forces Supabase to return the row(s) it actually deleted.
+        // Row Level Security silently matches zero rows instead of erroring
+        // when a table has no DELETE policy, so without this a blocked delete
+        // looks identical to a successful one — `error` stays null either way.
+        const { data, error } = await _supabase
+          .from('articles')
+          .delete()
+          .eq('id', articleId)
+          .select();
+
+        if (error) {
+          deleteError.textContent = 'Delete failed: ' + error.message;
+          deleteSubmitBtn.disabled = false;
+          deleteSubmitBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete Article';
+        } else if (!data || data.length === 0) {
+          deleteError.textContent = 'Blocked by Supabase Row Level Security — add a DELETE policy on the "articles" table for authenticated users (Table Editor > articles > RLS in your Supabase dashboard).';
+          deleteSubmitBtn.disabled = false;
+          deleteSubmitBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete Article';
+        } else {
+          window.location.href = 'research.html';
+        }
+      });
+    }
   }
 
   // Helper to toggle edit mode styling and status
