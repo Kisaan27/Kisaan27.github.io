@@ -273,7 +273,7 @@ body {
 .post-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 70px 4rem 4rem; /* Offset built for the top fixed layout */
+    padding: 1.25rem 4rem 4rem; /* Navbar is in-flow now (not fixed), so no extra top offset needed */
     position: relative;
     z-index: 5;
     opacity: 0;
@@ -479,7 +479,7 @@ body {
 /* --- Sidebar Panels --- */
 .post-sidebar {
     position: sticky;
-    top: 110px; /* Clearance safely past the 70px nav block + padding gap */
+    top: 110px; /* Clearance past the sticky navbar's own height */
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -849,9 +849,17 @@ body {
 }
 
 /* --- Media Response Rules --- */
+/* Keep the navbar pinned to the top while scrolling, matching the homepage.
+   Scoped to whenever the inline nav-links pill is showing (i.e. above the
+   960px breakpoint where it switches to the hamburger dropdown) rather than
+   copying the homepage's own 821px number, since article.css's own
+   hamburger breakpoint is already 960px. */
+@media screen and (min-width: 961px) {
+    .navbar { position: sticky; top: 0; }
+}
 @media screen and (max-width: 1200px) {
     .navbar__container { padding: 0 2rem; }
-    .post-container { padding: 70px 2rem 4rem; }
+    .post-container { padding: 1rem 2rem 4rem; }
 }
 
 @media screen and (max-width: 960px) {
