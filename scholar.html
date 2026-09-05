@@ -36,10 +36,10 @@
   --card-bg: rgba(26, 29, 36, 0.85);
   --border-light: rgba(255, 255, 255, 0.06);
   --text-dark: #9ca3af;
-  --text-muted: #00a3a3;
+  --text-muted: #3a4a85;
   --brand-green: #f3f4f6;
-  --accent-mint: #00a3a3;
-  --accent-glow: rgba(0, 163, 163, 0.06);
+  --accent-mint: #3a4a85;
+  --accent-glow: rgba(58, 74, 133, 0.06);
 
   /* ── BACKGROUND PLACEHOLDER: tune the blur amount here (px) ── */
   --bg-blur: 6px;
@@ -223,9 +223,9 @@ body {
 }
 #search::placeholder { color: #64748b; }
 #search:focus {
-  background: rgba(0, 163, 163, 0.06);
-  border-color: rgba(0, 163, 163, 0.3);
-  box-shadow: 0 4px 12px rgba(0, 163, 163, 0.06);
+  background: rgba(58, 74, 133, 0.06);
+  border-color: rgba(58, 74, 133, 0.3);
+  box-shadow: 0 4px 12px rgba(58, 74, 133, 0.06);
 }
 
 .rdiv { width: 1px; height: 24px; background: var(--border-light); flex-shrink: 0; }
@@ -354,7 +354,7 @@ body {
 .paper-card:hover {
   transform: translateY(-6px);
   background: #22262f;
-  border-color: rgba(0, 163, 163, 0.2);
+  border-color: rgba(58, 74, 133, 0.2);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--accent-glow);
 }
 
@@ -370,9 +370,9 @@ body {
 
 .year-badge {
   font-size: 0.75rem; font-weight: 700;
-  color: var(--accent-mint); background: rgba(0, 163, 163, 0.1);
+  color: var(--accent-mint); background: rgba(58, 74, 133, 0.1);
   padding: 0.25rem 0.75rem; border-radius: 20px;
-  border: 1px solid rgba(0, 163, 163, 0.2);
+  border: 1px solid rgba(58, 74, 133, 0.2);
   white-space: nowrap; flex-shrink: 0;
 }
 
@@ -392,8 +392,8 @@ body {
   font-size: 0.75rem; font-weight: 700;
   padding: 0.25rem 0.75rem; border-radius: 20px;
   width: fit-content; text-transform: uppercase; letter-spacing: 0.03em;
-  background: rgba(0, 163, 163, 0.08); color: var(--accent-mint);
-  border: 1px solid rgba(0, 163, 163, 0.15);
+  background: rgba(58, 74, 133, 0.08); color: var(--accent-mint);
+  border: 1px solid rgba(58, 74, 133, 0.15);
 }
 .rtag-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; background: var(--accent-mint); }
 
@@ -415,7 +415,7 @@ body {
   letter-spacing: 0.05em; text-transform: uppercase;
   color: var(--accent-mint); text-decoration: none;
   height: 32px; padding: 0 1rem; border-radius: 16px;
-  border: 1px solid rgba(0, 163, 163, 0.2); background: transparent;
+  border: 1px solid rgba(58, 74, 133, 0.2); background: transparent;
   transition: all 0.2s ease;
 }
 .card-link:hover {
@@ -506,6 +506,16 @@ body {
 @media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
   .control-rail { position: static; }
 }
+
+/* footer.css / search-dropdown.css ship a hardcoded bright-green accent shared
+   with pages outside this palette change (research/article) — override it
+   here instead of editing those shared files, so only this page picks up the
+   homepage's navy/sage brand color. */
+.site-footer .footer-logo-dot { background-color: #7aaa66; }
+.site-footer .footer-links a:hover { color: #7aaa66; }
+.site-footer .footer-bubble:hover { background: #7aaa66; border-color: #7aaa66; }
+.search-suggest-item i { color: #7aaa66; }
+.search-suggest-item strong { color: #7aaa66; }
   </style>
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

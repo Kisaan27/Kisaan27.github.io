@@ -1,8 +1,8 @@
 :root {
   --bg-light: #f4f6f4;
-  --text-dark: #0b130e;
-  --brand-green: #072a1d;
-  --accent-mint: #22c55e;
+  --text-dark: #10142a;
+  --brand-green: #1e274b;
+  --accent-mint: #7aaa66;
   --card-bg: rgba(255, 255, 255, 0.75);
   --border-light: rgba(0, 0, 0, 0.06);
 }
@@ -97,11 +97,50 @@ body {
 }
 
 .nav-links a {
+  position: relative;
   text-decoration: none;
   color: #555;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: color 0.2s;
+  border-radius: 20px;
+  transition: color 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* iOS 26 "Liquid Glass" style hover — matches the homepage navbar. The pill is
+   sized via negative inset (not padding), so it reaches beyond the link's own
+   tight text box without changing the navbar's own layout size. */
+.nav-links a::before,
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  inset: -0.55rem -0.9rem;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+}
+.nav-links a::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.65));
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.95),
+    inset 0 -1px 2px rgba(30,39,75,0.06),
+    0 6px 16px rgba(30,39,75,0.14);
+  opacity: 0;
+  transform: scale(0.82);
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-links a::after {
+  background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.9) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.nav-links a:hover::before { opacity: 1; transform: scale(1); }
+.nav-links a:hover::after { opacity: 1; animation: navGlassShimmer 1s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.nav-links a:active { transform: scale(0.96); }
+@keyframes navGlassShimmer {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
 }
 
 .nav-links a.active, .nav-links a:hover {
@@ -544,8 +583,8 @@ body {
 
 .advisor-card:hover .glow-ring {
   animation: pulseRotate 12s linear infinite;
-  border-color: #22c55e;
-  background: rgba(34, 197, 94, 0.05);
+  border-color: #7aaa66;
+  background: rgba(122, 170, 102, 0.05);
 }
 
 .expert-tag {
@@ -735,6 +774,9 @@ body {
     opacity: 0;
     transform: translateY(16px);
   }
+  /* The glass-pill hover is a desktop mouse-hover treatment; this full-width
+     mobile menu row already has its own slide-in animation, so skip it. */
+  .nav-links a::before, .nav-links a::after { display: none; }
   .nav-links a.active, .nav-links a:hover { color: var(--accent-mint) !important; }
   .nav-links.open a { animation: navLinkIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
   .nav-links.open a:nth-child(1) { animation-delay: 0.08s; }

@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="article.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="search-dropdown.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ══ INLINE THEME EXTENSIONS FOR STRUCTURAL DYNAMICS ══ */
@@ -204,22 +205,25 @@
     </div>
 
     <nav class="navbar">
-        <div class="navbar__container">
-            <a href="index.html" id="navbar__logo">
-                <img src="images/drawing22.svg" alt="Slate Surgery" class="logo-img">
-            </a>
-            <div class="navbar__toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+        <a href="index.html" class="logo"><img src="images/drawing22.svg" alt="Slate Surgery" class="logo-img"></a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="research.html" class="active">Research</a>
+            <a href="solutions.html">Solutions</a>
+            <a href="index.html#about-us">About Us</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="nav-actions">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input" id="siteSearchBar" placeholder="Search articles, papers...." autocomplete="off">
             </div>
-            <ul class="navbar__menu">
-                <li class="navbar__item"><a href="index.html" class="navbar__links">Home</a></li>
-                <li class="navbar__item"><a href="research.html" class="navbar__links active">Research</a></li>
-                <li class="navbar__item"><a href="solutions.html" class="navbar__links">Solutions</a></li>
-                <li class="navbar__item"><a href="index.html#about-us" class="navbar__links">About Us</a></li>
-                <li class="navbar__item"><a href="contact.html" class="navbar__links">Contact Us</a></li>
-            </ul>
+            <button class="mobile-search-toggle" id="mobileSearchToggle" aria-label="Search" aria-expanded="false">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
@@ -407,27 +411,26 @@
         const target = document.getElementById('editor-controls');
         if(target) observer.observe(target, { attributes: true, attributeFilter: ['style'] });
     </script>
+    <script src="site-search.js"></script>
     <script>
         (function () {
-            const menuBtn = document.getElementById('mobile-menu');
-            const menu = document.querySelector('.navbar__menu');
-            if (!menuBtn || !menu) return;
+            const btn = document.getElementById('navHamburger');
+            const links = document.querySelector('.nav-links');
+            if (!btn || !links) return;
             function closeMenu() {
-                menuBtn.classList.remove('active');
-                menu.classList.remove('active');
+                links.classList.remove('open');
+                btn.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
             }
-            menuBtn.addEventListener('click', () => {
-                const willOpen = !menu.classList.contains('active');
-                menuBtn.classList.toggle('active', willOpen);
-                menu.classList.toggle('active', willOpen);
+            btn.addEventListener('click', () => {
+                const open = !links.classList.contains('open');
+                links.classList.toggle('open', open);
+                btn.classList.toggle('open', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
             });
-            menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-            menu.addEventListener('click', (e) => {
-                if (e.target === menu) closeMenu();
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeMenu();
-            });
+            links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+            links.addEventListener('click', (e) => { if (e.target === links) closeMenu(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
         })();
     </script>
 

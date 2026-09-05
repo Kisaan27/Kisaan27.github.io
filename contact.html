@@ -29,6 +29,16 @@
   <link rel="stylesheet" href="search-dropdown.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* forarticle.css is shared with research.html, which keeps its own darker
+       green palette, so its root can't be edited directly — override the
+       brand variables here instead, scoped to just this page, to match the
+       homepage's navy/sage palette. */
+    :root {
+      --text-dark: #10142a;
+      --text-muted: rgba(16, 20, 42, 0.6);
+      --brand-green: #1e274b;
+      --accent-mint: #7aaa66;
+    }
     body {
       background:
         radial-gradient(ellipse 1000px 700px at 6% -8%, rgba(30,39,75,0.18), transparent 55%),
@@ -253,6 +263,15 @@
         padding: 2rem 1.5rem;
       }
     }
+
+    /* footer.css / search-dropdown.css ship a hardcoded bright-green accent
+       shared with research.html, which keeps its own palette — override it
+       here instead, scoped to just this page. */
+    .site-footer .footer-logo-dot { background-color: #7aaa66; }
+    .site-footer .footer-links a:hover { color: #7aaa66; }
+    .site-footer .footer-bubble:hover { background: #7aaa66; border-color: #7aaa66; }
+    .search-suggest-item i { color: #7aaa66; }
+    .search-suggest-item strong { color: #7aaa66; }
   </style>
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
