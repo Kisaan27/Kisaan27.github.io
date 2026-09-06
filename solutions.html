@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Lora:wght@600;700&display=swap">
   <link rel="stylesheet" href="footer.css">
   <link rel="stylesheet" href="search-dropdown.css">
   <style>
@@ -216,22 +216,49 @@
     .section-h2 span { color: var(--color-accent); }
     .section-sub { color: var(--color-text-muted); font-size: 1rem; line-height: 1.6; }
 
-    .cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; text-align: left; }
+    .cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
     .cap-card {
       text-align: center;
-      background: var(--color-primary-dark); border: 1px solid var(--color-primary-dark); border-radius: var(--radius-lg);
+      background: #ffffff;
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-soft);
-      padding: 2.25rem 1.75rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;
+      overflow: hidden;
+      padding-bottom: 2rem;
+      position: relative;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
-    .cap-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(16,20,42,0.24); }
+    .cap-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(16,20,42,0.16); }
+    .cap-img-frame { width: 100%; height: 200px; overflow: hidden; }
+    .cap-img-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .cap-icon {
-      width: 52px; height: 52px; border-radius: 14px;
+      position: relative;
+      z-index: 2;
+      width: 76px; height: 76px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(122,170,102,0.22); color: var(--color-accent); font-size: 1.3rem;
+      background: var(--color-primary-dark);
+      color: var(--color-accent); font-size: 1.7rem;
+      border: 4px solid #ffffff;
+      margin: -38px auto 1.25rem;
     }
-    .cap-title { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.005em; line-height: 1.35; color: #ffffff; }
-    .cap-desc { font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.7); margin-top: 0.2rem; }
+    .cap-title {
+      font-family: 'Lora', Georgia, serif;
+      display: block;
+      font-size: 1.25rem; font-weight: 700; letter-spacing: -0.005em; line-height: 1.35;
+      color: var(--color-primary-dark);
+      margin-bottom: 0.85rem;
+    }
+    .cap-divider {
+      display: block;
+      width: 32px; height: 2px;
+      background: var(--color-accent);
+      margin: 0 auto 1.1rem;
+    }
+    .cap-desc {
+      display: block;
+      font-size: 0.92rem; line-height: 1.65;
+      color: var(--color-text-muted);
+      padding: 0 1.6rem;
+    }
 
     /* ── SECTION 3: FEATURE SPLIT ── */
     .feature-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; padding: 5.5rem 0 4rem; }
@@ -397,18 +424,24 @@
 
       <div class="cap-grid">
         <div class="cap-card">
+          <div class="cap-img-frame"><img src="images/evaultion.jpg" alt="Medical device evaluation"></div>
           <span class="cap-icon"><i class="fa-solid fa-kit-medical"></i></span>
           <span class="cap-title">Medical Device Evaluation</span>
+          <span class="cap-divider"></span>
           <span class="cap-desc">Independent, evidence-based review of medical devices and equipment to help institutions and manufacturers understand real-world clinical and operational impact.</span>
         </div>
         <div class="cap-card">
+          <div class="cap-img-frame"><img src="images/cost.jpg" alt="Cost utility analysis"></div>
           <span class="cap-icon"><i class="fa-solid fa-chart-line"></i></span>
           <span class="cap-title">Cost Utility Analysis</span>
+          <span class="cap-divider"></span>
           <span class="cap-desc">Financial and outcomes modeling that translates clinical value into terms procurement and hospital leadership can act on.</span>
         </div>
         <div class="cap-card">
+          <div class="cap-img-frame"><img src="images/aiconsult.webp" alt="AI consulting"></div>
           <span class="cap-icon"><i class="fa-solid fa-brain"></i></span>
-          <span class="cap-title">Artificial Intelligence Consulting</span>
+          <span class="cap-title">AI Consulting</span>
+          <span class="cap-divider"></span>
           <span class="cap-desc">Guidance on applying machine learning and predictive analytics to healthcare operations, from feasibility through implementation.</span>
         </div>
       </div>
