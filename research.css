@@ -564,6 +564,35 @@ body {
     line-height: 1.5;
 }
 
+/* Shown while Scholar publications (and any admin-authored articles) are
+   still being fetched — without this, filterArticles() briefly counts zero
+   visible cards during that window and renders the "no results" empty state
+   instead, which looks like a broken/missing-content flash. */
+.grid-loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    color: #5b6578;
+}
+
+.grid-loading-spinner {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 3px solid rgba(30,39,75,0.12);
+    border-top-color: #1e274b;
+    animation: gridLoadingSpin 0.8s linear infinite;
+}
+
+@keyframes gridLoadingSpin {
+    to { transform: rotate(360deg); }
+}
+
 /* ==========================================================================
    BREAKPOINTS & RESPONSIVENESS
    ========================================================================== */

@@ -29,6 +29,20 @@
   <link rel="stylesheet" href="footer.css">
   <link rel="stylesheet" href="search-dropdown.css">
   <style>
+    /* Articles/newsletter/hero start hidden from the public by default — no
+       flash-of-content before the site-wide setting loads, since this rule
+       applies from first paint with no JS needed. An admin can publish them
+       for everyone via the eye icon in the floating admin bar, which adds
+       .articles-public to <body>. Scholar publication cards are exempt via
+       .scholar-paper and always stay visible. !important is required since
+       filterArticles() sets inline display styles for search/category
+       filtering that would otherwise win over a plain class rule. */
+    body:not(.articles-public) .article-card-link:not(.scholar-paper),
+    body:not(.articles-public) .newsletter-card,
+    body:not(.articles-public) .research-hero {
+      display: none !important;
+    }
+
     /* ══ FLOATING ADMIN BAR (sign in only, research page only) ══ */
     #admin-float-bar {
       display: none;
@@ -306,6 +320,7 @@
 
   <div id="admin-float-bar" aria-label="Admin controls">
     <button type="button" id="admin-add-article-btn" title="Add article" aria-label="Add new article"><i class="fa-solid fa-plus"></i></button>
+    <button type="button" id="admin-toggle-articles-btn" title="Show articles to the public" aria-label="Toggle article visibility to the public"><i class="fa-solid fa-eye-slash"></i></button>
     <button type="button" id="admin-signout-btn" title="Sign out" aria-label="Sign out"><i class="fa-solid fa-right-from-bracket"></i></button>
   </div>
 
@@ -428,6 +443,11 @@
 
     <section class="content-layout">
       <div class="articles-grid" id="articles-container">
+
+        <div class="grid-loading-state" id="gridLoadingState">
+          <div class="grid-loading-spinner"></div>
+          <p>Loading research…</p>
+        </div>
 
         <a href="ehss.html" class="article-card-link mobile-only-card" data-category="efficiency">
           <article class="article-card">
@@ -846,6 +866,26 @@
 
     let activeCategory = 'all';
     let searchQuery = '';
+    // Set by the admin floating-bar script (a later <script> tag in this same
+    // document, sharing this top-level scope) once it knows whether the
+    // articles/newsletter/hero are currently published to the public.
+    let articlesVisible = false;
+
+    // Tracks the two async card sources so filterArticles() can tell "zero
+    // results because nothing matches" apart from "zero results because
+    // we're still fetching" — without this it briefly shows the empty
+    // state on every load, before Scholar publications finish arriving.
+    let papersLoaded = false;
+    let adminArticlesLoaded = false;
+    function isGridStillLoading() {
+      return !papersLoaded || !adminArticlesLoaded;
+    }
+    function checkLoadingComplete() {
+      if (isGridStillLoading()) return;
+      const spinner = document.getElementById('gridLoadingState');
+      if (spinner) spinner.remove();
+      filterArticles();
+    }
 
     function escapeHtml(str) {
       return str.replace(/[&<>"']/g, (ch) => ({
@@ -881,8 +921,13 @@
 
         const matchesCategory = (activeCategory === 'all' || categories.includes(activeCategory));
         const matchesSearch = (title.includes(searchQuery) || excerpt.includes(searchQuery));
+        // Non-paper articles are CSS-hidden entirely while unpublished (see
+        // the body:not(.articles-public) rule) — count them as non-matching
+        // here too, so a search that only hits a hidden article still shows
+        // the "no results" empty state instead of silently blank space.
+        const isHiddenArticle = !articlesVisible && !article.classList.contains('scholar-paper');
 
-        if (matchesCategory && matchesSearch) {
+        if (matchesCategory && matchesSearch && !isHiddenArticle) {
           article.style.display = 'flex';
           visibleCount++;
         } else {
@@ -908,7 +953,7 @@
         existingEmptyState.remove();
       }
 
-      if (visibleCount === 0) {
+      if (visibleCount === 0 && !isGridStillLoading()) {
         const emptyStateHTML = `
           <div class="empty-state-card">
             <div class="empty-icon">(°.°)</div>
@@ -974,7 +1019,7 @@
         a.href = p.scholar_url || '#';
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.className = 'article-card-link';
+        a.className = 'article-card-link scholar-paper';
         a.setAttribute('data-category', categorizePaper(p.title));
         const citeLabel = p.citations ? `${p.citations} citation${p.citations === 1 ? '' : 's'}` : 'Published';
         a.innerHTML = `
@@ -1023,6 +1068,9 @@
           filterArticles();
         } catch (err) {
           console.error('Could not load published papers', err);
+        } finally {
+          papersLoaded = true;
+          checkLoadingComplete();
         }
       }
 
@@ -1194,6 +1242,9 @@
           filterArticles();
         } catch (err) {
           console.error('Could not load admin-authored articles', err);
+        } finally {
+          adminArticlesLoaded = true;
+          checkLoadingComplete();
         }
       }
 
@@ -1275,7 +1326,64 @@
       );
 
       const addArticleBtn = document.getElementById('admin-add-article-btn');
+      const toggleArticlesBtn = document.getElementById('admin-toggle-articles-btn');
       const signOutBtn = document.getElementById('admin-signout-btn');
+
+      // ── Public article visibility (persisted site-wide via Supabase, not
+      //    just this browser) — runs for every visitor, admin or not, since
+      //    it's what actually decides whether the articles/newsletter/hero
+      //    show up on the page at all. The toggle button itself is only
+      //    ever reachable by an admin, since the whole bar stays hidden for
+      //    everyone else. `articlesVisible` and `filterArticles` are shared
+      //    top-level bindings from the earlier <script> tag on this page —
+      //    classic scripts in one document share that scope, no import
+      //    needed — so updating them here also updates the actual grid. ──
+      function applyArticlesVisibility(visible) {
+        articlesVisible = visible;
+        document.body.classList.toggle('articles-public', visible);
+        if (toggleArticlesBtn) {
+          const icon = toggleArticlesBtn.querySelector('i');
+          if (icon) icon.className = visible ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+          toggleArticlesBtn.title = visible ? 'Hide articles from the public' : 'Show articles to the public';
+        }
+        if (typeof filterArticles === 'function') filterArticles();
+      }
+
+      sbAdmin
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'articles_visible')
+        .single()
+        .then(({ data, error }) => {
+          if (!error && data) applyArticlesVisibility(!!data.value);
+        });
+
+      if (toggleArticlesBtn) {
+        toggleArticlesBtn.addEventListener('click', async () => {
+          const next = !articlesVisible;
+          applyArticlesVisibility(next);
+
+          // .select() forces Supabase to return what it actually updated —
+          // if a table has no UPDATE policy for authenticated users, RLS
+          // silently matches zero rows instead of erroring, so `error`
+          // alone can't tell success from a silently-blocked update.
+          const { data, error } = await sbAdmin
+            .from('site_settings')
+            .update({ value: next })
+            .eq('key', 'articles_visible')
+            .select();
+
+          if (error) {
+            console.error('Could not save articles visibility setting', error);
+            applyArticlesVisibility(!next);
+            alert('Could not update visibility: ' + error.message);
+          } else if (!data || data.length === 0) {
+            console.error('Articles visibility update blocked by RLS');
+            applyArticlesVisibility(!next);
+            alert('Blocked by Supabase Row Level Security — add an UPDATE policy on the "site_settings" table for authenticated users.');
+          }
+        });
+      }
 
       // Static cards below go up to id 27 — new articles always get an id past
       // that, whether or not every static id has actually been saved to the
