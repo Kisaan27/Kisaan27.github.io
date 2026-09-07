@@ -237,8 +237,15 @@
 
     /* ── HERO ── */
     .hero-wrapper {
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 2rem; height: calc(80vh - 80px); width: 100%;
+      display: flex; justify-content: center; align-items: center;
+      /* A gentle vw-based grow (not the previous 5vw) — that was large enough
+         at mid-desktop widths to eat into hero-left's space before the pair
+         was wide enough to start centering with outer margins, forcing the
+         headline to wrap an extra line. This barely grows at all until the
+         viewport is genuinely wide, and justify-content: center (not
+         space-between) does the actual "more breathing room on a big
+         screen" work via outer margins once both sides hit their max-width. */
+      gap: clamp(2rem, 1.5vw, 4rem); height: calc(80vh - 80px); width: 100%;
       padding: 0 4rem 0rem 5rem;
       position: relative; z-index: 1;
     }
@@ -580,17 +587,43 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(0,242,242,0.35) 15%, rgba(0,242,242,0.35) 85%, transparent);
     }
+    /* Fake-3D via a skewed top cap + right-side face on each bar, rather
+       than rotating the whole chart — a full rotateY reads as "too much
+       side view" at this size; this gives just enough depth to register as
+       3D, tilted toward the right, without distorting the chart. */
     .cost-bar {
       position: absolute;
       bottom: 15%;
       width: 15px;
-      border-radius: 3px 3px 0 0;
+      border-radius: 2px 2px 0 0;
       background: linear-gradient(180deg, var(--teal-bright), rgba(0,242,242,0.12));
       box-shadow: 0 0 5px rgba(0,242,242,0.25);
       height: var(--bar-h);
       transform: scaleY(0);
       transform-origin: bottom;
       opacity: 0.3;
+    }
+    .cost-bar::before,
+    .cost-bar::after {
+      content: '';
+      position: absolute;
+    }
+    /* Top cap — a thin parallelogram implying the bar's flat top face. */
+    .cost-bar::before {
+      top: 0; left: 0;
+      width: 100%; height: 5px;
+      background: rgba(0,242,242,0.65);
+      transform: skewX(-45deg) translateY(-2.5px);
+      transform-origin: bottom left;
+    }
+    /* Right side face — implies the bar's depth, darker since it's turned
+       away from the light. */
+    .cost-bar::after {
+      top: 0; left: 100%;
+      width: 5px; height: 100%;
+      background: linear-gradient(180deg, rgba(0,153,153,0.6), rgba(0,153,153,0.05));
+      transform: skewY(45deg);
+      transform-origin: top left;
     }
     /* .bars-shown (set once by JS the first time this card becomes active,
        and never removed) instead of .active — .active gets stripped the
