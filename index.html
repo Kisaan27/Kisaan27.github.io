@@ -569,14 +569,24 @@
        time the .active class is (re)applied, so scrolling or arrowing back
        to this card replays it, but it never loops in the background). */
     .carousel-bars { position: absolute; inset: 0; }
-    .bar-baseline { position: absolute; left: 22%; right: 22%; bottom: 15%; height: 1px; background: rgba(0,242,242,0.2); }
+    /* Soft-fades at both ends instead of a hard-edged flat line — reads as a
+       deliberate chart axis rather than a stray unstyled rule. */
+    .bar-baseline {
+      position: absolute;
+      /* Tighter span that actually hugs the bars instead of overshooting
+         them, and sits a couple points lower than the bars' own baseline so
+         their glow can't visually bleed across the line. */
+      left: 20%; right: 24%; bottom: 13%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,242,242,0.35) 15%, rgba(0,242,242,0.35) 85%, transparent);
+    }
     .cost-bar {
       position: absolute;
       bottom: 15%;
       width: 15px;
       border-radius: 3px 3px 0 0;
       background: linear-gradient(180deg, var(--teal-bright), rgba(0,242,242,0.12));
-      box-shadow: 0 0 8px rgba(0,242,242,0.3);
+      box-shadow: 0 0 5px rgba(0,242,242,0.25);
       height: var(--bar-h);
       transform: scaleY(0);
       transform-origin: bottom;
@@ -1035,9 +1045,17 @@
         height: auto;
         flex-direction: column;
         align-items: stretch;
-        gap: 1.5rem;
+        gap: 0;
       }
-      .carousel-copy { padding: 1.75rem; }
+      .carousel-copy {
+        padding: 1.75rem;
+        /* The desktop divider is a vertical border-right, which makes no
+           sense once the two panels stack vertically — swap it for a
+           border-top so it still reads as "a line between image and text",
+           just in the right orientation for this layout. */
+        border-right: none;
+        border-top: 1px solid rgba(255,255,255,0.07);
+      }
       .carousel-visual { width: 100%; aspect-ratio: 16 / 10; align-self: auto; order: -1; }
       .carousel-title { font-size: 1.4rem; }
       .carousel-desc { font-size: 0.88rem; }
@@ -1324,10 +1342,10 @@
           <div class="carousel-visual">
             <div class="carousel-bars">
               <span class="bar-baseline"></span>
-              <span class="cost-bar" style="left:34%; --bar-h:22%; animation-delay:0s;"></span>
-              <span class="cost-bar" style="left:48%; --bar-h:34%; animation-delay:0.15s;"></span>
-              <span class="cost-bar" style="left:62%; --bar-h:46%; animation-delay:0.3s;"></span>
-              <span class="cost-bar" style="left:76%; --bar-h:60%; animation-delay:0.45s;"></span>
+              <span class="cost-bar" style="left:26%; --bar-h:22%; animation-delay:0s;"></span>
+              <span class="cost-bar" style="left:40%; --bar-h:34%; animation-delay:0.15s;"></span>
+              <span class="cost-bar" style="left:54%; --bar-h:46%; animation-delay:0.3s;"></span>
+              <span class="cost-bar" style="left:68%; --bar-h:60%; animation-delay:0.45s;"></span>
             </div>
           </div>
         </div>
