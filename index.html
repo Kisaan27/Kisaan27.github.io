@@ -375,6 +375,12 @@
         radial-gradient(ellipse 900px 550px at 15% 0%, rgba(0,163,163,0.14), transparent 60%),
         radial-gradient(ellipse 700px 500px at 100% 100%, rgba(0,242,242,0.06), transparent 55%),
         #0a0e17;
+      /* Alternate scheme tried and set aside for possible future use:
+      background:
+        radial-gradient(ellipse 900px 550px at 15% 0%, rgba(69, 115, 115, 0.14), transparent 60%),
+        radial-gradient(ellipse 700px 500px at 100% 100%, rgba(0,242,242,0.06), transparent 55%),
+        #040417;
+      */
     }
     .team-band {
       position: relative;
@@ -382,11 +388,11 @@
       width: 100%;
       --teal: #00a3a3;
       --teal-bright: #00f2f2;
-      border-top: 1px solid rgba(34,197,94,0.12);
+      border-top: 1px solid rgba(23, 7, 7, 0.12);
       background:
-        radial-gradient(ellipse 900px 550px at 85% 0%, rgba(34,197,94,0.10), transparent 60%),
-        radial-gradient(ellipse 700px 500px at 0% 100%, rgba(7,42,29,0.5), transparent 55%),
-        #05070a;
+        radial-gradient(ellipse 900px 550px at 100% 0%, rgba(48, 20, 98, 0.5), transparent 0%),
+        radial-gradient(ellipse 700px 500px at 0% 100%, rgba(48, 20, 98, 0.5), transparent 0%),
+        #0c1017;
     }
     .advisors-section {
       max-width: 1400px;
@@ -428,12 +434,12 @@
       display: flex;
       align-items: stretch;
       gap: 0;
-      background: #0d1117;
-      border: 1px solid rgba(255,255,255,0.06);
+      background: #060c15;
+      border: 1px solid rgba(20, 9, 27, 0.787);
       border-radius: 20px;
       overflow: hidden;
       padding: 0;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      box-shadow: 0 20px 50px rgba(37, 10, 10, 0.798);
       filter: blur(5px);
       opacity: 0.55;
       transition: filter 0.4s ease-out, opacity 0.4s ease-out;
@@ -448,6 +454,9 @@
       padding: 3rem 2rem 3rem 3.5rem;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #0e172a;
+      /* Alternate scheme tried and set aside for possible future use:
+      background: rgba(12, 5, 34, 0.953);
+      */
       border-right: 1px solid rgba(238, 240, 233, 0.07);
       position: relative;
       z-index: 1;
@@ -477,9 +486,7 @@
       align-self: stretch;
       position: relative;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 62% 50%, rgba(0,242,242,0.16), transparent 60%),
-        #0a0e17;
+      background: radial-gradient(circle at 62% 50%, rgba(0,242,242,0.16), transparent 60%);
     }
     .carousel-radar { position: absolute; inset: 0; }
     .radar-ring {
@@ -621,7 +628,7 @@
     .cost-bar::after {
       top: 0; left: 100%;
       width: 5px; height: 100%;
-      background: linear-gradient(180deg, rgba(0,153,153,0.6), rgba(0,153,153,0.05));
+      background: linear-gradient(180deg, #007373, #023030);
       transform: skewY(45deg);
       transform-origin: top left;
     }
@@ -638,24 +645,46 @@
       100% { transform: scaleY(1); opacity: 1; }
     }
 
-    /* Card 4 — Clinical Research: a PRISMA-style systematic-review funnel —
-       studies narrowing down through stages, each tier lighting up in turn.
-       This is literally how a systematic review is diagrammed in the papers
-       this team publishes, unlike a generic network graph. */
-    .carousel-funnel { position: absolute; inset: 0; }
-    .funnel-bar {
+    /* Card 4 — Clinical Research: a stack of study sheets. Thickness comes
+       from two solid, layered box-shadow copies (no blur, no skew) — this
+       automatically follows the card's own border-radius on every corner,
+       so unlike a skewed pseudo-element it can't misalign at the corners
+       regardless of the card's aspect ratio. */
+    .doc-stack { position: absolute; inset: 0; }
+    .doc-card {
       position: absolute;
-      left: 50%;
-      height: 11px;
+      opacity: 0;
+      width: 30%; height: 46%;
       border-radius: 6px;
-      background: rgba(0,242,242,0.14);
-      border: 1px solid rgba(0,242,242,0.4);
-      transform: translateX(-50%);
-      animation: funnelGlow 3.4s ease-in-out infinite;
+      border: 1px solid rgba(0,242,242,0.35);
+      background: linear-gradient(180deg, #007a7a, #033333);
+      box-shadow: 3px 3px 0 #007373, 5px 5px 0 #023030;
+      transform: translateY(14px) scale(0.85);
     }
-    @keyframes funnelGlow {
-      0%, 100% { background: rgba(0,242,242,0.14); box-shadow: none; }
-      50% { background: rgba(0,242,242,0.45); box-shadow: 0 0 14px rgba(0,242,242,0.5); }
+    .doc-card-3 { top: 20%; left: 26%; }
+    .doc-card-2 { top: 27%; left: 35%; }
+    .doc-card-1 { top: 34%; left: 44%; }
+    .doc-rule {
+      position: absolute;
+      left: 16%;
+      height: 7px; border-radius: 3.5px;
+      background: #00cccc;
+    }
+    /* Same one-shot-on-first-view pattern as .bars-shown, so the entrance
+       plays once and the visual stays settled afterward instead of
+       resetting every time you swipe back to this card. */
+    .carousel-card.bars-shown .doc-card-3 {
+      animation: docCardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0s forwards;
+    }
+    .carousel-card.bars-shown .doc-card-2 {
+      animation: docCardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+    }
+    .carousel-card.bars-shown .doc-card-1 {
+      animation: docCardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.24s forwards;
+    }
+    @keyframes docCardIn {
+      0% { opacity: 0; transform: translateY(14px) scale(0.85); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .carousel-controls {
@@ -689,7 +718,7 @@
     }
     .section-title {
       font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 800; color: #f3f4f6;
+      font-weight: 600; color: #f3f4f6;
       letter-spacing: -0.03em; line-height: 1.15;
     }
     .section-title span {
@@ -810,23 +839,7 @@
       display: flex;
       flex-direction: column;
     }
-    .advisor-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(0,163,163,0.06) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .advisor-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,163,163,0.3);
-      border-color: rgba(0,163,163,0.4);
-    }
-    .advisor-card:hover::before { opacity: 1; }
+
     .card-image-panel {
       position: relative;
       width: 100%;
@@ -842,12 +855,10 @@
       transition: transform 0.6s cubic-bezier(0.25,1,0.5,1);
       display: block;
     }
-    .advisor-card:hover .card-image-panel img { transform: scale(1.06); }
     /* Dr. Toor's source photo has more headroom than the other portraits,
        so it needs a tighter, bottom-anchored crop to pull his face up and
        line it up with the rest of the grid. */
     .advisor-card--jaytoor .card-image-panel img { transform: scale(1.18); transform-origin: bottom center; }
-    .advisor-card--jaytoor:hover .card-image-panel img { transform: scale(1.24); transform-origin: bottom center; }
     .card-image-panel::after {
       content: '';
       position: absolute;
@@ -922,24 +933,17 @@
       border-right: 1px solid rgba(255,255,255,0.06); transition: background 0.2s;
     }
     .stat-item:last-child { border-right: none; }
-    .advisor-card:hover .stat-item { background: rgba(0,163,163,0.05); }
     .stat-value { display: block; font-size: 1.1rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 3px; }
     .stat-label { font-size: 0.6rem; color: #4a5568; text-transform: uppercase; letter-spacing: 0.06em; }
     .card-footer-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .card-link {
       display: inline-flex; align-items: center; gap: 5px;
-      font-size: 0.75rem; font-weight: 600; color: #4a5568; text-decoration: none;
+      font-size: 0.75rem; font-weight: 600; color: #94a3b8; text-decoration: none;
       background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
       padding: 0.4rem 0.7rem; border-radius: 20px; transition: all 0.2s;
     }
     .card-link i { font-size: 0.7rem; }
     .card-link:hover { color: var(--teal-bright); border-color: rgba(0,163,163,0.4); background: rgba(0,163,163,0.08); }
-    .advisor-card::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--teal), var(--teal-bright), var(--teal));
-      opacity: 0; transition: opacity 0.4s ease; border-radius: 0 0 20px 20px;
-    }
-    .advisor-card:hover::after { opacity: 1; }
 
     /* ── RESPONSIVE ── */
     /* Tablet (portrait + landscape): tighten spacing, keep hero side-by-side as long as it fits */
@@ -1137,7 +1141,7 @@
             <span class="avatar">💻</span>
             <span class="avatar">📊</span>
           </div>
-          <p class="avatar-text"><strong>265+</strong> Peer-reviewed publications</p>
+          <p class="avatar-text"><strong>200+</strong> Peer-reviewed publications</p>
         </div>
       </div>
     </section>
@@ -1343,11 +1347,21 @@
             <p class="carousel-desc">Our cohort studies, systematic reviews, and multicentre collaborations generate evidence that directly informs surgical decision-making and training.</p>
           </div>
           <div class="carousel-visual">
-            <div class="carousel-funnel">
-              <span class="funnel-bar" style="width:54%; top:34%; animation-delay:0s;"></span>
-              <span class="funnel-bar" style="width:40%; top:46%; animation-delay:0.35s;"></span>
-              <span class="funnel-bar" style="width:26%; top:58%; animation-delay:0.7s;"></span>
-              <span class="funnel-bar" style="width:14%; top:70%; animation-delay:1.05s;"></span>
+            <div class="doc-stack">
+              <div class="doc-card doc-card-3">
+                <span class="doc-rule" style="top:30%; width:58%;"></span>
+                <span class="doc-rule" style="top:47%; width:66%;"></span>
+                <span class="doc-rule" style="top:64%; width:42%;"></span>
+              </div>
+              <div class="doc-card doc-card-2">
+                <span class="doc-rule" style="top:30%; width:58%;"></span>
+                <span class="doc-rule" style="top:47%; width:66%;"></span>
+              </div>
+              <div class="doc-card doc-card-1">
+                <span class="doc-rule" style="top:30%; width:58%;"></span>
+                <span class="doc-rule" style="top:47%; width:66%;"></span>
+                <span class="doc-rule" style="top:64%; width:42%;"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -1388,16 +1402,16 @@
             <p class="advisor-bio">Spine Surgeon and Assistant Professor at the University of Manitoba. Passionate about questioning healthcare's status quo using evidence-based fundamentals and applying business principles to clinical practice.</p>
             <div class="advisor-stats">
               <div class="stat-item">
-                <span class="stat-value">15+</span>
-                <span class="stat-label">Years</span>
+                <span class="stat-value">Orthopaedics</span>
+                <span class="stat-label">Focus</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">MB</span>
-                <span class="stat-label">Location</span>
+                <span class="stat-value">Surgeon</span>
+                <span class="stat-label">Role</span>
               </div>
               <div class="stat-item">
                 <span class="stat-value">MBA</span>
-                <span class="stat-label">Business</span>
+                <span class="stat-label">Background</span>
               </div>
             </div>
             <div class="card-footer-meta">
@@ -1427,13 +1441,13 @@
             <p class="advisor-bio">Orthopaedic surgery resident at the University of Toronto. Background in physics and mathematics, applying engineering concepts to healthcare efficiency and patient outcomes through mathematical modeling.</p>
             <div class="advisor-stats">
               <div class="stat-item">
-                <span class="stat-value">74+</span>
-                <span class="stat-label">Papers</span>
-              </div>
-              <div class="stat-item">
                 <span class="stat-value">ML</span>
                 <span class="stat-label">Focus</span>
-              
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">Resident</span>
+                <span class="stat-label">Role</span>
+
               </div>
 
               <div class="stat-item">
@@ -1465,7 +1479,7 @@
           </span>
           <div class="collab-body">
             <h4 class="collab-name">Dharsan Ravindran</h4>
-            <span class="collab-role">PhD (Candidate), Biomedical Engineering</span>
+            <span class="collab-role">MASc Biomedical Engineering</span>
             <p class="collab-bio">With a background in computer science, he's pursuing an MASc in biomedical engineering at the University of Toronto with the Holland Bone and Joint Research Program at Sunnybrook Research Institute.</p>
             <div class="collab-links">
               <a href="https://www.linkedin.com/in/dharsanravi/" target="_blank" rel="noopener noreferrer" class="collab-link"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
@@ -1484,6 +1498,7 @@
             <p class="collab-bio">Zayn is a developer with a background in computer science and machine learning from the University of Guelph, currently a Technical Product Manager at Bell, bringing engineering rigor to Slate Surgery.</p>
             <div class="collab-links">
               <a href="https://www.linkedin.com/in/zayn-j-abbas/" target="_blank" rel="noopener noreferrer" class="collab-link"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+              <a href="https://github.com/zaynjameelabbas" target="_blank" rel="noopener noreferrer" class="collab-link"><i class="fab fa-github"></i> GitHub</a>
               <a href="https://www.researchgate.net/profile/Zayn-Abbas-2" target="_blank" rel="noopener noreferrer" class="collab-link"><i class="fas fa-flask"></i> ResearchGate</a>
             </div>
           </div>
