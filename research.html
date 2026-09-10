@@ -1016,12 +1016,14 @@
 
       function buildPaperCard(p) {
         const a = document.createElement('a');
-        a.href = p.scholar_url || '#';
+        const paperUrl = p.source_url || p.scholar_url;
+        a.href = paperUrl || '#';
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
         a.className = 'article-card-link scholar-paper';
         a.setAttribute('data-category', categorizePaper(p.title));
         const citeLabel = p.citations ? `${p.citations} citation${p.citations === 1 ? '' : 's'}` : 'Published';
+        const linkLabel = p.source_url ? 'View Paper' : 'View on Scholar';
         a.innerHTML = `
           <article class="article-card paper-card">
             <div class="paper-card-head">
@@ -1034,7 +1036,7 @@
               <p class="card-excerpt">${escapeHtml(p.authors || '')}</p>
               <div class="card-date-row">
                 <span class="card-date">${escapeHtml(p.year ? String(p.year) : '')}</span>
-                <span class="card-scholar-link">View on Scholar <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7em;"></i></span>
+                <span class="card-scholar-link">${escapeHtml(linkLabel)} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7em;"></i></span>
               </div>
             </div>
           </article>
@@ -1047,7 +1049,7 @@
           const sb = supabase.createClient(PUB_SUPABASE_URL, PUB_SUPABASE_KEY);
           const { data, error } = await sb
             .from('publications')
-            .select('title, authors, venue, year, citations, scholar_url, researcher')
+            .select('title, authors, venue, year, citations, scholar_url, source_url, researcher')
             .order('year', { ascending: false });
           if (error || !data) return;
 

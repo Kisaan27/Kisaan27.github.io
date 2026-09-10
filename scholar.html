@@ -831,10 +831,12 @@ body {
       ? `<div class="paper-researcher-tag" style="background:${meta.color.bg};color:${meta.color.text}">
            <span class="rtag-dot" style="background:${meta.color.dot}"></span>${esc(p.researcher)}
          </div>` : '';
-    const linkHtml = p.scholar_url
-      ? `<a class="card-link" href="${esc(p.scholar_url)}" target="_blank" rel="noopener">View <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '';
-    const titleHtml = p.scholar_url
-      ? `<a href="${esc(p.scholar_url)}" target="_blank" rel="noopener">${esc(p.title||'Untitled')}</a>`
+    const paperUrl = p.source_url || p.scholar_url;
+    const linkLabel = p.source_url ? 'View Paper' : 'View on Scholar';
+    const linkHtml = paperUrl
+      ? `<a class="card-link" href="${esc(paperUrl)}" target="_blank" rel="noopener">${esc(linkLabel)} <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '';
+    const titleHtml = paperUrl
+      ? `<a href="${esc(paperUrl)}" target="_blank" rel="noopener">${esc(p.title||'Untitled')}</a>`
       : esc(p.title||'Untitled');
     return `<div class="paper-card" style="animation-delay:${delay}ms">
       <div class="card-top">
