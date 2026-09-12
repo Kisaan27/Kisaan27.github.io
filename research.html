@@ -416,17 +416,36 @@
       </div>
     </section>
 
+    <!-- Populated from the same Supabase publications the grid uses, so it
+         stays empty (and hidden) until those load. -->
+    <section class="latest-rail" id="latestRail" hidden>
+      <div class="latest-rail-head">
+        <div class="latest-rail-heading">
+          <h2 class="latest-rail-title">Latest Research</h2>
+        </div>
+        <div class="latest-rail-nav">
+          <button type="button" class="rail-arrow" id="railPrev" aria-label="Scroll to earlier papers">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <button type="button" class="rail-arrow" id="railNext" aria-label="Scroll to later papers">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+      <div class="latest-rail-track" id="latestRailTrack"></div>
+    </section>
+
     <section class="filter-ribbon">
       <div class="categories-cluster">
         <div class="filter-links">
-          <a href="#" class="cat-link active" data-filter="all">All Channels</a>
-          <a href="#" class="cat-link" data-filter="efficiency">Efficiency</a>
-          <a href="#" class="cat-link" data-filter="clinical-research">Clinical Research</a>
-          <a href="#" class="cat-link" data-filter="ai">Artificial Intelligence</a>
-          <a href="#" class="cat-link" data-filter="device-evaluation">Device Evaluation</a>
+          <a href="#" class="cat-link active" data-filter="all"><i class="fa-solid fa-layer-group cat-link-icon"></i>All Articles</a>
+          <a href="#" class="cat-link" data-filter="efficiency"><i class="fa-solid fa-gauge-high cat-link-icon"></i>Efficiency</a>
+          <a href="#" class="cat-link" data-filter="clinical-research"><i class="fa-solid fa-notes-medical cat-link-icon"></i>Clinical Research</a>
+          <a href="#" class="cat-link" data-filter="ai"><i class="fa-solid fa-microchip cat-link-icon"></i>Artificial Intelligence</a>
+          <a href="#" class="cat-link" data-filter="device-evaluation"><i class="fa-solid fa-stethoscope cat-link-icon"></i>Device Evaluation</a>
         </div>
         <select class="cat-select" id="categorySelect" aria-label="Filter articles by category">
-          <option value="all">All Channels</option>
+          <option value="all">All Articles</option>
           <option value="efficiency">Efficiency</option>
           <option value="clinical-research">Clinical Research</option>
           <option value="ai">Artificial Intelligence</option>
@@ -439,7 +458,6 @@
       </div>
     </section>
 
-    <hr class="section-divider">
 
     <section class="content-layout">
       <div class="articles-grid" id="articles-container">
@@ -942,6 +960,15 @@
         researchHero.style.display = searchQuery !== '' ? 'none' : '';
       }
 
+      // "Latest Research" is a browsing shortcut, not a search result — it
+      // would be misleading to keep a fixed list of recent papers on screen
+      // while the user is filtering for something else.
+      const latestRail = document.getElementById('latestRail');
+      if (latestRail && !latestRail.hidden) {
+        latestRail.style.display =
+          (activeCategory !== 'all' || searchQuery !== '') ? 'none' : '';
+      }
+
       if (activeCategory !== 'all' || searchQuery !== '') {
         newsletterCard.style.display = 'none';
       } else {
@@ -998,6 +1025,13 @@
       // shared work, but his solo/unrelated publications are left out.
       const TEAM_RESEARCHERS = ['Azad Abbas', 'Jay Toor'];
 
+      // Some scraped summaries carry raw markup (e.g. "<em>Journal Name</em>")
+      // from the source page. Strip tags before escaping so it reads as plain
+      // text instead of showing the literal tag characters.
+      function stripHtml(str) {
+        return (str || '').replace(/<[^>]*>/g, '');
+      }
+
       function escapeHtml(str) {
         return (str || '').replace(/[&<>"']/g, (ch) => ({
           '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -1024,6 +1058,9 @@
         a.setAttribute('data-category', categorizePaper(p.title));
         const citeLabel = p.citations ? `${p.citations} citation${p.citations === 1 ? '' : 's'}` : 'Published';
         const linkLabel = p.source_url ? 'View Paper' : 'View on Scholar';
+        const summaryHtml = p.summary
+          ? `<div class="paper-summary"><p class="paper-summary-text">${escapeHtml(stripHtml(p.summary))}</p></div>`
+          : '';
         a.innerHTML = `
           <article class="article-card paper-card">
             <div class="paper-card-head">
@@ -1031,12 +1068,13 @@
               <span class="paper-cite-badge">${escapeHtml(citeLabel)}</span>
             </div>
             <div class="card-body">
-              <span class="card-inline-tag">${escapeHtml(p.venue || 'Peer-Reviewed Publication')}</span>
+              <span class="card-inline-tag" title="${escapeHtml(p.venue || 'Peer-Reviewed Publication')}">${escapeHtml(p.venue || 'Peer-Reviewed Publication')}</span>
               <h3 class="card-title">${escapeHtml(p.title || 'Untitled')}</h3>
               <p class="card-excerpt">${escapeHtml(p.authors || '')}</p>
+              ${summaryHtml}
               <div class="card-date-row">
                 <span class="card-date">${escapeHtml(p.year ? String(p.year) : '')}</span>
-                <span class="card-scholar-link">${escapeHtml(linkLabel)} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7em;"></i></span>
+                <span class="card-scholar-link">${escapeHtml(linkLabel)} <i class="fa-solid fa-arrow-up-right-from-square card-scholar-link-arrow"></i></span>
               </div>
             </div>
           </article>
@@ -1044,13 +1082,72 @@
         return a;
       }
 
+      // Horizontal "Latest Research" rail above the main grid. Takes the
+      // newest papers off the already-deduped, year-sorted list the grid
+      // was built from, so it can't show the same paper twice (co-authored
+      // papers exist once per researcher in the table).
+      function buildLatestRail(papers) {
+        const rail = document.getElementById('latestRail');
+        const track = document.getElementById('latestRailTrack');
+        if (!rail || !track) return;
+
+        // Undated papers can't meaningfully be "latest", so they're left to
+        // the main grid rather than padding out the rail.
+        const latest = papers.filter(p => p.year).slice(0, 12);
+        if (latest.length === 0) return;
+
+        latest.forEach(p => {
+          const url = p.source_url || p.scholar_url;
+          const a = document.createElement('a');
+          a.className = 'rail-card';
+          a.href = url || '#';
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.innerHTML = `
+            <div class="rail-card-top">
+              <span class="rail-card-year">${escapeHtml(String(p.year))}</span>
+              ${p.citations ? `<span class="rail-card-cites"><i class="fa-solid fa-quote-left"></i> ${escapeHtml(String(p.citations))}</span>` : ''}
+            </div>
+            <h3 class="rail-card-title">${escapeHtml(p.title || 'Untitled')}</h3>
+            <span class="rail-card-venue">${escapeHtml(p.venue || 'Peer-Reviewed Publication')}</span>
+          `;
+          track.appendChild(a);
+        });
+
+        rail.hidden = false;
+
+        const prev = document.getElementById('railPrev');
+        const next = document.getElementById('railNext');
+        // Scroll by roughly one card-plus-gap per click.
+        const step = () => Math.max(280, Math.round(track.clientWidth * 0.8));
+        prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+        next?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+
+        // Arrows disable at the ends rather than sitting there doing nothing.
+        // The tolerance matters: scroll-snap parks the track a few px in
+        // (the container's own left padding), so an exact `<= 0` test never
+        // registers as "at the start" and the left arrow stays lit.
+        const EDGE_TOLERANCE = 12;
+        const syncArrows = () => {
+          const maxScroll = track.scrollWidth - track.clientWidth;
+          if (prev) prev.disabled = track.scrollLeft <= EDGE_TOLERANCE;
+          if (next) next.disabled = track.scrollLeft >= maxScroll - EDGE_TOLERANCE;
+        };
+        track.addEventListener('scroll', syncArrows, { passive: true });
+        window.addEventListener('resize', syncArrows);
+        syncArrows();
+      }
+
       async function loadPublishedPapers() {
         try {
           const sb = supabase.createClient(PUB_SUPABASE_URL, PUB_SUPABASE_KEY);
           const { data, error } = await sb
             .from('publications')
-            .select('title, authors, venue, year, citations, scholar_url, source_url, researcher')
-            .order('year', { ascending: false });
+            .select('title, authors, venue, year, citations, scholar_url, source_url, summary, researcher')
+            // nullsFirst:false — Postgres sorts NULLs first on a DESC order,
+            // which otherwise floats every undated paper to the top of the
+            // grid (and the "Latest Research" rail) ahead of real 2026 work.
+            .order('year', { ascending: false, nullsFirst: false });
           if (error || !data) return;
 
           const filtered = data.filter(p => {
@@ -1060,13 +1157,16 @@
           });
 
           const seen = new Set();
+          const unique = [];
           filtered.forEach(p => {
             const key = (p.title || '').toLowerCase().trim();
             if (!key || seen.has(key)) return;
             seen.add(key);
+            unique.push(p);
             gridContainer.appendChild(buildPaperCard(p));
           });
 
+          buildLatestRail(unique);
           filterArticles();
         } catch (err) {
           console.error('Could not load published papers', err);

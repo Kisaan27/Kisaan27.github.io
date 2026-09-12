@@ -15,6 +15,14 @@ body {
 /* Base Wrapper Matrix */
 .research-wrapper {
     max-width: 1400px;
+    /* width:100% + min-width:0 are load-bearing, not cosmetic. body is a
+       flex column, and `margin: 0 auto` on a flex item disables cross-axis
+       stretch — so without an explicit width this shrink-to-fits its widest
+       content. The horizontally-scrolling Latest Research rail has a
+       max-content width of ~3800px, which blew the wrapper out to its
+       1400px cap on a 390px phone and pushed every section off-screen. */
+    width: 100%;
+    min-width: 0;
     margin: 0 auto;
     padding: 3rem 4rem;
     position: relative;
@@ -119,6 +127,161 @@ body {
 }
 
 /* ==========================================================================
+   LATEST RESEARCH RAIL (horizontal scroller above the main grid)
+   ========================================================================== */
+.latest-rail {
+    width: 100%;
+}
+
+.latest-rail-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.latest-rail-eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #7aaa66;
+    margin-bottom: 0.35rem;
+}
+
+.latest-rail-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #10142a;
+    margin: 0;
+}
+
+.latest-rail-nav {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.rail-arrow {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(30,39,75,0.12);
+    background: #ffffff;
+    color: #1e274b;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease,
+                transform 0.2s ease, opacity 0.2s ease;
+}
+
+.rail-arrow:hover:not(:disabled) {
+    background: #1e274b;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.rail-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.latest-rail-track {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* Vertical padding leaves room for the cards' hover lift and shadow,
+       which would otherwise get clipped by the scroll container. */
+    padding: 0.35rem 0.35rem 1rem;
+    margin: -0.35rem -0.35rem -1rem;
+    scrollbar-width: none;
+}
+
+.latest-rail-track::-webkit-scrollbar {
+    display: none;
+}
+
+.rail-card {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.4rem;
+    background: #ffffff;
+    border: 1px solid rgba(30,39,75,0.08);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(16,20,42,0.07);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.rail-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(30,39,75,0.2);
+    box-shadow: 0 16px 32px rgba(16,20,42,0.14);
+}
+
+.rail-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.rail-card-year {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #1e274b;
+    background: rgba(30,39,75,0.06);
+    border-radius: 12px;
+    padding: 0.2rem 0.6rem;
+}
+
+.rail-card-cites {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.rail-card-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: #10142a;
+    margin: 0;
+    /* Three lines keeps every rail card the same height. */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.rail-card-venue {
+    font-size: 0.75rem;
+    color: #64748b;
+    line-height: 1.4;
+    margin-top: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ==========================================================================
    FILTER & SEARCH CONTROLS RIBBON
    ========================================================================== */
 .filter-ribbon {
@@ -132,6 +295,14 @@ body {
     padding: 1rem 2rem;
     border-radius: 40px;
     border: 1px solid rgba(30,39,75,0.12);
+    /* Stays reachable while scrolling a 200+ card grid instead of forcing
+       a scroll back to the top to change filters. Navbar renders at ~139px
+       (90px logo + 1.5rem padding top/bottom + border); 155px docks the
+       ribbon under it with a small gap instead of overlapping it. z-index
+       below the navbar's 100 but above card content. */
+    position: sticky;
+    top: 100px;
+    z-index: 50;
 }
 
 .categories-cluster {
@@ -168,6 +339,8 @@ body {
     padding: 0 1.25rem;
     border-radius: 22px;
     line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
 
     transition: all 0.22s ease;
 }
@@ -175,12 +348,29 @@ body {
 .cat-link:hover {
     color: #10142a;
     background: rgba(30,39,75,0.06); /* Soft floating link glow */
+    transform: translateY(-1px);
 }
 
 .cat-link.active {
     color: #ffffff;
     background-color: #1e274b; /* Navy brand focus state */
     font-weight: 600;
+    box-shadow: 0 6px 16px rgba(30,39,75,0.25);
+}
+
+/* A small icon per channel — quicker to scan at a glance than text alone,
+   using only the existing palette (muted on rest, white on active) rather
+   than introducing new colors per category. */
+.cat-link-icon {
+    font-size: 0.8rem;
+    margin-right: 0.55rem;
+    color: inherit;
+    opacity: 0.75;
+    transition: opacity 0.22s ease;
+}
+.cat-link.active .cat-link-icon,
+.cat-link:hover .cat-link-icon {
+    opacity: 1;
 }
 
 /* Search Architecture */
@@ -246,6 +436,12 @@ body {
     color: inherit;
     display: flex;
     will-change: transform;
+    /* Grid items default to min-width:auto, which won't shrink below their
+       content's min-content width. The line-clamped elements inside
+       (display:-webkit-box) report a min-content width of the *unwrapped*
+       text, so a single 1fr column was being forced to ~735px on a 390px
+       phone. min-width:0 lets the track size to the grid instead. */
+    min-width: 0;
 }
 
 .article-card {
@@ -298,15 +494,48 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    min-width: 0; /* same reason as .article-card-link above */
+}
+
+/* Section header for the main grid, so the page reads as two distinct
+   zones: the "Latest Research" rail up top, then everything else. */
+.results-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.results-header-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #10142a;
+    margin: 0;
+}
+
+.results-count {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
 }
 
 .card-inline-tag {
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #1e274b; /* Navy card tag */
-    margin-bottom: 0.75rem;
+    /* Muted rather than full navy: the journal name is context, not the
+       headline. At the previous weight it competed with the title for
+       attention and, on long journal names, wrapped to two heavy lines
+       before the reader reached the actual paper title. */
+    color: #64748b;
+    margin-bottom: 0.6rem;
+    /* One line, ellipsised — the full value stays in the title attribute. */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-title {
@@ -316,6 +545,15 @@ body {
     letter-spacing: -0.01em;
     color: #10142a; /* Dark navy for clean headlines */
     margin: 0 0 0.85rem 0;
+    /* Clamped to 3 lines so cards in the same grid row land at a
+       consistent height regardless of title length — titles here range
+       from one line to six, which otherwise makes every row ragged. */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.35em * 3);
 }
 
 .card-excerpt {
@@ -380,6 +618,73 @@ body {
     font-size: 0.78rem;
     font-weight: 600;
     color: #1e274b;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s ease;
+}
+
+.card-scholar-link-arrow {
+    font-size: 0.7em;
+    transition: transform 0.2s ease;
+}
+
+/* Same sage-on-hover + arrow-slide treatment as .inline-cta-btn in the
+   hero card above, so "View Paper" reads as the same CTA language used
+   elsewhere on this page rather than a one-off link style. */
+.article-card-link:hover .card-scholar-link {
+    color: #7aaa66;
+}
+
+.article-card-link:hover .card-scholar-link-arrow {
+    transform: translateX(3px);
+}
+
+/* Abstract snippet, shown inline on the card rather than as a hover-open
+   overlay. The overlay version kept wedging itself across the card in the
+   row below — it opened into the grid's 2rem gap, so there was never
+   anywhere for it to go that didn't overlap a neighbour. Inline is also
+   what research listings actually do (Semantic Scholar, Papers With Code,
+   arXiv all show a clamped snippet up front), and it makes the summary
+   discoverable without having to hover every card to find out which ones
+   have one. */
+.paper-summary {
+    margin: 0 0 1.25rem 0;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(30,39,75,0.07);
+}
+
+/* On paper cards the author line sits above the summary, so it shouldn't
+   be the element absorbing slack space (that would leave a gap between
+   authors and the snippet). The date row takes the slack instead, which
+   keeps it pinned to the card's bottom edge. Scoped to .paper-card so
+   regular article cards keep their existing behaviour. */
+.paper-card .card-excerpt {
+    flex-grow: 0;
+    margin-bottom: 1.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.paper-card .card-date-row {
+    margin-top: auto;
+}
+
+.paper-summary-text {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #5b6578;
+    margin: 0;
+    /* Two lines keeps every card's snippet the same size, so rows stay
+       even whether a summary runs 80 characters or 400. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* ==========================================================================
@@ -611,6 +916,11 @@ body {
         gap: 0.75rem;
         border-radius: 20px;
         padding: 1.5rem;
+        /* The sticky behavior above assumes the navbar is also sticky,
+           which it only is at 821px+ (see .navbar's own breakpoint) — on
+           mobile the navbar scrolls away, so a hardcoded top offset leaves
+           this floating awkwardly mid-page instead of docked to anything. */
+        position: static;
     }
     .categories-cluster {
         flex-direction: column;
