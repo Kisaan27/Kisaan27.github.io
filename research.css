@@ -192,6 +192,14 @@ body {
     cursor: default;
 }
 
+/* Browser default focus ring is blue, which clashes with the navy theme
+   used everywhere else a control is "selected" (active nav pill, hover
+   state above). Swap it for the same navy instead of suppressing it. */
+.rail-arrow:focus-visible {
+    outline: 2px solid #1e274b;
+    outline-offset: 2px;
+}
+
 .latest-rail-track {
     display: flex;
     gap: 1.25rem;
@@ -585,11 +593,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.75rem;
 }
 
-.paper-card-icon {
-    color: #1e274b;
-    font-size: 1.3rem;
+/* Venue label moved up into the head row (next to the Published/citation
+   badge) instead of sitting on its own line in .card-body — matches how
+   the reference layout pairs a journal name with its status pill on one
+   row, and drops the need for a separate document-icon slot above it. */
+.paper-card-head .card-inline-tag {
+    margin-bottom: 0;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .paper-cite-badge {
@@ -601,6 +615,7 @@ body {
     padding: 0.3rem 0.7rem;
     border-radius: 12px;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .paper-card .card-body {

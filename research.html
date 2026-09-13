@@ -1038,6 +1038,31 @@
         }[ch]));
       }
 
+      // Scraped venue strings come straight from Google Scholar citation
+      // fields, e.g. "BMJ Health & Care Informatics 33 (1), e101420" or
+      // "Bone, 117923" — the journal name followed by a volume/issue/page
+      // locator. Readers only want the journal name, so strip everything
+      // from the first "<whitespace><digit>" onward (covers both the
+      // space-separated "Name 33 (1)" form and the comma-separated
+      // "Name, 117923" form, since the comma is followed by a space then
+      // a digit either way), then clean up trailing punctuation and any
+      // ellipsis Scholar left over from truncating a long venue name.
+      function cleanVenue(venue) {
+        if (!venue) return '';
+        const original = String(venue).trim();
+        let out = original;
+        out = out.replace(/[\s,]*…+\s*$/, '');
+        out = out.replace(/\s\d[\s\S]*$/, '');
+        out = out.replace(/[\s,;:.\-]+$/, '');
+        out = out.trim();
+        // A handful of conference venues lead with their year ("2018 20th
+        // International Conference on…"), which the space+digit strip
+        // above mistakes for the volume locator, collapsing the whole
+        // name down to just "2018". Better an unpolished original than a
+        // meaningless bare number.
+        return (out && !/^\d+$/.test(out)) ? out : original;
+      }
+
       function categorizePaper(title) {
         const t = (title || '').toLowerCase();
         const cats = new Set();
@@ -1058,17 +1083,17 @@
         a.setAttribute('data-category', categorizePaper(p.title));
         const citeLabel = p.citations ? `${p.citations} citation${p.citations === 1 ? '' : 's'}` : 'Published';
         const linkLabel = p.source_url ? 'View Paper' : 'View on Scholar';
+        const venue = cleanVenue(p.venue) || 'Peer-Reviewed Publication';
         const summaryHtml = p.summary
           ? `<div class="paper-summary"><p class="paper-summary-text">${escapeHtml(stripHtml(p.summary))}</p></div>`
           : '';
         a.innerHTML = `
           <article class="article-card paper-card">
             <div class="paper-card-head">
-              <i class="fa-solid fa-file-lines paper-card-icon"></i>
+              <span class="card-inline-tag" title="${escapeHtml(venue)}">${escapeHtml(venue)}</span>
               <span class="paper-cite-badge">${escapeHtml(citeLabel)}</span>
             </div>
             <div class="card-body">
-              <span class="card-inline-tag" title="${escapeHtml(p.venue || 'Peer-Reviewed Publication')}">${escapeHtml(p.venue || 'Peer-Reviewed Publication')}</span>
               <h3 class="card-title">${escapeHtml(p.title || 'Untitled')}</h3>
               <p class="card-excerpt">${escapeHtml(p.authors || '')}</p>
               ${summaryHtml}
@@ -1109,7 +1134,7 @@
               ${p.citations ? `<span class="rail-card-cites"><i class="fa-solid fa-quote-left"></i> ${escapeHtml(String(p.citations))}</span>` : ''}
             </div>
             <h3 class="rail-card-title">${escapeHtml(p.title || 'Untitled')}</h3>
-            <span class="rail-card-venue">${escapeHtml(p.venue || 'Peer-Reviewed Publication')}</span>
+            <span class="rail-card-venue">${escapeHtml(cleanVenue(p.venue) || 'Peer-Reviewed Publication')}</span>
           `;
           track.appendChild(a);
         });
