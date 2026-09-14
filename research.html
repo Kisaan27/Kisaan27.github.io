@@ -1063,6 +1063,18 @@
         return (out && !/^\d+$/.test(out)) ? out : original;
       }
 
+      // A couple of Scholar-scraped rows picked up the PDF's "Check for
+      // updates" crossmark badge as the title instead of the real one —
+      // scoped by the row's known id (not just the title text) so it can
+      // only ever correct this specific, verified paper.
+      const TITLE_OVERRIDES = {
+        'fe387863-723a-47cc-bff8-7b709ea0168c': 'Simulation Optimization of Operating Room Schedules for Elective Surgeries',
+      };
+
+      function cleanTitle(p) {
+        return TITLE_OVERRIDES[p.id] || p.title;
+      }
+
       function categorizePaper(title) {
         const t = (title || '').toLowerCase();
         const cats = new Set();
@@ -1080,7 +1092,8 @@
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
         a.className = 'article-card-link scholar-paper';
-        a.setAttribute('data-category', categorizePaper(p.title));
+        const title = cleanTitle(p);
+        a.setAttribute('data-category', categorizePaper(title));
         const citeLabel = p.citations ? `${p.citations} citation${p.citations === 1 ? '' : 's'}` : 'Published';
         const linkLabel = p.source_url ? 'View Paper' : 'View on Scholar';
         const venue = cleanVenue(p.venue) || 'Peer-Reviewed Publication';
@@ -1094,7 +1107,7 @@
               <span class="paper-cite-badge">${escapeHtml(citeLabel)}</span>
             </div>
             <div class="card-body">
-              <h3 class="card-title">${escapeHtml(p.title || 'Untitled')}</h3>
+              <h3 class="card-title">${escapeHtml(title || 'Untitled')}</h3>
               <p class="card-excerpt">${escapeHtml(p.authors || '')}</p>
               ${summaryHtml}
               <div class="card-date-row">
@@ -1133,7 +1146,7 @@
               <span class="rail-card-year">${escapeHtml(String(p.year))}</span>
               ${p.citations ? `<span class="rail-card-cites"><i class="fa-solid fa-quote-left"></i> ${escapeHtml(String(p.citations))}</span>` : ''}
             </div>
-            <h3 class="rail-card-title">${escapeHtml(p.title || 'Untitled')}</h3>
+            <h3 class="rail-card-title">${escapeHtml(cleanTitle(p) || 'Untitled')}</h3>
             <span class="rail-card-venue">${escapeHtml(cleanVenue(p.venue) || 'Peer-Reviewed Publication')}</span>
           `;
           track.appendChild(a);
@@ -1168,7 +1181,7 @@
           const sb = supabase.createClient(PUB_SUPABASE_URL, PUB_SUPABASE_KEY);
           const { data, error } = await sb
             .from('publications')
-            .select('title, authors, venue, year, citations, scholar_url, source_url, summary, researcher')
+            .select('id, title, authors, venue, year, citations, scholar_url, source_url, summary, researcher')
             // nullsFirst:false — Postgres sorts NULLs first on a DESC order,
             // which otherwise floats every undated paper to the top of the
             // grid (and the "Latest Research" rail) ahead of real 2026 work.
