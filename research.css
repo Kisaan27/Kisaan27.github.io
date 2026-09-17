@@ -24,7 +24,7 @@ body {
     width: 100%;
     min-width: 0;
     margin: 0 auto;
-    padding: 3rem 4rem;
+    padding: 2rem 4rem 3rem;
     position: relative;
     z-index: 5;
     flex-grow: 1;
