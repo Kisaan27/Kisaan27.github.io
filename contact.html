@@ -64,7 +64,9 @@
 
     .contact-card-inner {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      /* The form needs the room — the left pane is decorative, so it gets
+         the smaller share rather than an even split. */
+      grid-template-columns: 0.78fr 1.22fr;
       align-items: stretch;
       min-height: 680px;
     }
@@ -74,81 +76,88 @@
       min-height: 100%;
       border-radius: 0 0 0 28px;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse 66% 44% at 50% 42%, #2b3865 0%, #1a2340 45%, transparent 72%),
+        linear-gradient(168deg, #161d38 0%, #111731 58%, #0a0e1f 100%);
     }
 
-    /* Absolutely positioned so the portrait plate does not contribute its
-       intrinsic height to the auto-sized grid row — otherwise the image's
-       aspect ratio, not min-height, ends up driving the card's height. */
-    .contact-image-pane img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 50%;
-      display: block;
-    }
-
+    /* Vignette so the corners fall away and the column holds the eye. */
     .contact-image-pane::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(16,20,42,0.15) 0%, transparent 30%, rgba(16,20,42,0.35) 100%);
+      pointer-events: none;
+      background: radial-gradient(ellipse 72% 62% at 50% 46%, transparent 42%, rgba(5,8,18,0.6) 100%);
     }
+
+    /* Absolutely positioned (and centred via inset+auto margins) so this very
+       tall, narrow artwork cannot contribute its intrinsic height to the
+       auto-sized grid row — in flow, its aspect ratio rather than the row's
+       min-height ends up driving the whole card's height. */
+    /* Absolutely positioned so the canvas can never contribute intrinsic
+       size to the auto-sized grid row — in flow it drives the card's height
+       instead of the row's own min-height. */
+    .brand-scene {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .contact-image-pane.is-ready .brand-scene { opacity: 1; }
 
     /* ---- Right pane ---- */
     .contact-form-pane {
       position: relative;
       overflow: hidden;
-      padding: 3.75rem 3.5rem;
+      padding: 4rem 4.25rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
       background: linear-gradient(180deg, #ffffff 0%, #fafbfd 100%);
     }
 
-    .contact-brand-logo {
-      display: block;
-      align-self: flex-start;
-      height: 50px;
-      width: auto;
-      margin-bottom: 0.75rem;
-    }
-
     .contact-title {
-      font-size: clamp(1.75rem, 2.6vw, 2.35rem);
+      font-size: clamp(2rem, 2.9vw, 2.85rem);
       font-weight: 750;
-      letter-spacing: -0.025em;
-      line-height: 1.12;
+      letter-spacing: -0.028em;
+      line-height: 1.1;
       color: #10142a;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.9rem;
     }
 
     .contact-subtitle {
-      font-size: 0.95rem;
+      font-size: 1.02rem;
       line-height: 1.65;
       color: #5b6578;
-      max-width: 400px;
-      margin: 0 0 2.25rem;
+      max-width: 470px;
+      margin: 0 0 2.4rem;
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
-      margin-bottom: 1.1rem;
+      gap: 0.5rem;
+      margin-bottom: 1.35rem;
     }
 
     .form-group label {
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       font-weight: 600;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
       color: #7d8699;
     }
@@ -158,12 +167,12 @@
       display: block;
       width: 100%;
       font-family: inherit;
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: #10142a;
       background: #fbfcfe;
       border: 1px solid rgba(30,39,75,0.16);
-      border-radius: 14px;
-      padding: 0.85rem 1rem;
+      border-radius: 15px;
+      padding: 1rem 1.15rem;
       outline: none;
       transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
     }
@@ -180,20 +189,20 @@
 
     .form-group textarea {
       resize: vertical;
-      min-height: 122px;
+      min-height: 152px;
       line-height: 1.55;
     }
 
     .contact-submit {
       width: 100%;
-      margin-top: 0.4rem;
+      margin-top: 0.6rem;
       justify-content: center;
       background: #1e274b;
       color: #ffffff;
       border: none;
-      padding: 0.9rem 1.75rem;
-      border-radius: 14px;
-      font-size: 0.92rem;
+      padding: 1.05rem 1.75rem;
+      border-radius: 15px;
+      font-size: 1rem;
       font-weight: 650;
       cursor: pointer;
       display: inline-flex;
@@ -232,13 +241,10 @@
       .contact-card-inner {
         grid-template-columns: 1fr;
       }
-      /* The plate is a tall subject, so a short strip reads as fragments —
-         give it more height and crop to the upper column. */
       .contact-image-pane {
-        height: 250px;
+        height: 260px;
         border-radius: 0;
       }
-      .contact-image-pane img { object-position: 50% 30%; }
       .contact-wrapper {
         padding-top: 0;
         padding-left: 0;
@@ -307,11 +313,11 @@
   <main class="contact-wrapper">
     <div class="contact-card">
       <div class="contact-card-inner">
-        <div class="contact-image-pane">
-          <img src="images/ortho3.jpeg" alt="Spine visualization">
+        <div class="contact-image-pane" id="brand-scene-pane">
+          <canvas class="brand-scene" id="brand-scene" role="img"
+                  aria-label="Rotating three-dimensional rendering of the Slate Surgery cube mark"></canvas>
         </div>
         <div class="contact-form-pane">
-          <img src="images/drawing22.svg" alt="Slate Surgery" class="contact-brand-logo">
           <h1 class="contact-title">Let's get in touch.</h1>
           <p class="contact-subtitle">
             Questions about our research, or a collaboration you'd like to explore?
@@ -422,6 +428,15 @@
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
     })();
   </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="contact-scene.js"></script>
   <script src="site-search.js"></script>
 
   <!-- Vercel Speed Insights -->
