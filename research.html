@@ -1166,10 +1166,28 @@
         // (the container's own left padding), so an exact `<= 0` test never
         // registers as "at the start" and the left arrow stays lit.
         const EDGE_TOLERANCE = 12;
+        // On narrow viewports the next card peeks in at the container's own
+        // overflow boundary, hard-cut mid-card with no fade — reads as a
+        // rendering glitch rather than a "keep scrolling" cue. Mask the
+        // track's edges to fade whichever side still has more to reveal
+        // (same start/end state the arrows already use), so a fully-visible
+        // list stays untouched and a mid-scroll position fades both edges.
+        const EDGE_FADE = 28;
+        const syncEdgeFade = (atStart, atEnd) => {
+          const stops = [];
+          stops.push(atStart ? 'black 0%' : `transparent 0, black ${EDGE_FADE}px`);
+          stops.push(atEnd ? 'black 100%' : `black calc(100% - ${EDGE_FADE}px), transparent 100%`);
+          const gradient = `linear-gradient(to right, ${stops.join(', ')})`;
+          track.style.webkitMaskImage = gradient;
+          track.style.maskImage = gradient;
+        };
         const syncArrows = () => {
           const maxScroll = track.scrollWidth - track.clientWidth;
-          if (prev) prev.disabled = track.scrollLeft <= EDGE_TOLERANCE;
-          if (next) next.disabled = track.scrollLeft >= maxScroll - EDGE_TOLERANCE;
+          const atStart = track.scrollLeft <= EDGE_TOLERANCE;
+          const atEnd = track.scrollLeft >= maxScroll - EDGE_TOLERANCE;
+          if (prev) prev.disabled = atStart;
+          if (next) next.disabled = atEnd;
+          syncEdgeFade(atStart, atEnd);
         };
         track.addEventListener('scroll', syncArrows, { passive: true });
         window.addEventListener('resize', syncArrows);
