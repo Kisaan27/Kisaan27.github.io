@@ -121,8 +121,23 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      background: linear-gradient(180deg, #ffffff 0%, #fafbfd 100%);
+      background: linear-gradient(170deg, #eff2f7 0%, #e8ecf3 100%);
     }
+
+    /* Fine grain over the surface, so the carved controls sit on something
+       that reads as a material rather than flat fill. */
+    .contact-form-pane::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    .contact-form-pane > * { position: relative; z-index: 1; }
 
     .contact-title {
       font-size: clamp(2rem, 2.9vw, 2.85rem);
@@ -136,7 +151,7 @@
     .contact-subtitle {
       font-size: 1.02rem;
       line-height: 1.65;
-      color: #5b6578;
+      color: #545e72;
       max-width: 470px;
       margin: 0 0 2.4rem;
     }
@@ -159,7 +174,7 @@
       font-weight: 600;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: #7d8699;
+      color: #69738a;
     }
 
     .form-group input,
@@ -169,22 +184,33 @@
       font-family: inherit;
       font-size: 1rem;
       color: #10142a;
-      background: #fbfcfe;
-      border: 1px solid rgba(30,39,75,0.16);
-      border-radius: 15px;
+      /* Same tone as the pane: the field reads as pressed into the surface
+         rather than as a box laid on top of it. Depth is the two inner
+         shadows — dark from the top-left, light from the bottom-right. */
+      background: #ecf0f6;
+      border: none;
+      border-radius: 16px;
       padding: 1rem 1.15rem;
       outline: none;
-      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      box-shadow:
+        inset 3px 3px 6px rgba(26,36,64,0.11),
+        inset -3px -3px 6px rgba(255,255,255,0.95),
+        0 1px 1px rgba(255,255,255,0.75);
+      transition: box-shadow 0.2s ease, background 0.2s ease;
     }
 
     .form-group input::placeholder,
-    .form-group textarea::placeholder { color: #9aa3b5; }
+    .form-group textarea::placeholder { color: #858fa6; }
 
+    /* Focus deepens the well and adds a brand-tinted ring — a colour-only
+       cue would be too quiet against this low-contrast surface. */
     .form-group input:focus,
     .form-group textarea:focus {
-      border-color: #1e274b;
-      background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(30,39,75,0.09);
+      background: #e9eef5;
+      box-shadow:
+        inset 4px 4px 8px rgba(26,36,64,0.16),
+        inset -3px -3px 6px rgba(255,255,255,0.95),
+        0 0 0 3px rgba(30,39,75,0.20);
     }
 
     .form-group textarea {
@@ -208,6 +234,9 @@
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
+      box-shadow:
+        5px 5px 12px rgba(26,36,64,0.22),
+        -4px -4px 10px rgba(255,255,255,0.9);
       transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -216,7 +245,17 @@
     .contact-submit:hover {
       background: #2a3663;
       transform: translateY(-1px);
-      box-shadow: 0 10px 22px rgba(30,39,75,0.22);
+      box-shadow:
+        6px 7px 16px rgba(26,36,64,0.26),
+        -4px -4px 10px rgba(255,255,255,0.95);
+    }
+
+    /* Press pushes it into the surface, mirroring the fields. */
+    .contact-submit:active {
+      transform: translateY(1px);
+      box-shadow:
+        inset 3px 3px 7px rgba(10,15,30,0.38),
+        inset -2px -2px 5px rgba(255,255,255,0.12);
     }
 
     .contact-submit:hover i { transform: translateX(3px); }
