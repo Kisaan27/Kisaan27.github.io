@@ -68,21 +68,28 @@ function init() {
   const geo = new RoundedBoxGeometry(SIZE, SIZE, SIZE, 4, 0.085);
   const cluster = new THREE.Group();
 
-  voxels.forEach(([x, y, z, mat], i) => {
+  const SPACING = SIZE + GAP;
+
+  voxels.forEach(([x, y, z, mat]) => {
     const m = new THREE.Mesh(geo, mat);
-    m.position.set(x * (SIZE + GAP), y * (SIZE + GAP), z * (SIZE + GAP));
-    m.userData.baseY = m.position.y;
-    m.userData.phase = i * 0.55;
+    m.position.set(x * SPACING, y * SPACING, z * SPACING);
+    // Integer lattice coords, kept in step with every face turn — this is what
+    // decides which cubes belong to the next turn.
+    m.userData.g = { x, y, z };
     cluster.add(m);
   });
 
-  // Centre the cluster on its own bounds so rotation stays on-axis.
+  // Centring goes on a wrapper, NOT baked into each cube: a face turn has to
+  // pivot about the lattice origin, and an offset baked into the cubes would
+  // make every face swing around a point slightly off its own centre.
   const box = new THREE.Box3().setFromObject(cluster);
   const centre = box.getCenter(new THREE.Vector3());
-  cluster.children.forEach((m) => { m.position.sub(centre); m.userData.baseY = m.position.y; });
+  const centerer = new THREE.Group();
+  centerer.position.copy(centre).multiplyScalar(-1);
+  centerer.add(cluster);
 
   const rig = new THREE.Group();
-  rig.add(cluster);
+  rig.add(centerer);
   // Base angle is the logo's own isometric three-quarter view; the loop below
   // only sways around it rather than spinning full circle, which would pass
   // through angles where the cluster reads as an undifferentiated block.
@@ -94,11 +101,67 @@ function init() {
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // --- interaction ---------------------------------------------------------
+  // Motion is gated on hover: at rest the cluster holds its pose, and the sway
+  // eases in only while the pointer is over the pane.
+  let hovered = false;
+  let motion = 0;              // smoothed 0..1 follower of `hovered`
+  let swayClock = 0;           // advances only while moving, so the sway
+                               // resumes from where it stopped rather than jumping
+
+  pane.addEventListener('pointerenter', () => { hovered = true; });
+  pane.addEventListener('pointerleave', () => { hovered = false; });
+
+  // A face turn, Rubik-style: pick an axis and one of its layers, reparent that
+  // layer under a pivot at the lattice origin, spin a quarter turn, then bake
+  // the result back and update the lattice coords so the next turn selects the
+  // right cubes.
+  const AXES = ['x', 'y', 'z'];
+  const TURN_DUR = 0.52;
+  let turn = null;
+
+  function startTurn() {
+    if (turn) return;                                  // one at a time
+    const axis = AXES[Math.floor(Math.random() * AXES.length)];
+    const layers = [...new Set(cluster.children.map((m) => m.userData.g[axis]))];
+    const layer = layers[Math.floor(Math.random() * layers.length)];
+    const members = cluster.children.filter((m) => m.userData.g[axis] === layer);
+    if (!members.length) return;
+
+    const pivot = new THREE.Group();
+    cluster.add(pivot);
+    // attach() preserves world transform, so cubes do not jump on reparent
+    members.forEach((m) => pivot.attach(m));
+    turn = { pivot, members, axis, dir: Math.random() < 0.5 ? 1 : -1, t: 0 };
+  }
+
+  function finishTurn() {
+    const { pivot, members, axis, dir } = turn;
+    pivot.rotation[axis] = dir * Math.PI / 2;
+    pivot.updateMatrixWorld(true);
+    members.forEach((m) => cluster.attach(m));         // bake transform back
+    cluster.remove(pivot);
+
+    // Rotate the lattice coords to match. Derived from the turn rather than
+    // re-read from position, so rounding cannot drift over many turns.
+    members.forEach((m) => {
+      const g = m.userData.g;
+      const { x, y, z } = g;
+      if (axis === 'x') { g.y = -dir * z; g.z = dir * y; }
+      if (axis === 'y') { g.x = dir * z;  g.z = -dir * x; }
+      if (axis === 'z') { g.x = -dir * y; g.y = dir * x; }
+    });
+    turn = null;
+  }
+
+  canvas.addEventListener('pointerdown', () => { if (!reduceMotion) startTurn(); });
+  canvas.style.cursor = 'pointer';
+
   // Solve the camera distance from the cluster's bounding sphere against BOTH
   // the vertical and horizontal field of view — fitting only the vertical one
   // crops the sides as soon as the pane is taller than it is wide, which this
   // one is.
-  const bounds = new THREE.Box3().setFromObject(cluster);
+  const bounds = new THREE.Box3().setFromObject(centerer);
   const sphere = bounds.getBoundingSphere(new THREE.Sphere());
   const MARGIN = 1.10;
 
@@ -131,19 +194,40 @@ function init() {
   pane.classList.add('is-ready');
 
   const t0 = performance.now();
+  let lastT = 0;
+  const easeInOutCubic = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+
   renderer.setAnimationLoop(() => {
     if (!visible) return;
     const t = (performance.now() - t0) / 1000;
+    const dt = Math.min(t - lastT, 0.05);              // clamp after a tab stall
+    lastT = t;
+
     if (!reduceMotion) {
-      rig.rotation.y = BASE_YAW + Math.sin(t * 0.24) * SWAY;
-      rig.rotation.x = 0.30 + Math.sin(t * 0.19) * 0.07;
-      rig.position.y = Math.sin(t * 0.5) * 0.12;
-      // Each voxel breathes very slightly out of phase, so the cluster feels
-      // alive rather than like one rigid block.
-      cluster.children.forEach((m) => {
-        m.position.y = m.userData.baseY + Math.sin(t * 0.8 + m.userData.phase) * 0.022;
-      });
+      // Ease toward the hover state rather than snapping, so leaving the pane
+      // settles the cluster instead of freezing it mid-sway. The decay is
+      // asymptotic, so snap the tail to zero — otherwise it creeps
+      // imperceptibly forever and the scene never actually comes to rest.
+      motion += ((hovered ? 1 : 0) - motion) * Math.min(dt * 4.5, 1);
+      if (!hovered && motion < 0.002) motion = 0;
+
+      swayClock += dt * motion;
+
+      rig.rotation.y = BASE_YAW + Math.sin(swayClock * 0.5) * SWAY * motion;
+      rig.rotation.x = 0.30 + Math.sin(swayClock * 0.38) * 0.07 * motion;
+      rig.position.y = Math.sin(swayClock * 0.9) * 0.12 * motion;
+
+      if (turn) {
+        turn.t += dt;
+        const k = Math.min(turn.t / TURN_DUR, 1);
+        turn.pivot.rotation[turn.axis] = turn.dir * (Math.PI / 2) * easeInOutCubic(k);
+        if (k >= 1) finishTurn();
+      }
     }
+
+    // Deliberately still renders every frame when idle: skipping draws with a
+    // non-preserved drawing buffer lets the compositor sample unstable
+    // contents, which showed up as flicker between otherwise identical frames.
     renderer.render(scene, camera);
   });
 
